@@ -13,23 +13,23 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 # The ID and range of a sample spreadsheet.
 SAMPLE_SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
 SAMPLE_RANGE_NAME = 'A1:AA1000'
-output = {}
 
 
 def get_spreadsheet_data():
-    global values_input, service
     creds = None
+
     if os.path.exists('token.pickle'):
         with open('token.pickle', 'rb') as token:
             creds = pickle.load(token)
+
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'confirmed_cases/credentials.json', SCOPES)  # here enter the name of your downloaded JSON file
+            flow = InstalledAppFlow.from_client_secrets_file('credentials.json',
+                                                             SCOPES)  # here enter the name of your downloaded JSON file
             creds = flow.run_local_server(port=0)
-        with open('confirmed_cases/token.pickle', 'wb') as token:
+        with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
     service = build('sheets', 'v4', credentials=creds)
@@ -42,13 +42,15 @@ def get_spreadsheet_data():
 
     # Part of the sheets API, even if undefined. Do not remove
     if not values_input and not values_expansion:
-        print('No data found.')
+        raise Exception("No data found")
 
 
-def geocode_sheet():
+    return values_input
+
+
+def geocode_sheet(values_input):
     df = pd.DataFrame(values_input)
 
-    global last_updated
     last_updated = df[0][0]
 
     df = df.drop([0, 1])
@@ -68,6 +70,8 @@ def geocode_sheet():
                        "Zone 2 (Saint John area)": "Saint John",
                        "Island": "Vancouver Island",
                        "Interior": "Golden"}
+
+    output = {}
 
     for index, row in df.iterrows():
         if row['health_region'] + ', ' + row['province'] in output:
@@ -89,8 +93,10 @@ def geocode_sheet():
                     location = geolocator.geocode(row['province'] + ', Canada')
                 output[row['health_region'] + ', ' + row['province']] = [1, location.latitude, location.longitude]
 
+    return output, last_updated
 
-def output_json():
+
+def output_json(output, last_updated):
     real_output = []
 
     for key in output:
@@ -102,5 +108,3 @@ def output_json():
         output_string = output_string.replace("'", r"\'")
         outfile.write("data_last_updated = '" + last_updated + "';\n")
         outfile.write("data_confirmed = '" + output_string + "';")
-
-
