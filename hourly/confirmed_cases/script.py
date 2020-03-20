@@ -26,9 +26,9 @@ def get_spreadsheet_data():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES) # here enter the name of your downloaded JSON file
+                'confirmed_cases/credentials.json', SCOPES) # here enter the name of your downloaded JSON file
             creds = flow.run_local_server(port=0)
-        with open('token.pickle', 'wb') as token:
+        with open('confirmed_cases/token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
     service = build('sheets', 'v4', credentials=creds)
@@ -63,7 +63,9 @@ def geocode_sheet():
     geolocator = Nominatim(user_agent="COVIDScript")
 
     name_exceptions = {"Kingston Frontenac Lennox & Addington": "Kingston", 
-                        "Zone 2 (Saint John area)": "Saint John"}
+                        "Zone 2 (Saint John area)": "Saint John",
+                        "Island": "Vancouver Island",
+                        "Interior": "Golden"}
 
 
     for index, row in df.iterrows():
