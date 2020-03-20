@@ -1,6 +1,6 @@
 import pandas as pd
 from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow,Flow
+from google_auth_oauthlib.flow import InstalledAppFlow, Flow
 from google.auth.transport.requests import Request
 import os
 import pickle
@@ -15,6 +15,7 @@ SAMPLE_SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
 SAMPLE_RANGE_NAME = 'A1:AA1000'
 output = {}
 
+
 def get_spreadsheet_data():
     global values_input, service
     creds = None
@@ -26,7 +27,7 @@ def get_spreadsheet_data():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'confirmed_cases/credentials.json', SCOPES) # here enter the name of your downloaded JSON file
+                'confirmed_cases/credentials.json', SCOPES)  # here enter the name of your downloaded JSON file
             creds = flow.run_local_server(port=0)
         with open('confirmed_cases/token.pickle', 'wb') as token:
             pickle.dump(creds, token)
@@ -36,15 +37,16 @@ def get_spreadsheet_data():
     # Call the Sheets API
     sheet = service.spreadsheets()
     result_input = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                range=SAMPLE_RANGE_NAME).execute()
+                                      range=SAMPLE_RANGE_NAME).execute()
     values_input = result_input.get('values', [])
 
+    # Part of the sheets API, even if undefined. Do not remove
     if not values_input and not values_expansion:
         print('No data found.')
 
 
 def geocode_sheet():
-    df=pd.DataFrame(values_input)
+    df = pd.DataFrame(values_input)
 
     global last_updated
     last_updated = df[0][0]
@@ -62,11 +64,10 @@ def geocode_sheet():
 
     geolocator = Nominatim(user_agent="COVIDScript")
 
-    name_exceptions = {"Kingston Frontenac Lennox & Addington": "Kingston", 
-                        "Zone 2 (Saint John area)": "Saint John",
-                        "Island": "Vancouver Island",
-                        "Interior": "Golden"}
-
+    name_exceptions = {"Kingston Frontenac Lennox & Addington": "Kingston",
+                       "Zone 2 (Saint John area)": "Saint John",
+                       "Island": "Vancouver Island",
+                       "Interior": "Golden"}
 
     for index, row in df.iterrows():
         if row['health_region'] + ', ' + row['province'] in output:
@@ -79,13 +80,15 @@ def geocode_sheet():
                 output[row['health_region'] + ', ' + row['province']] = [1, location.latitude, location.longitude]
             else:
                 if row['health_region'] in name_exceptions:
-                    location = geolocator.geocode(name_exceptions[row['health_region']] + ', ' + row['province'] + ', Canada')
-                else: 
+                    location = geolocator.geocode(
+                        name_exceptions[row['health_region']] + ', ' + row['province'] + ', Canada')
+                else:
                     location = geolocator.geocode(row['health_region'] + ', ' + row['province'] + ', Canada')
-                    
+
                 if location is None:
                     location = geolocator.geocode(row['province'] + ', Canada')
                 output[row['health_region'] + ', ' + row['province']] = [1, location.latitude, location.longitude]
+
 
 def output_json():
     real_output = []
@@ -98,4 +101,6 @@ def output_json():
         output_string = output_string.replace("Vancouver Coastal", "Vancouver")
         output_string = output_string.replace("'", r"\'")
         outfile.write("data_last_updated = '" + last_updated + "';\n")
-        outfile.write("data_confirmed = '"+output_string + "';")
+        outfile.write("data_confirmed = '" + output_string + "';")
+
+
