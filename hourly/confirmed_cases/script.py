@@ -1,3 +1,4 @@
+from google.cloud import storage
 import pandas as pd
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow, Flow
@@ -13,6 +14,9 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 # The ID and range of a sample spreadsheet.
 SAMPLE_SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
 SAMPLE_RANGE_NAME = 'A1:AA1000'
+
+GCS_BUCKET = 'flatten-271620.appspot.com'
+UPLOAD_FILE = 'confirmed_data.js'
 
 
 def get_spreadsheet_data():
@@ -43,7 +47,6 @@ def get_spreadsheet_data():
     # Part of the sheets API, even if undefined. Do not remove
     if not values_input and not values_expansion:
         raise Exception("No data found")
-
 
     return values_input
 
@@ -96,15 +99,33 @@ def geocode_sheet(values_input):
     return output, last_updated
 
 
+def upload_blob(bucket, data_string, destination_blob_name):
+    """Uploads a file to the bucket."""
+
+    blob = bucket.blob(destination_blob_name)
+
+    blob.upload_from_string(data_string)
+
+    print(
+        "File {} uploaded to {}.".format(
+            data_string, destination_blob_name
+        )
+    )
+
+
 def output_json(output, last_updated):
     real_output = []
 
     for key in output:
         real_output.append({"name": key, "cases": output[key][0], "coord": [output[key][1], output[key][2]]})
 
-    with open('confirmed.js', 'w') as outfile:
-        output_string = json.dumps(real_output)
-        output_string = output_string.replace("Vancouver Coastal", "Vancouver")
-        output_string = output_string.replace("'", r"\'")
-        outfile.write("data_last_updated = '" + last_updated + "';\n")
-        outfile.write("data_confirmed = '" + output_string + "';")
+    output_string = json.dumps(real_output)
+    output_string = output_string.replace("Vancouver Coastal", "Vancouver")
+    output_string = output_string.replace("'", r"\'")
+    output_string = "data_last_updated = '" + last_updated + "';\n" + "data_confirmed = '" + output_string + "';"
+    with open(UPLOAD_FILE, 'w') as outfile:
+        outfile.write(output_string)
+
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(GCS_BUCKET)
+    upload_blob(bucket, output_string, UPLOAD_FILE)

@@ -32,4 +32,4 @@ def main(event, context):
 
 
 if __name__ == '__main__':
-    main()
+    main(None, None)
