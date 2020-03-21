@@ -1,1 +1,2 @@
-google
+google-cloud-storage
+google-cloud-datastore
