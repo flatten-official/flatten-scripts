@@ -6,8 +6,9 @@ from math import floor
 
 DATASTORE_KIND = 'form-user'
 
-GCS_BUCKET = 'flatten-map-data'
-UPLOAD_FILE = 'user_map_data.json'
+GCS_BUCKET = 'gs://flatten-271620.appspot.com'
+UPLOAD_FILE = 'form_data.js'
+
 
 def upload_blob(bucket, data_string, destination_blob_name):
     """Uploads a file to the bucket."""
@@ -21,6 +22,7 @@ def upload_blob(bucket, data_string, destination_blob_name):
             data_string, destination_blob_name
         )
     )
+
 
 def download_blob(bucket, destination_file_name):
     """Downloads a blob from the bucket."""
@@ -36,6 +38,7 @@ def download_blob(bucket, destination_file_name):
     )
 
     return data_string
+
 
 def main(event, context):
     """
@@ -59,8 +62,8 @@ def main(event, context):
 
     query = datastore_client.query(kind=DATASTORE_KIND,
                                    # NB time in DB is int ms
-                                   filters=(('timestamp', '>=', query_since*1000),
-                                            ('timestamp', '<', query_to*1000))
+                                   filters=(('timestamp', '>=', query_since * 1000),
+                                            ('timestamp', '<', query_to * 1000))
                                    )
     for entity in query.fetch():
         try:
@@ -77,7 +80,8 @@ def main(event, context):
             map_data['fsa'][postcode]['severe'] += at_risk
         else:
             map_data['fsa'][postcode] = {'number_reports': 1, 'mild': symptoms, 'severe': at_risk}
-        map_data['max'] = max(map_data['max'], map_data['fsa'][postcode]['mild']+2*map_data['fsa'][postcode]['severe'])
+        map_data['max'] = max(map_data['max'],
+                              map_data['fsa'][postcode]['mild'] + 2 * map_data['fsa'][postcode]['severe'])
 
     json_str = json.dumps(map_data)
 
@@ -85,4 +89,4 @@ def main(event, context):
 
 
 if __name__ == "__main__":
-    main()
+    main(None, None)
