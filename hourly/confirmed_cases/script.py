@@ -18,25 +18,21 @@ SAMPLE_RANGE_NAME = 'A1:AA1000'
 GCS_BUCKET = 'flatten-271620.appspot.com'
 UPLOAD_FILE = 'confirmed_data.js'
 
+def download_blob(bucket_name, source_blob_name):
+    """Downloads a blob from the bucket."""
+
+    storage_client = storage.Client()
+
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(source_blob_name)
+    s = blob.download_as_string()
+    return s
 
 def get_spreadsheet_data():
-    creds = None
 
-    if os.path.exists('token.pickle'):
-        with open('token.pickle', 'rb') as token:
-            creds = pickle.load(token)
+    api_key = download_blob("flatten_private", "credentials/sheets_api_key.txt",)
 
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file('credentials.json',
-                                                             SCOPES)  # here enter the name of your downloaded JSON file
-            creds = flow.run_local_server(port=0)
-        with open('token.pickle', 'wb') as token:
-            pickle.dump(creds, token)
-
-    service = build('sheets', 'v4', credentials=creds)
+    service = build('sheets', 'v4', developerKey=api_key)
 
     # Call the Sheets API
     sheet = service.spreadsheets()
