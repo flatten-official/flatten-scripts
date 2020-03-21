@@ -43,7 +43,7 @@ def get_spreadsheet_data():
     values_input = result_input.get('values', [])
 
     # Part of the sheets API, even if undefined. Do not remove
-    if not values_input and not values_expansion:
+    if not values_input:
         raise Exception("No data found")
 
     return values_input
