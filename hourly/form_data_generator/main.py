@@ -82,3 +82,7 @@ def main(event, context):
     json_str = json.dumps(map_data)
 
     upload_blob(bucket, json_str, UPLOAD_FILE)
+
+
+if __name__ == "__main__":
+    main()
