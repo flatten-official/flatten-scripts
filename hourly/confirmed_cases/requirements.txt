@@ -1,0 +1,7 @@
+pandas
+pickle
+geopy
+json
+google_auth_oauthlib
+googleapiclient.discovery
+google_auth_oauthlib.flow
