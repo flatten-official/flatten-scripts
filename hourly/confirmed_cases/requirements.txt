@@ -1,5 +1,4 @@
 pandas
 geopy
 google_auth_oauthlib
-googleapiclient.discovery
-google_auth_oauthlib.flow
+googleapiclient
