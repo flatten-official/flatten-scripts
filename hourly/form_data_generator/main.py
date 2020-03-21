@@ -7,7 +7,7 @@ from math import floor
 DATASTORE_KIND = 'form-user'
 
 GCS_BUCKET = 'flatten-271620.appspot.com'
-UPLOAD_FILE = 'form_data.js'
+UPLOAD_FILE = 'form_data.json'
 
 
 def upload_blob(bucket, data_string, destination_blob_name):
