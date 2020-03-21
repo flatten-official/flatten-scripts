@@ -67,7 +67,7 @@ def geocode_sheet(values_input):
     df.index = df.index - 2
     df = df.drop(0)
 
-    geolocator = Nominatim(user_agent="COVIDScript")
+    geolocator = Nominatim(user_agent="COVIDScript", timeout=3)
 
     name_exceptions = {"Kingston Frontenac Lennox & Addington": "Kingston",
                        "Zone 2 (Saint John area)": "Saint John",
