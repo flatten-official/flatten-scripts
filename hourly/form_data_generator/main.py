@@ -6,7 +6,7 @@ from math import floor
 
 DATASTORE_KIND = 'form-user'
 
-GCS_BUCKET = 'gs://flatten-271620.appspot.com'
+GCS_BUCKET = 'flatten-271620.appspot.com'
 UPLOAD_FILE = 'form_data.js'
 
 
