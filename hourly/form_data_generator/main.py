@@ -56,10 +56,10 @@ def main(event, context):
     try:
         user_map_data_json = download_blob(bucket, UPLOAD_FILE)
         map_data = json.loads(user_map_data_json)
-        query_since = float(map_data['timestamp'])
+        query_since = float(map_data['time'])
     except google.api_core.exceptions.NotFound:
         map_data = {'max': 0, 'fsa': {}}
-    map_data['timestamp'] = query_to
+    map_data['time'] = query_to
 
     query = datastore_client.query(kind=DS_KIND,
                                    # NB time in DB is int ms
@@ -70,20 +70,20 @@ def main(event, context):
         try:
             # make this get the latest form data...
             postcode = entity['form_responses']['postalCode']
-            symptoms = 1 if entity['probable'] else 0
-            at_risk = 1 if entity['at_risk'] else 0
+            pot = 1 if entity['probable'] else 0
+            risk = 1 if entity['at_risk'] else 0
         except KeyError as e:
             print(e)
             continue
 
         if postcode in map_data['fsa']:
             map_data['fsa'][postcode]['number_reports'] += 1
-            map_data['fsa'][postcode]['mild'] += symptoms
-            map_data['fsa'][postcode]['severe'] += at_risk
+            map_data['fsa'][postcode]['pot'] += pot
+            map_data['fsa'][postcode]['risk'] += risk
         else:
-            map_data['fsa'][postcode] = {'number_reports': 1, 'mild': symptoms, 'severe': at_risk}
+            map_data['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk}
         map_data['max'] = max(map_data['max'],
-                              map_data['fsa'][postcode]['mild'] + 2 * map_data['fsa'][postcode]['severe'])
+                              map_data['fsa'][postcode]['pot'] + 2 * map_data['fsa'][postcode]['risk'])
 
     json_str = json.dumps(map_data)
 
