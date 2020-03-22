@@ -18,7 +18,7 @@ SAMPLE_SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
 SAMPLE_RANGE_NAME = 'A1:AA1000'
 
 GCS_BUCKET = 'flatten-271620.appspot.com'
-UPLOAD_FILE = 'confirmed_data.js'
+UPLOAD_FILE = 'confirmed_data.json'
 
 def download_blob(bucket_name, source_blob_name):
     """Downloads a blob from the bucket."""
@@ -67,37 +67,45 @@ def geocode_sheet(values_input):
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     last_updated = "Data last accessed at: " + dt_string + ". Latest case reported on: " + str(df.iloc[-1]['date_report']) + "."
 
+    df = df[['health_region', 'province']]
+    df['health_region'] = df['health_region'] + ', ' + df['province']
+    #df.drop('province', axis=1, inplace=True)
+
+    df = df.groupby('health_region').size()
+    print(df)
+
     geolocator = Nominatim(user_agent="COVIDScript")
     geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
 
-    name_exceptions = {"Kingston Frontenac Lennox & Addington": "Kingston",
-                       "Zone 2 (Saint John area)": "Saint John",
-                       "Island": "Vancouver Island",
-                       "Interior": "Golden"}
+    name_exceptions = {"Kingston Frontenac Lennox & Addington, Ontario": "Kingston, Ontario",
+                       "Zone 2 (Saint John area), New Brunswick": "Saint John, New Brunswick",
+                       "Island, BC": "Vancouver Island, BC",
+                       "Interior, BC": "Golden, BC",
+                       "Grey Bruce, Ontario": "Owen Sound, Ontario"}
 
-    output = {}
+    output = {'last_updated': last_updated, 'max_cases': int(df.max()), 'confirmed_cases':[]}
 
-    for index, row in df.iterrows():
-        if row['health_region'] + ', ' + row['province'] in output:
-            output[row['health_region'] + ', ' + row['province']][0] += 1
+    for index, row in df.iteritems():
+        if str(index) == "Not Reported, Repatriated":
+            output['confirmed_cases'].append({'name': str(index), 'cases': int(df.get(key = str(index))), 'coord': ["N/A", "N/A"]})
+        elif str(index)[:12] == "Not Reported":
+            location = geocode(index[14:] + ', Canada')
+            output['confirmed_cases'].append({'name': str(index), 'cases': int(df.get(key = str(index))), 'coord': [location.latitude, location.longitude]})
+            print("Geocoded:" + str(index))
         else:
-            if row['health_region'] == "Not Reported" and row['province'] == "Repatriated":
-                output[row['health_region'] + ', ' + row['province']] = [1, "N/A", "N/A"]
-            elif row['health_region'] == "Not Reported":
-                location = geocode(row['province'] + ', Canada')
-                output[row['health_region'] + ', ' + row['province']] = [1, location.latitude, location.longitude]
+            if index in name_exceptions:
+                location = geocode(
+                    name_exceptions[str(index)] + ', Canada')
             else:
-                if row['health_region'] in name_exceptions:
-                    location = geocode(
-                        name_exceptions[row['health_region']] + ', ' + row['province'] + ', Canada')
-                else:
-                    location = geocode(row['health_region'] + ', ' + row['province'] + ', Canada')
+                location = geocode(str(index) + ', Canada')
 
-                if location is None:
-                    location = geocode(row['province'] + ', Canada')
-                output[row['health_region'] + ', ' + row['province']] = [1, location.latitude, location.longitude]
+            if location is None:
+                location = geocode(str(index).split(", ", 1)[1] + ', Canada')
 
-    return output, last_updated
+            output['confirmed_cases'].append({'name': str(index), 'cases': int(df.get(key = str(index))), 'coord': [location.latitude, location.longitude]})
+            print("Geocoded:" + str(index))
+
+    return output
 
 
 def upload_blob(bucket, data_string, destination_blob_name):
@@ -114,16 +122,10 @@ def upload_blob(bucket, data_string, destination_blob_name):
     )
 
 
-def output_json(output, last_updated):
-    real_output = []
-
-    for key in output:
-        real_output.append({"name": key, "cases": output[key][0], "coord": [output[key][1], output[key][2]]})
-
-    output_string = json.dumps(real_output)
+def output_json(output):
+    output_string = json.dumps(output)
     output_string = output_string.replace("Vancouver Coastal", "Vancouver")
     output_string = output_string.replace("'", r"\'")
-    output_string = "data_last_updated = '" + last_updated + "';\n" + "data_confirmed = '" + output_string + "';"
     with open(UPLOAD_FILE, 'w') as outfile:
         outfile.write(output_string)
 

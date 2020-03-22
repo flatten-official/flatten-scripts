@@ -1,13 +1,14 @@
 from google.cloud import datastore, storage
-import time
+import datetime
 import google
 import json
 from math import floor
+import os
 
-DATASTORE_KIND = 'form-user'
-
-GCS_BUCKET = 'flatten-271620.appspot.com'
-UPLOAD_FILE = 'form_data.json'
+GCS_BUCKET = os.environ['GCS_BUCKET']
+UPLOAD_FILE = os.environ['UPLOAD_FILE']
+DS_NAMESPACE =  os.environ['DS_NAMESPACE']
+DS_KIND = os.environ['DS_KIND']
 
 
 def upload_blob(bucket, data_string, destination_blob_name):
@@ -45,43 +46,44 @@ def main(event, context):
     Processes the info in the datastore into
     """
 
-    datastore_client = datastore.Client()
+    datastore_client = datastore.Client(namespace=DS_NAMESPACE)
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(GCS_BUCKET)
 
     query_since = 0
-    query_to = floor(time.time())
+    query_to = floor(datetime.datetime.utcnow().timestamp())
     try:
         user_map_data_json = download_blob(bucket, UPLOAD_FILE)
         map_data = json.loads(user_map_data_json)
-        query_since = map_data['timestamp']
+        query_since = float(map_data['time'])
     except google.api_core.exceptions.NotFound:
         map_data = {'max': 0, 'fsa': {}}
-    map_data['timestamp'] = query_to
+    map_data['time'] = query_to
 
-    query = datastore_client.query(kind=DATASTORE_KIND,
+    query = datastore_client.query(kind=DS_KIND,
                                    # NB time in DB is int ms
-                                   filters=(('timestamp', '>=', query_since * 1000),
-                                            ('timestamp', '<', query_to * 1000))
+                                   filters=(('timestamp', '>=', int(query_since * 1000)),
+                                            ('timestamp', '<', int(query_to * 1000)))
                                    )
     for entity in query.fetch():
         try:
             # make this get the latest form data...
-            postcode = entity['form_responses']['postcode']
-            symptoms = 1 if entity['probable'] else 0
-            at_risk = 1 if entity['at_risk'] else 0
+            postcode = entity['form_responses']['postalCode']
+            pot = 1 if entity['probable'] else 0
+            risk = 1 if entity['at_risk'] else 0
         except KeyError as e:
+            print(e)
             continue
 
         if postcode in map_data['fsa']:
             map_data['fsa'][postcode]['number_reports'] += 1
-            map_data['fsa'][postcode]['mild'] += symptoms
-            map_data['fsa'][postcode]['severe'] += at_risk
+            map_data['fsa'][postcode]['pot'] += pot
+            map_data['fsa'][postcode]['risk'] += risk
         else:
-            map_data['fsa'][postcode] = {'number_reports': 1, 'mild': symptoms, 'severe': at_risk}
+            map_data['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk}
         map_data['max'] = max(map_data['max'],
-                              map_data['fsa'][postcode]['mild'] + 2 * map_data['fsa'][postcode]['severe'])
+                              map_data['fsa'][postcode]['pot'] + 2 * map_data['fsa'][postcode]['risk'])
 
     json_str = json.dumps(map_data)
 
