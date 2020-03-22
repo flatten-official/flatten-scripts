@@ -84,7 +84,8 @@ def geocode_sheet(values_input):
                        "Grey Bruce, Ontario": "Park Head, Ontario",
                        "NWT, NWT": "Northwest Territories",
                        "Haliburton Kawartha Pineridge, Ontario": "Haliburton, Ontario",
-                       "Labrador-Grenfell, NL": "Labrador City, NL"
+                       "Labrador-Grenfell, NL": "Labrador City, NL",
+                       "Fraser, BC": "Fraser Valley, BC"
                        }
 
     output = {'last_updated': last_updated, 'max_cases': int(df.max()), 'confirmed_cases':[]}
