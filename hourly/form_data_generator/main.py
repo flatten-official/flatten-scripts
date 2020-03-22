@@ -56,10 +56,10 @@ def main(event, context):
     try:
         user_map_data_json = download_blob(bucket, UPLOAD_FILE)
         map_data = json.loads(user_map_data_json)
-        query_since = float(map_data['timestamp'])
+        query_since = float(map_data['time'])
     except google.api_core.exceptions.NotFound:
         map_data = {'max': 0, 'fsa': {}}
-    map_data['timestamp'] = query_to
+    map_data['time'] = query_to
 
     query = datastore_client.query(kind=DS_KIND,
                                    # NB time in DB is int ms
