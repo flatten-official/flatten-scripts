@@ -14,20 +14,10 @@ def main(event, context):
 
     print("Geocoding data...")
 
-    output = None
-    last_updated = None
-
-    for i in range(4):
-        try:
-            output, last_updated = script.geocode_sheet(data)
-        except:
-            print("Attempt " + str(i + 1) + " failed.")
-            time.sleep(2)
-
-    output, last_updated = script.geocode_sheet(data)
+    output = script.geocode_sheet(data)
 
     print("Outputting data to file...")
-    script.output_json(output, last_updated)
+    script.output_json(output)
     print("Done")
 
 
