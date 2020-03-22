@@ -15,7 +15,7 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
 SAMPLE_SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
-SAMPLE_RANGE_NAME = 'A1:AA1000'
+SAMPLE_RANGE_NAME = 'Cases'
 
 GCS_BUCKET = 'flatten-271620.appspot.com'
 UPLOAD_FILE = 'confirmed_data.json'
@@ -62,17 +62,16 @@ def geocode_sheet(values_input):
     df.index = df.index - 2
     df = df.drop(0)
 
+    print(df.iloc[-1])
 
     now = datetime.now()
-    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+    dt_string = now.strftime("%d/%m/%Y %H:%M")
     last_updated = "Data last accessed at: " + dt_string + ". Latest case reported on: " + str(df.iloc[-1]['date_report']) + "."
 
     df = df[['health_region', 'province']]
     df['health_region'] = df['health_region'] + ', ' + df['province']
-    #df.drop('province', axis=1, inplace=True)
 
     df = df.groupby('health_region').size()
-    print(df)
 
     geolocator = Nominatim(user_agent="COVIDScript")
     geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
