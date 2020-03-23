@@ -65,6 +65,7 @@ def geocode_sheet(values_input):
 
     now = datetime.now()
     dt_string = now.strftime("%d/%m/%Y %H:%M")
+    dt_string.replace('/', '-')
     last_updated = "Data last accessed at: " + dt_string + ". Latest case reported on: " + str(df.iloc[-1]['date_report']) + "."
 
     df = df[['health_region', 'province']]
@@ -79,7 +80,12 @@ def geocode_sheet(values_input):
                        "Zone 2 (Saint John area), New Brunswick": "Saint John, New Brunswick",
                        "Island, BC": "Vancouver Island, BC",
                        "Interior, BC": "Golden, BC",
-                       "Grey Bruce, Ontario": "Owen Sound, Ontario"}
+                       "Grey Bruce, Ontario": "Park Head, Ontario",
+                       "NWT, NWT": "Northwest Territories",
+                       "Haliburton Kawartha Pineridge, Ontario": "Haliburton, Ontario",
+                       "Labrador-Grenfell, NL": "Labrador City, NL",
+                       "Fraser, BC": "Fraser Valley, BC"
+                       }
 
     output = {'last_updated': last_updated, 'max_cases': int(df.max()), 'confirmed_cases':[]}
 
@@ -98,6 +104,7 @@ def geocode_sheet(values_input):
                 location = geocode(str(index) + ', Canada')
 
             if location is None:
+                print(index)
                 location = geocode(str(index).split(", ", 1)[1] + ', Canada')
 
             output['confirmed_cases'].append({'name': str(index), 'cases': int(df.get(key = str(index))), 'coord': [location.latitude, location.longitude]})
