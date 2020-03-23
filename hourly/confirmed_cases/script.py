@@ -33,9 +33,7 @@ def download_blob(bucket_name, source_blob_name):
 
 def get_spreadsheet_data():
 
-    api_key = download_blob("flatten_private", "credentials/sheets_api_key.txt")
-
-    service = build('sheets', 'v4', developerKey=api_key)
+    service = build('sheets', 'v4', developerKey=SHEETS_API_KEY)
 
     # Call the Sheets API
     sheet = service.spreadsheets()
