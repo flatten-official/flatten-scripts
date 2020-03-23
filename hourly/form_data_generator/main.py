@@ -25,22 +25,6 @@ def upload_blob(bucket, data_string, destination_blob_name):
     )
 
 
-def download_blob(bucket, destination_file_name):
-    """Downloads a blob from the bucket."""
-
-    blob = bucket.blob(destination_file_name)
-
-    data_string = blob.download_as_string()
-
-    print(
-        "File {} downloaded from {}.".format(
-            data_string, destination_file_name
-        )
-    )
-
-    return data_string
-
-
 def main(event, context):
     """
     Processes the info in the datastore into
@@ -51,21 +35,9 @@ def main(event, context):
     storage_client = storage.Client()
     bucket = storage_client.bucket(GCS_BUCKET)
 
-    query_since = 0
-    query_to = floor(datetime.datetime.utcnow().timestamp())
-    try:
-        user_map_data_json = download_blob(bucket, UPLOAD_FILE)
-        map_data = json.loads(user_map_data_json)
-        query_since = float(map_data['time'])
-    except google.api_core.exceptions.NotFound:
-        map_data = {'max': 0, 'fsa': {}}
-    map_data['time'] = query_to
+    map_data = {'time': floor(datetime.datetime.utcnow().timestamp()), 'max': 0, 'fsa': {}}
 
-    query = datastore_client.query(kind=DS_KIND,
-                                   # NB time in DB is int ms
-                                   filters=(('timestamp', '>=', int(query_since * 1000)),
-                                            ('timestamp', '<', int(query_to * 1000)))
-                                   )
+    query = datastore_client.query(kind=DS_KIND)
     for entity in query.fetch():
         try:
             # make this get the latest form data...
@@ -73,7 +45,6 @@ def main(event, context):
             pot = 1 if entity['probable'] else 0
             risk = 1 if entity['at_risk'] else 0
         except KeyError as e:
-            print(e)
             continue
 
         if postcode in map_data['fsa']:
