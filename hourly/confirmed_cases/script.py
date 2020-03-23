@@ -131,8 +131,6 @@ def output_json(output):
     output_string = json.dumps(output)
     output_string = output_string.replace("Vancouver Coastal", "Vancouver")
     output_string = output_string.replace("'", r"\'")
-    with open(UPLOAD_FILE, 'w') as outfile:
-        outfile.write(output_string)
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(GCS_BUCKET)
