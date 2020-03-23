@@ -9,16 +9,17 @@ import json
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 from datetime import datetime
+import os
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
-SAMPLE_RANGE_NAME = 'Cases'
-
-GCS_BUCKET = 'flatten-271620.appspot.com'
-UPLOAD_FILE = 'confirmed_data.json'
+SPREADSHEET_ID = os.environ['SPREADSHEET_ID']
+SPREADSHEET_RANGE = 'Cases'
+GCS_BUCKET = os.environ['GCS_BUCKET']
+UPLOAD_FILE = os.environ['UPLOAD_FILE']
+SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
 
 def download_blob(bucket_name, source_blob_name):
     """Downloads a blob from the bucket."""
@@ -38,8 +39,8 @@ def get_spreadsheet_data():
 
     # Call the Sheets API
     sheet = service.spreadsheets()
-    result_input = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                      range=SAMPLE_RANGE_NAME).execute()
+    result_input = sheet.values().get(spreadsheetId=SPREADSHEET_ID,
+                                      range=SPREADSHEET_RANGE).execute()
     values_input = result_input.get('values', [])
 
     # Part of the sheets API, even if undefined. Do not remove
