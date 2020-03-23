@@ -38,14 +38,16 @@ def main(event, context):
     map_data = {'time': floor(datetime.datetime.utcnow().timestamp()), 'max': 0, 'fsa': {}}
 
     query = datastore_client.query(kind=DS_KIND)
+    total_responses = 0
     for entity in query.fetch():
         try:
             # make this get the latest form data...
-            postcode = entity['form_responses']['postalCode']
+            postcode = entity['form_responses']['postalCode'].upper()
             pot = 1 if entity['probable'] else 0
             risk = 1 if entity['at_risk'] else 0
         except KeyError as e:
             continue
+        total_responses+=1
 
         if postcode in map_data['fsa']:
             map_data['fsa'][postcode]['number_reports'] += 1
@@ -55,6 +57,7 @@ def main(event, context):
             map_data['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk}
         map_data['max'] = max(map_data['max'],
                               map_data['fsa'][postcode]['pot'] + 2 * map_data['fsa'][postcode]['risk'])
+    map_data['total_responses'] = total_responses
 
     json_str = json.dumps(map_data)
 
