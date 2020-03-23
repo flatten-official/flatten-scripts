@@ -47,7 +47,7 @@ def main(event, context):
             risk = 1 if entity['at_risk'] else 0
         except KeyError as e:
             continue
-        total_responses+=1
+        total_responses += 1
 
         if postcode in map_data['fsa']:
             map_data['fsa'][postcode]['number_reports'] += 1
