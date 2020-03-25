@@ -2,12 +2,8 @@
 The scripts that parse, format and run the flatten data behind the scenes. 
 
 ## Repo Structure
-Flatten has three categories of data that requires hourly updating:
-- Confirmed COVID19 Cases (tested positive)
-- Potential Cases (reported relevant symptons)
-- Vulnerable Populations (reported immunocompromised/elder than 60)
 
-The generator scripts for these categories of data are in `\hourly` folder.
+`\hourly` folder contains scripts for hourly updating data, including confirmed cases, potential cases and vulnerable populations. Both the later two numbers are extracted from flatten.ca forms and are mapped by 3-digit postal code area.
 
 `\others` folder contains scripts for static data, including postal code boundaries and random form samples.
 
