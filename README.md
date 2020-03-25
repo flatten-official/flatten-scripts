@@ -1,5 +1,5 @@
 # Flatten-Scripts
-The scripts that parse, format and run the flatten data behind the scenes. 
+The scripts that parse, format and run the flatten data behind the scenes of flatten.ca/heat-map
 
 ## Repo Structure
 
