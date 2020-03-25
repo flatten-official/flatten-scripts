@@ -1,12 +1,11 @@
 from google.cloud import datastore, storage
 import datetime
-import google
 import json
 from math import floor
 import os
 
 GCS_BUCKET = os.environ['GCS_BUCKET']
-UPLOAD_FILE = os.environ['UPLOAD_FILE']
+UPLOAD_FILE = os.environ['UPLOAD_FILE_FORM']
 DS_NAMESPACE =  os.environ['DS_NAMESPACE']
 DS_KIND = os.environ['DS_KIND']
 
@@ -25,7 +24,7 @@ def upload_blob(bucket, data_string, destination_blob_name):
     )
 
 
-def main(event, context):
+def main():
     """
     Processes the info in the datastore into
     """

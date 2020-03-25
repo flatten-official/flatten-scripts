@@ -1,10 +1,6 @@
 from google.cloud import storage
 import pandas as pd
 from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow, Flow
-from google.auth.transport.requests import Request
-import os
-import pickle
 import json
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
@@ -20,7 +16,7 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 SPREADSHEET_ID = os.environ['SPREADSHEET_ID']
 SPREADSHEET_RANGE = 'Cases'
 GCS_BUCKET = os.environ['GCS_BUCKET']
-UPLOAD_FILE = os.environ['UPLOAD_FILE']
+UPLOAD_FILE = os.environ['UPLOAD_FILE_CONFIRMED']
 SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
 
 def download_blob(bucket_name, source_blob_name):
@@ -140,15 +136,17 @@ def output_json(output):
 
 
 
-def run(event, context):
+# def main(event, context):
+def main():
+
     print("Getting data from spreadsheet...")
 
-    data = script.get_spreadsheet_data()
+    data = get_spreadsheet_data()
 
     print("Geocoding data...")
 
-    output = script.geocode_sheet(data)
+    output = geocode_sheet(data)
 
     print("Outputting data to file...")
-    script.output_json(output)
+    output_json(output)
     print("Done")

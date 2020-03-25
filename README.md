@@ -83,3 +83,8 @@ gcloud projects add-iam-policy-binding PROJECT-ID \
 
 Test with
 `gcloud pubsub topics publish TOPIC --message "hello"`
+
+
+### Environment Variables
+
+You can set and update environment variables as described [here](https://cloud.google.com/run/docs/configuring/environment-variables).
