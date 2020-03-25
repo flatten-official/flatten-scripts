@@ -1,5 +1,5 @@
 # Flatten-Scripts
-The scripts that parse, format and run the flatten data behind the scenes of [flatten.ca/heat-map](flatten.ca/heat-map).
+The scripts that parse, format and run the data behind the scenes of [flatten.ca/heat-map](flatten.ca/heat-map).
 
 ## Repo Structure
 
@@ -23,8 +23,9 @@ Both the later two numbers are extracted from flatten.ca forms and are mapped by
 
 - Install the following Python libraries: `pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib google-cloud-storage google-cloud-datastore`
 
-## Running the app
-- Run `main.py` for `\hourly` data
+## Running a script
+Run the script you want to with Python 3. In the hourly folders, always run `main.py`.
+
 
 ## Contact
 Martin, Will, Rupert, Ivan, Charlie
