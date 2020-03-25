@@ -11,6 +11,8 @@ from geopy.extra.rate_limiter import RateLimiter
 from datetime import datetime
 import os
 
+import time
+
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
@@ -87,14 +89,14 @@ def geocode_sheet(values_input):
                        "Fraser, BC": "Fraser Valley, BC"
                        }
 
-    output = {'last_updated': last_updated, 'max_cases': int(df.max()), 'confirmed_cases':[]}
+    output = {'last_updated': last_updated, 'max_cases': int(df.max()), 'confirmed_data_generator':[]}
 
     for index, row in df.iteritems():
         if str(index) == "Not Reported, Repatriated":
-            output['confirmed_cases'].append({'name': str(index), 'cases': int(df.get(key = str(index))), 'coord': ["N/A", "N/A"]})
+            output['confirmed_data_generator'].append({'name': str(index), 'cases': int(df.get(key = str(index))), 'coord': ["N/A", "N/A"]})
         elif str(index)[:12] == "Not Reported":
             location = geocode(index[14:] + ', Canada')
-            output['confirmed_cases'].append({'name': str(index), 'cases': int(df.get(key = str(index))), 'coord': [location.latitude, location.longitude]})
+            output['confirmed_data_generator'].append({'name': str(index), 'cases': int(df.get(key = str(index))), 'coord': [location.latitude, location.longitude]})
             print("Geocoded:" + str(index))
         else:
             if index in name_exceptions:
@@ -107,7 +109,7 @@ def geocode_sheet(values_input):
                 print(index)
                 location = geocode(str(index).split(", ", 1)[1] + ', Canada')
 
-            output['confirmed_cases'].append({'name': str(index), 'cases': int(df.get(key = str(index))), 'coord': [location.latitude, location.longitude]})
+            output['confirmed_data_generator'].append({'name': str(index), 'cases': int(df.get(key = str(index))), 'coord': [location.latitude, location.longitude]})
             print("Geocoded:" + str(index))
 
     return output
@@ -135,3 +137,18 @@ def output_json(output):
     storage_client = storage.Client()
     bucket = storage_client.bucket(GCS_BUCKET)
     upload_blob(bucket, output_string, UPLOAD_FILE)
+
+
+
+def run(event, context):
+    print("Getting data from spreadsheet...")
+
+    data = script.get_spreadsheet_data()
+
+    print("Geocoding data...")
+
+    output = script.geocode_sheet(data)
+
+    print("Outputting data to file...")
+    script.output_json(output)
+    print("Done")
