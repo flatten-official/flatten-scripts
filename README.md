@@ -19,7 +19,9 @@ Both the later two numbers are extracted from flatten.ca forms and are mapped by
 
 ## Setting up
 
-- As mentionned here: https://cloud.google.com/docs/authentication/production?hl=en_GB. A service account needs to be created (ask Martin or Arthur) and then environment variables need to be set. Follow tutorials.
+- Install Google Cloud SDK and in the `[default]` confircuration login with your <name>@flatten.ca account. Tutorial: https://cloud.google.com/sdk/docs/quickstarts.
+            
+- 
 
 - Install the following Python libraries: `pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib google-cloud-storage google-cloud-datastore`
 
