@@ -1,13 +1,11 @@
 # Flatten-Scripts
-The scripts that parse, format and run the flatten data behind the scenes. 
+The scripts that parse, format and run the data behind the scenes of [flatten.ca/heat-map](flatten.ca/heat-map).
 
 ## Repo Structure
-Flatten has three categories of data that requires hourly updating:
-- Confirmed COVID19 Cases (tested positive)
-- Potential Cases (reported relevant symptons)
-- Vulnerable Populations (reported immunocompromised/elder than 60)
 
-The generator scripts for these categories of data are in `\hourly` folder.
+`\hourly` folder contains scripts for hourly updating data, including confirmed cases, potential cases and vulnerable populations. 
+
+Both the later two numbers are extracted from flatten.ca forms and are mapped by 3-digit postal code area.
 
 `\others` folder contains scripts for static data, including postal code boundaries and random form samples.
 
@@ -21,12 +19,13 @@ The generator scripts for these categories of data are in `\hourly` folder.
 
 ## Setting up
 
-As mentionned here: https://cloud.google.com/docs/authentication/production?hl=en_GB. A service account needs to be created (ask Martin or Arthur) and then environment variables need to be set. Follow tutorials.
+- As mentionned here: https://cloud.google.com/docs/authentication/production?hl=en_GB. A service account needs to be created (ask Martin or Arthur) and then environment variables need to be set. Follow tutorials.
 
-Install the following Python libraries: `pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib google-cloud-storage google-cloud-datastore`
+- Install the following Python libraries: `pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib google-cloud-storage google-cloud-datastore`
 
-## Running the app
-- Run main.py for `\hourly` data
+## Running a script
+Run the script you want to with Python 3. In the hourly folders, always run `main.py`.
+
 
 ## Contact
 Martin, Will, Rupert, Ivan, Charlie
