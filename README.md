@@ -3,7 +3,9 @@ The scripts that parse, format and run the flatten data behind the scenes.
 
 ## Repo Structure
 
-`\hourly` folder contains scripts for hourly updating data, including confirmed cases, potential cases and vulnerable populations. Both the later two numbers are extracted from flatten.ca forms and are mapped by 3-digit postal code area.
+`\hourly` folder contains scripts for hourly updating data, including confirmed cases, potential cases and vulnerable populations. 
+
+Both the later two numbers are extracted from flatten.ca forms and are mapped by 3-digit postal code area.
 
 `\others` folder contains scripts for static data, including postal code boundaries and random form samples.
 
@@ -22,7 +24,7 @@ As mentionned here: https://cloud.google.com/docs/authentication/production?hl=e
 Install the following Python libraries: `pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib google-cloud-storage google-cloud-datastore`
 
 ## Running the app
-- Run main.py for `\hourly` data
+- Run `main.py` for `\hourly` data
 
 ## Contact
 Martin, Will, Rupert, Ivan, Charlie
