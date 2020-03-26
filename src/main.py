@@ -43,7 +43,7 @@ def index():
     if name in run:
         print(f'Running {name}')
         try:
-            run[name].main(pubsub_message['attributes'] if 'attributes' in pubsub_message else None)
+            run[name].main(pubsub_message['attributes'] if 'attributes' in pubsub_message else {})
         except Exception as e:
             # failure
             print(e)
