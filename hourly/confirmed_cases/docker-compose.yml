@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  confirmed_cases:
+    container_name: confirmed_cases
+    restart: always
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./:/confirmed_cases

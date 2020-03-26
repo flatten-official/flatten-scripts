@@ -1,3 +1,5 @@
+from config import GCS_BUCKET, UPLOAD_FILE, SPREADSHEET_ID, SHEETS_API_KEY
+
 from google.cloud import storage
 import pandas as pd
 from googleapiclient.discovery import build
@@ -14,12 +16,7 @@ import os
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
-# The ID and range of a sample spreadsheet.
-SPREADSHEET_ID = os.environ['SPREADSHEET_ID']
-SPREADSHEET_RANGE = 'Cases'
-GCS_BUCKET = os.environ['GCS_BUCKET']
-UPLOAD_FILE = os.environ['UPLOAD_FILE']
-SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
+SPREADSHEET_RANGE = "Cases"
 
 def download_blob(bucket_name, source_blob_name):
     """Downloads a blob from the bucket."""
@@ -50,16 +47,15 @@ def get_spreadsheet_data():
 
 def geocode_sheet(values_input):
     df = pd.DataFrame(values_input)
-    df = df.drop([0, 1])
 
-    column_names = []
+    # deletes rows where all values are NaN
+    df = df.set_index(0)
+    df = df.dropna(how="all")
+    df.reset_index(inplace=True)
 
-    for item in df.iloc[0]:
-        column_names.append(item)
-
-    df.columns = column_names
-    df.index = df.index - 2
-    df = df.drop(0)
+    # sets the first row to the column headers
+    df.columns = df.iloc[0]
+    df = df[1:]
 
     print(df.iloc[-1])
 
@@ -73,6 +69,7 @@ def geocode_sheet(values_input):
 
     df = df.groupby('health_region').size()
 
+    # this piece of code gives an error
     geolocator = Nominatim(user_agent="COVIDScript")
     geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
 
