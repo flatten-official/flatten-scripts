@@ -33,17 +33,21 @@ def index():
 
     pubsub_message = envelope['message']
 
-    name = 'World'
     if isinstance(pubsub_message, dict) and 'data' in pubsub_message:
         name = base64.b64decode(pubsub_message['data']).decode('utf-8').strip()
+    else:
+        return ('', 400) # error
+
+    print(pubsub_message)
 
     if name in run:
         print(f'Running {name}')
         try:
-            run[name].main()
+            run[name].main(pubsub_message['attributes'] if 'attributes' in pubsub_message else None)
         except Exception as e:
             # failure
             print(e)
+            return f'Error in instance: {e}', 400
     else:
         print(f'No such name {name} in modules to be run - pubsub message incorrect.')
 

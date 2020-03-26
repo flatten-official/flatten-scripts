@@ -135,9 +135,7 @@ def output_json(output):
     upload_blob(bucket, output_string, UPLOAD_FILE)
 
 
-
-# def main(event, context):
-def main():
+def main(message_attributes):
 
     print("Getting data from spreadsheet...")
 

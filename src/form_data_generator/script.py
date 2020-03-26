@@ -24,7 +24,7 @@ def upload_blob(bucket, data_string, destination_blob_name):
     )
 
 
-def main():
+def main(message_attributes):
     """
     Processes the info in the datastore into
     """
