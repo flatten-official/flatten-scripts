@@ -4,7 +4,9 @@ Backend scripts for the FLATTEN project.
 
 ## Project Structure
 
-Each folder in this repository represents a microservice on google cloud run. The root directory contains configuration common to all projects.
+Each folder in this repository represents a microservice. These run on a unified google cloud run container.
+
+The root directory contains configuration common to all projects.
 
 The project is structured as follows:
 
@@ -12,15 +14,15 @@ The project is structured as follows:
 src/
     main.py # runs the flask server that gets triggered by pubsub
     project1/
-        main.py # contains the main() function which is picked up by the overall main.py and run by the flask server.
-        other_import.py # contains the project specific code
+        script.py # contains the main() function which is picked up by the overall main.py and run by the flask server.
+        other_import.py # contains the project specific code. can import from main.py as import other_import.py
     project2/
-        main.py
-requirements.txt # contains the project requirements
+        script.py
+requirements.txt # contains the project requirements. please include requirements for each script
 ```
 
-NB WIP DOCS
-remember to include a main template
+Each project directory contains a `script.py` file with a `main` function that is called when your service is triggered.
+The `main` function is passed the message attributes.
 
 ## Setup
 
@@ -63,9 +65,6 @@ Subscribe the service to recieve messages from the topic
 
 `gcloud projects add-iam-policy-binding flatten-staging-271921 --member=serviceAccount:service-233853318753@gcp-sa-pubsub.iam.gserviceaccount.com --role=roles/iam.serviceAccountTokenCreator`
 
-gcloud beta pubsub subscriptions create cloud-run-scripts-pubsub --topic flatten-scripts \
-   --push-endpoint=https://flatten-scripts-6eoeawk53a-ue.a.run.app/ \
-   --push-auth-service-account=run-scripts-pubsub@flatten-staging-271921.iam.gserviceaccount.com
 ```
 gcloud beta pubsub subscriptions create SUBSCRIPTION-ID --topic TOPIC-NAME \
    --push-endpoint=SERVICE-URL/ \
