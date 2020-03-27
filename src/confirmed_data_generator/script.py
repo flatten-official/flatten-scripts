@@ -18,6 +18,7 @@ SPREADSHEET_ID = "1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo"
 GCS_BUCKET = "flatten-staging-271921.appspot.com"
 UPLOAD_FILE = "confirmed_data.json"
 SHEETS_API_KEY = "AIzaSyDs-bNN44Es1zMpL0pAO4qsnOdz9g4zIok"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "confirmed_data_generator/credentials.json"
 
 def download_blob(bucket_name, source_blob_name):
     """Downloads a blob from the bucket."""
@@ -48,16 +49,15 @@ def get_spreadsheet_data():
 
 def geocode_sheet(values_input):
     df = pd.DataFrame(values_input)
-    df = df.drop([0, 1])
 
-    column_names = []
+    # deletes rows where all values are NaN
+    df = df.set_index(0)
+    df = df.dropna(how="all")
+    df.reset_index(inplace=True)
 
-    for item in df.iloc[0]:
-        column_names.append(item)
-
-    df.columns = column_names
-    df.index = df.index - 2
-    df = df.drop(0)
+    # sets the first row to the column headers
+    df.columns = df.iloc[0]
+    df = df[1:]
 
     print(df.iloc[-1])
 
@@ -71,7 +71,7 @@ def geocode_sheet(values_input):
 
     df = df.groupby('health_region').size()
 
-    geolocator = Nominatim(user_agent="COVIDScript")
+    geolocator = Nominatim(user_agent="COVIDScript", timeout=3)
     geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
 
     name_exceptions = {"Kingston Frontenac Lennox & Addington, Ontario": "Kingston, Ontario",
@@ -130,13 +130,12 @@ def output_json(output):
     output_string = output_string.replace("Vancouver Coastal", "Vancouver")
     output_string = output_string.replace("'", r"\'")
 
+    # stops here because I need to set the GOOGLE_APPLICATION_CREDENTIALS
     storage_client = storage.Client()
     bucket = storage_client.bucket(GCS_BUCKET)
     upload_blob(bucket, output_string, UPLOAD_FILE)
 
-
 def main(message_attributes):
-
     print("Getting data from spreadsheet...")
 
     data = get_spreadsheet_data()
@@ -144,6 +143,16 @@ def main(message_attributes):
     print("Geocoding data...")
 
     output = geocode_sheet(data)
+
+    # output = {
+    #     "confirmed_data_generator": [
+    #         {
+    #             "name": "Yifei Zhang",
+    #             "cases": 1,
+    #             "coord": [2.0, 3.0]
+    #         }
+    #     ]
+    # }
 
     print("Outputting data to file...")
     output_json(output)
