@@ -1,22 +1,20 @@
-"""
+'''
 covidOntario.py
 A script to get up to date Covid-19 Data from the public health units of Ontario.
 Author: Ivan Nesterovic
 Born: 2020-03-25
-"""
+'''
 
 ## NOTE: Some Public Health units have put their data in text so text parsing is necessary, this may break and require checking over.
 
-import json
-from datetime import date
-
 import bs4
 import requests
+import json
 from word2number import w2n
+from datetime import date
 
-
-def get_soup(region):
-    url_region = {
+def getSoup(region):
+    urlRegion = {
         'Algoma': "http://www.algomapublichealth.com/disease-and-illness/infectious-diseases/novel-coronavirus/",
         'Brant County': "https://www.bchu.org/ServicesWeProvide/InfectiousDiseases/Pages/coronavirus.aspx",
         'Chatham Kent': "https://ckphu.com/current-situation-in-chatham-kent-and-surrounding-areas/",
@@ -52,22 +50,20 @@ def get_soup(region):
         "Windsor-Essex County": "https://www.wechu.org/cv/local-updates",
         "York": "https://www.york.ca/wps/portal/yorkhome/health/yr/infectiousdiseasesandprevention/covid19/covid19/!ut/p/z1/jZDfT4MwEMf_Fh94lB6Mjc63ijrKtmBi3LAvpoMOMKwlLYPEv95Ol5glit7D5e7yuR_fQwxliEne1yXvaiV5Y_MXNnulZEHjeAlJGuAICKQk8UMM93MPbT8B-MUIIPaf_hGAjY9P_lpgFfh6Ha1LxFreVde13CuUWS9yq_FoitoIboThsmi16IU8KUdZrvq68ObfwRaxy1WLJxwA3SQh2XgpBHRyBnw_mMVeBAnEKQb6ED5O73DswdI_A-Nqykbtvh5P5G6C7dla7IUW2j1qW666rjU3DjgwDINbKlU2ws3VwYGfWiplOpRdkqg9PGfvq9s5fZs2_YpcfQDml0gV/dz/d5/L2dBISEvZ0FBIS9nQSEh/#.XnvckW57lTY"
     }
-    page = requests.get(url_region[region])
+    page = requests.get(urlRegion[region])
     return bs4.BeautifulSoup(page.content, 'html.parser')
 
-
-def get_algoma_data():
-    soup = get_soup('Algoma')
-    table = soup.find("table", {'style': "width: 300px; height: 25px; float: left;"})
+def getAlgomaData():
+    soup = getSoup('Algoma')
+    table = soup.find("table", {'style': "width: 300px; height: 25px; float: left;" })
     algomaData = {}
     for row in table.find_all("tr"):
         dataRow = [cell.get_text(strip=True) for cell in row.find_all("td")]
         algomaData[dataRow[0]] = int(dataRow[1])
     return algomaData
 
-
 def getBrantCountyData():
-    soup = get_soup('Brant County')
+    soup = getSoup('Brant County')
     tables = soup.find_all("table", {"class": "ms-rteTable-default"})
     brantCountyData = {}
     rows = []
@@ -78,9 +74,8 @@ def getBrantCountyData():
     brantCountyData["Positive"] = int(rows[0][1][1:])
     return brantCountyData
 
-
 def getChathamKentData():
-    soup = get_soup('Chatham Kent')
+    soup = getSoup('Chatham Kent')
     chathamKentData = {}
     table1 = soup.find("table", {"id": "tablepress-3"})
     table2 = soup.find("table", {"id": "tablepress-4"})
@@ -96,58 +91,52 @@ def getChathamKentData():
     chathamKentData["Negative"] = chathamKentData["Tested"] - chathamKentData["Positive"] - chathamKentData["Pending"]
     return chathamKentData
 
-
 def getDurhamData():
-    soup = get_soup('Durham')
+    soup = getSoup('Durham')
     table = soup.find("table", {"class": "datatable"})
-    durhamData = {"Positive": len(table.find_all("tr")) - 1}
+    durhamData = {}
+    durhamData["Positive"] = len(table.find_all("tr")) - 1
     return durhamData
 
-
 def getEasternOntarioData():
-    soup = get_soup("Eastern Ontario")
+    soup = getSoup("Eastern Ontario")
     table = soup.find("table", {"class": "table table-bordered"})
-    easternOntarioData = {"Positive": len(table.find_all("tr")) - 1}
+    easternOntarioData = {}
+    easternOntarioData["Positive"] = len(table.find_all("tr")) - 1
     return easternOntarioData
 
-
-# TODO find the data for these regions ------------------------------
+#TODO find the data for these regions ------------------------------
 
 # def getGreyBruceData():
 
 # def getHalimandNorfolkData():
 
-# -------------------------------------------------------------------
+#-------------------------------------------------------------------
 
 def getHaliburtonKawarthaPineRidgeData():
-    soup = get_soup('Haliburton, Kawartha, Pine Ridge District')
+    soup = getSoup('Haliburton, Kawartha, Pine Ridge District')
     table = soup.find("table", {"class": "wp-block-advgb-table aligncenter advgb-table-frontend is-style-stripes"})
     positive = int(table.find_all("tr")[1].find_all("td")[-1].get_text(strip=True))
     return {"Positive": positive}
 
-
 def getHaltonData():
-    soup = get_soup('Halton')
+    soup = getSoup('Halton')
     data = {"Positive": len(soup.find("table", {"class": "table table-striped"}).find_all("tr")) - 1}
     return data
 
-
 def getHamiltonData():
-    soup = get_soup("Hamilton")
+    soup = getSoup("Hamilton")
     div = soup.find("div", {"class": "coh-column fourth first"})
     data = {"Positive": int(div.find("p").find("strong").text.split()[-1])}
     return data
-
-
+    
 def getHastingsPrinceEdwardData():
-    soup = get_soup("Hastings and Prince Edward Counties")
-    data = {"Positive": len(
-        soup.find("table", {"class": "has-subtle-pale-blue-background-color has-background"}).find_all("tr")) - 1}
+    soup = getSoup("Hastings and Prince Edward Counties")
+    data = {"Positive": len(soup.find("table", {"class": "has-subtle-pale-blue-background-color has-background"}).find_all("tr")) - 1}
     return data
 
-
 def getHuronData():
-    soup = get_soup("Huron and Perth")
+    soup = getSoup("Huron and Perth")
     table = soup.find("table", {"style": "width: 80%;"})
     data = {}
     rows = table.find_all("tr")
@@ -157,9 +146,8 @@ def getHuronData():
         data[headers[i]] = elems[i]
     return data
 
-
 def getKingstonFrontenacLennoxAddingtonData():
-    soup = get_soup("Kingston Frontenac Lennox and Addington")
+    soup = getSoup("Kingston Frontenac Lennox and Addington")
     table = soup.find("table", {"class": "Left datatable"})
     rows = table.find_all("tr")
     data = {}
@@ -178,15 +166,14 @@ def getKingstonFrontenacLennoxAddingtonData():
 
 ## for this one pending and negative results are also available but text parsing is necessary, might add later
 def getLambtonData():
-    soup = get_soup("Lambton")
+    soup = getSoup("Lambton")
     table = soup.find("table", {"class": "wp-block-table"})
     cases = int(table.find_all("tr")[1].find_all("td")[1].get_text(strip=True))
     return {"Positive": cases}
 
-
 ##NOTE: currently has no cases so they haven't set up a proper site so this will be done later
 def getLeedsGrenvilleLanarkData():
-    soup = get_soup("Leeds, Grenville and Lanark")
+    soup = getSoup("Leeds, Grenville and Lanark")
     words = soup.find_all("div", {"class": "accordion-body"})[0].find("p").get_text(strip=True).split()
     for word in words[::-1]:
         try:
@@ -200,43 +187,36 @@ def getLeedsGrenvilleLanarkData():
     #     return {"Positive": 1}
     # raise Exception(NameError)
 
-
 def getMiddlesexLondonData():
-    soup = get_soup("London and Middlesex County")
+    soup = getSoup("London and Middlesex County")
     table = soup.find_all("table")[0]
     return {"Positive": len(table.find_all("tr")) - 1}
 
-
 def getNiagaraData():
-    soup = get_soup('Niagara Region')
+    soup = getSoup('Niagara Region')
     cases = int(soup.find("strong", {"id": "strCaseNumbers"}).get_text(strip=True))
     return {"Positive": cases}
 
-
 def getNorthBayParrySoundData():
-    soup = get_soup("North Bay Parry Sound")
+    soup = getSoup("North Bay Parry Sound")
     table = soup.find("table", {"class": "datatable"})
     rows = table.find_all("tr")
     data = {}
     for i in range(len(rows)):
         dataRow = [cell.get_text(strip=True) for cell in rows[i].find_all("td")]
-        if i == 3:
+        if (i == 3):
             data["Tested"] = int(dataRow[1])
         else:
             data[dataRow[0].split()[0]] = int(dataRow[1])
     return data
 
-
 ##NOTE this will probably have to be changed as the situation develops
 def getNorthWesternData():
-    soup = get_soup("Northwestern Ontario")
-    return {"Positive": w2n.word_to_num(
-        soup.find_all("p", {"class": "ms-rteElement-P ms-rteThemeForeColor-2-0"})[1].find("strong").get_text().split()[
-            0])}
-
+    soup = getSoup("Northwestern Ontario")
+    return {"Positive": w2n.word_to_num(soup.find_all("p", {"class": "ms-rteElement-P ms-rteThemeForeColor-2-0"})[1].find("strong").get_text().split()[0])}
 
 def getOttawaData():
-    soup = get_soup("Ottawa")
+    soup = getSoup("Ottawa")
     text = soup.find("p", {"class": "largeButton-Yellow"}).find("strong").get_text(strip=True).split()
     for block in text[::-1]:
         try:
@@ -246,35 +226,33 @@ def getOttawaData():
             pass
     return {"Positive": cases}
 
-
 def getPeelData():
-    soup = get_soup("Peel")
+    soup = getSoup("Peel")
     table = soup.find("table", {"class": "charttable white grid row-hover half margin_top_20"})
     cases = int(table.find_all("tr")[-1].find_all("td")[1].get_text(strip=True))
     return {"Positive": cases}
 
-
 def getPeterboroughData():
-    soup = get_soup("Peterborough")
+    soup = getSoup("Peterborough")
     lines = soup.find_all("p")[2].get_text().split("\n")
     data = {}
     for i in range(len(lines) - 1):
-        if i == 0:
+        head = ""
+        if (i == 0):
             head = "Positive"
-        elif i == 1:
+        elif (i == 1):
             head = "Negative"
         else:
             head = "Pending"
         data[head] = int(lines[i].split()[-1])
     tested = 0
     for value in data.values():
-        tested += value
+        tested+=value
     data["Tested"] = tested
     return data
 
-
 def getPorcupineData():
-    soup = get_soup("Porcupine")
+    soup = getSoup("Porcupine")
     table = soup.find("table")
     data = {}
     for row in table.find_all("tr"):
@@ -285,54 +263,48 @@ def getPorcupineData():
             data[cells[0].split()[0]] = int(cells[1])
     return data
 
-
 def getSudburyData():
-    soup = get_soup("Sudbury")
+    soup = getSoup("Sudbury")
     table = soup.find("table", {"id": "tablepress-1409"})
     cells = [row.find("td", {"class": "column-2"}) for row in table.find_all("tr")]
-    return {"Negative": int(cells[2].get_text(strip=True)),
-            "Pending": int(cells[3].get_text(strip=True)),
-            "Positive": int(cells[4].get_text(strip=True)),
+    return {"Negative": int(cells[2].get_text(strip=True)), 
+            "Pending": int(cells[3].get_text(strip=True)), 
+            "Positive": int(cells[4].get_text(strip=True)), 
             "Resolved": int(cells[5].get_text(strip=True)),
             "Tested": int(cells[6].get_text(strip=True))}
 
-
 ##NOTE: No cases so no proper website yet, will likely need to be changed soon
 def getRenfrewCountyData():
-    soup = get_soup("Renfrew County")
-    interestingText = soup.find("div", {"id": "collapse-5"}).find_all("p")[0].get_text(strip=True)
+    soup = getSoup("Renfrew County")
+    interestingText = soup.find("div", {"id": "collapse-5"}).find_all("p")[1].get_text(strip=True)
     if interestingText == "March 25, 2019 –Renfrew County and District Health Unit (RCDHU) confirms the first positive laboratory confirmed case of novel coronavirus 2019 (COVID-19) in the region. A woman in her 90s developed symptoms and was tested by Pembroke Regional Hospital (PRH) on March 23,2020. She is currently an inpatient at PRH.":
-        return {"Positive": 1}
+       return {"Positive": 1}
     raise Exception(NameError)
 
-
 def getSimcoeMuskokaData():
-    soup = get_soup("Simcoe Muskoka")
+    soup = getSoup("Simcoe Muskoka")
     table = soup.find_all("table")[0]
     return {"Positive": len(table.find_all("tr")) - 1}
 
-
 def getSouthwesternData():
-    soup = get_soup("Southwestern")
+    soup = getSoup("Southwestern")
     table = soup.find("table")
-    return {"Positive": len(table.find_all("tr")) - 1}
-
+    return {"Positive": len(table.find_all("tr")) -1}
 
 def getThunderBayData():
-    soup = get_soup("Thunder Bay")
+    soup = getSoup("Thunder Bay")
     table = soup.find("table")
     data = {}
     for row in table.find_all("tr"):
         cells = [cell.get_text(strip=True) for cell in row.find_all("td")]
-        if cells[0].split()[0] == "Tests":
+        if (cells[0].split()[0] == "Tests"):
             data["Testing"] = int(cells[1])
         else:
             data[cells[0].split()[0]] = int(cells[1])
     return data
 
-
 def getTimiskamingData():
-    soup = get_soup("Timiskaming")
+    soup = getSoup("Timiskaming")
     table = soup.find("table")
     data = {}
     for row in table.find_all("tr"):
@@ -340,84 +312,92 @@ def getTimiskamingData():
         data[dataRow[0]] = int(dataRow[1])
     return data
 
-
 def getTorontoData():
-    soup = get_soup("Toronto")
+    soup = getSoup("Toronto")
     paragraph = soup.find("div", {"class": "pagecontent"}).find_all("p")[3].get_text(strip=True)
     return {"Positive": int(paragraph.split()[5])}
 
-
 def getWaterlooData():
-    soup = get_soup("Waterloo")
+    soup = getSoup("Waterloo")
     cases = 0
     table = soup.find("table", {"class": "datatable"})
     rows = table.find_all("tr")
     for i in range(1, len(rows)):
         caseNum = rows[i].find("td").get_text(strip=True)
-        if caseNum[-1] != '*':
-            cases += 1
+        if (caseNum[-1] != '*'):
+            cases+=1
     return {"Positive": cases}
 
-
 def getWellingtonDufferinGuelphData():
-    soup = get_soup("Wellington-Dufferin-Guelph")
+    soup = getSoup("Wellington-Dufferin-Guelph")
     tables = soup.find_all("table")
     cases = len(tables[0].find_all("tr")) - 1
     tested = 0
-    for i in range(1, 3):
+    for i in range(1,3):
         tested += int(tables[i].find_all("tr")[1].find_all("td")[1].get_text(strip=True))
     return {"Positive": cases, "Tested": tested}
 
-
 def getWindsorEssexCountyData():
-    soup = get_soup("Windsor-Essex County")
+    soup = getSoup("Windsor-Essex County")
     divs = soup.find_all("div", {'class': "well"})
-    positive = int(divs[0].find_all("strong")[1].get_text(strip=True))
-    tested = int(divs[3].find_all("p")[1].get_text(strip=True))
-    pending = int(divs[4].find_all("p")[1].get_text(strip=True))
-    return {"Positive": positive, "Tested": tested, "Pending": pending, "Negative": tested - positive - pending}
-
+    nums = []
+    for div in divs[:5]:
+        nums.append(div.find_all("p")[1].get_text(strip=True))
+    positive = int(nums[0])
+    tested = int(nums[3])
+    pending = int(nums[4])
+    return {"Positive": positive, "Tested": tested, "Pending": pending, "Negative": tested-positive-pending}
 
 def getYorkData():
-    soup = get_soup("York")
+    soup = getSoup("York")
     table = soup.find("table", {"dir": "ltr"})
     return {"Positive": len(table.find_all("tr")) - 1}
-
-
+    
 def main():
-    covid_ontario_functions = {'Algoma': get_algoma_data, 'Brant County': getBrantCountyData,
-                    'Chatham Kent': getChathamKentData, 'Durham': getDurhamData,
-                    'Eastern Ontario': getEasternOntarioData,
-                    'Haliburton Kawartha Pine Ridge': getHaliburtonKawarthaPineRidgeData, 'Halton': getHaltonData,
-                    'Hamilton': getHamiltonData, "Hastings Prince Edward": getHastingsPrinceEdwardData,
-                    "Huron and Perth": getHuronData,
-                    "Kingston Frontenac Lennox and Addington": getKingstonFrontenacLennoxAddingtonData,
-                    "Lambton": getLambtonData, 'Leeds, Grenvile and Lanark': getLeedsGrenvilleLanarkData,
-                    'Middlesex-London': getMiddlesexLondonData, 'Niagara Region': getNiagaraData,
-                    'North Bay Parry Sound': getNorthBayParrySoundData, 'Northwestern Ontario': getNorthWesternData,
-                    "Ottawa": getOttawaData, "Peel": getPeelData, "Peterborough": getPeterboroughData,
-                    "Porcupine": getPorcupineData, "Renfrew County": getRenfrewCountyData,
-                    "Simcoe Muskoka": getSimcoeMuskokaData, "Southwestern": getSouthwesternData,
-                    "Sudbury": getSudburyData, "Thunder Bay": getThunderBayData,
-                    "Timiskaming": getTimiskamingData, "Toronto": getTorontoData, "Waterloo": getWaterlooData,
-                    "Wellington-Dufferin-Guelph": getWellingtonDufferinGuelphData,
-                    "Windsor-Essex County": getWindsorEssexCountyData, "York": getYorkData}
 
-    covid_ontario_results = {}
-
-    total = 0
-    for key, value in covid_ontario_functions.items():
-        try:
-            covid_ontario_results[key] = value()
-            total += covid_ontario_results[key]["Positive"]
-        except:
-            print("Error on function: " + key)
-
-    print(total)
+    covidOntario = {}
+    covidOntario['Algoma'] = getAlgomaData()
+    covidOntario['Brant County'] = getBrantCountyData()
+    covidOntario['Chatham Kent'] = getChathamKentData()
+    covidOntario['Durham'] = getDurhamData()
+    covidOntario['Eastern Ontario'] = getEasternOntarioData()
+    #
+    #
+    covidOntario['Haliburton Kawartha Pine Ridge'] = getHaliburtonKawarthaPineRidgeData()
+    covidOntario['Halton'] = getHaltonData()
+    covidOntario['Hamilton'] = getHamiltonData()
+    covidOntario["Hastings Prince Edward"] = getHastingsPrinceEdwardData()
+    covidOntario["Huron and Perth"] = getHuronData()
+    covidOntario["Kingston Frontenac Lennox and Addington"] = getKingstonFrontenacLennoxAddingtonData()
+    covidOntario["Lambton"] = getLambtonData()
+    covidOntario['Leeds, Grenvile and Lanark'] = getLeedsGrenvilleLanarkData()
+    covidOntario['Middlesex-London'] = getMiddlesexLondonData()
+    covidOntario['Niagara Region'] = getNiagaraData()
+    covidOntario['North Bay Parry Sound'] = getNorthBayParrySoundData()
+    covidOntario['Northwestern Ontario'] = getNorthWesternData()
+    covidOntario["Ottawa"] = getOttawaData()
+    covidOntario["Peel"] = getPeelData()
+    covidOntario["Peterborough"] = getPeterboroughData()
+    covidOntario["Porcupine"] = getPorcupineData()
+    #covidOntario["Renfrew County"] = getRenfrewCountyData()
+    covidOntario["Simcoe Muskoka"] = getSimcoeMuskokaData()
+    covidOntario["Southwestern"] = getSouthwesternData()
+    covidOntario["Sudbury"] = getSudburyData()
+    covidOntario["Thunder Bay"] = getThunderBayData()
+    covidOntario["Timiskaming"] = getTimiskamingData()
+    covidOntario["Toronto"] = getTorontoData()
+    covidOntario["Waterloo"] = getWaterlooData()
+    covidOntario["Wellington-Dufferin-Guelph"] = getWellingtonDufferinGuelphData()
+    covidOntario["Windsor-Essex County"] = getWindsorEssexCountyData()
+    covidOntario["York"] = getYorkData()
+    
+    sum = 0
+    for value in covidOntario.values():
+        sum += value["Positive"]
+    print(sum)
 
     with open(f"covidOntario{date.today().isoformat()}.json", 'w') as jsonFile:
-        json.dump(covid_ontario_results, jsonFile, indent=1)
-
+        json.dump(covidOntario, jsonFile, indent=1)
 
 if __name__ == '__main__':
     main()
