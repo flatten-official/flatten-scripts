@@ -4,8 +4,7 @@ Make sure it runs smoothly and reports any errors clearly.
 """
 
 import script
-import time
-import json
+
 
 def main(event, context):
     print("Getting data from spreadsheet...")
@@ -19,6 +18,7 @@ def main(event, context):
     print("Outputting data to file...")
     script.output_json(output)
     print("Done")
+
 
 if __name__ == '__main__':
     main(None, None)
