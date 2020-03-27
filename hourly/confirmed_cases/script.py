@@ -11,12 +11,22 @@ import json
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 from datetime import datetime
+import script
 import os
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
+<<<<<<< HEAD
 SPREADSHEET_RANGE = "Cases"
+=======
+# The ID and range of a sample spreadsheet.
+SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
+SPREADSHEET_RANGE = 'Cases'
+GCS_BUCKET = os.environ['GCS_BUCKET']
+UPLOAD_FILE = 'confirmed_data.json'
+SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
+>>>>>>> master
 
 def download_blob(bucket_name, source_blob_name):
     """Downloads a blob from the bucket."""
@@ -81,7 +91,12 @@ def geocode_sheet(values_input):
                        "NWT, NWT": "Northwest Territories",
                        "Haliburton Kawartha Pineridge, Ontario": "Haliburton, Ontario",
                        "Labrador-Grenfell, NL": "Labrador City, NL",
-                       "Fraser, BC": "Fraser Valley, BC"
+                       "Fraser, BC": "Fraser Valley, BC",
+                       "Zone 3 (Fredericton area), New Brunswick": "Fredericton, New Brunswick",
+                       "Zone 1 (Moncton Area), New Brunswick": "Moncton, New Brunswick",
+                       "North, Saskatchewan": "La Ronge, Saskatchewan",
+                       "North, Alberta": "Peerless Lake, Alberta",
+                       "South, Saskatchewan": "Moose Jaw, Saskatchewan"
                        }
 
     output = {'last_updated': last_updated, 'max_cases': int(df.max()), 'confirmed_cases':[]}

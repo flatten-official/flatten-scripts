@@ -3,3 +3,4 @@ config.py
 .ipynb_checkpoints
 *.ipynb
 __pycache__
+.idea
