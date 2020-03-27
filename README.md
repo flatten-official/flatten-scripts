@@ -19,16 +19,18 @@ Both the later two numbers are extracted from flatten.ca forms and are mapped by
 
 ## Setting up
 
-- Install Google Cloud SDK and in the `[default]` confircuration login with your name@flatten.ca account. Tutorial: https://cloud.google.com/sdk/docs/quickstarts.
+- Install Google Cloud SDK and in the `[default]` configuration login with your name@flatten.ca account. Tutorial: https://cloud.google.com/sdk/docs/quickstarts.
+
+- Run `gcloud auth application-default login` to generate the credentials for th Python scripts.
             
-- run `pip install -r requirements.txt` in both `\hourly\confirmed_cases` and `\hourly\form_data_generator`
+- run `pip install -r requirements.txt` in both `\hourly\confirmed_cases` and `\hourly\form_data_generator` to install dependencies.
 
 ## Running a script
 Run the script you want to with Python 3. In the hourly folders, always run `main.py`.
 
 
 ## Contact
-Martin, Will, Rupert, Ivan, Charlie
+Martin, Arthur, Will, Rupert, Ivan, Charlie
 
 ## Internal Notes
 
