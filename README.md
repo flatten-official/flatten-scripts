@@ -62,7 +62,7 @@ To deploy the docker image from your current `HEAD` to test:
 
 You can ping the requisite service with
 
-`gcloud pubsub topics publish TOPIC --message "hello"`
+`gcloud pubsub topics publish <name_of_cloud_service> --message "hello"`
 
 You can also add attributes, which will be passed by the flask server to your `main()` as a dictionary.
 
