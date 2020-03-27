@@ -46,7 +46,7 @@ def get_spreadsheet_data():
     values_input = result_input.get('values', [])
 
     # Part of the sheets API, even if undefined. Do not remove
-    if not values_input and not values_expansion:
+    if not values_input:
         raise Exception("No data found")
 
     return values_input
@@ -178,7 +178,6 @@ def upload_blob(bucket, data_string, destination_blob_name):
 
 def output_json(output):
     output_string = json.dumps(output)
-    output_string = output_string.replace("Vancouver Coastal", "Vancouver")
     output_string = output_string.replace("'", r"\'")
 
     storage_client = storage.Client()
