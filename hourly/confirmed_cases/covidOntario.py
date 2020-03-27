@@ -460,44 +460,15 @@ dispatcher = {
 def main():
 
     covidOntario = {}
-    covidOntario['Algoma'] = getAlgomaData()
-    covidOntario['Brant County'] = getBrantCountyData()
-    covidOntario['Chatham Kent'] = getChathamKentData()
-    covidOntario['Durham'] = getDurhamData()
-    covidOntario['Eastern Ontario'] = getEasternOntarioData()
-    #
-    #
-    covidOntario['Haliburton Kawartha Pine Ridge'] = getHaliburtonKawarthaPineRidgeData()
-    covidOntario['Halton'] = getHaltonData()
-    covidOntario['Hamilton'] = getHamiltonData()
-    covidOntario["Hastings Prince Edward"] = getHastingsPrinceEdwardData()
-    covidOntario["Huron and Perth"] = getHuronData()
-    covidOntario["Kingston Frontenac Lennox and Addington"] = getKingstonFrontenacLennoxAddingtonData()
-    covidOntario["Lambton"] = getLambtonData()
-    covidOntario['Leeds, Grenvile and Lanark'] = getLeedsGrenvilleLanarkData()
-    covidOntario['Middlesex-London'] = getMiddlesexLondonData()
-    covidOntario['Niagara Region'] = getNiagaraData()
-    covidOntario['North Bay Parry Sound'] = getNorthBayParrySoundData()
-    #covidOntario['Northwestern Ontario'] = getNorthWesternData()
-    covidOntario["Ottawa"] = getOttawaData()
-    covidOntario["Peel"] = getPeelData()
-    covidOntario["Peterborough"] = getPeterboroughData()
-    covidOntario["Porcupine"] = getPorcupineData()
-    #covidOntario["Renfrew County"] = getRenfrewCountyData()
-    covidOntario["Simcoe Muskoka"] = getSimcoeMuskokaData()
-    covidOntario["Southwestern"] = getSouthwesternData()
-    covidOntario["Sudbury"] = getSudburyData()
-    covidOntario["Thunder Bay"] = getThunderBayData()
-    covidOntario["Timiskaming"] = getTimiskamingData()
-    covidOntario["Toronto"] = getTorontoData()
-    covidOntario["Waterloo"] = getWaterlooData()
-    covidOntario["Wellington-Dufferin-Guelph"] = getWellingtonDufferinGuelphData()
-    covidOntario["Windsor-Essex County"] = getWindsorEssexCountyData()
-    covidOntario["York"] = getYorkData()
-    
     sum = 0
-    for value in covidOntario.values():
-        sum += value["Positive"]
+    for key in dispatcher.keys():
+        try:
+            data = dispatcher[key]['func']()
+            covidOntario[key] = data
+            sum += data['Positive']
+            print(f"Scraped {key}")
+        except:
+            print(f"Failed on {key}")
     print(sum)
 
     with open(f"covidOntario{date.today().isoformat()}.json", 'w') as jsonFile:
