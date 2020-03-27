@@ -9,16 +9,17 @@ import json
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 from datetime import datetime
+import script
 import os
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
-SPREADSHEET_ID = os.environ['SPREADSHEET_ID']
+SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
 SPREADSHEET_RANGE = 'Cases'
 GCS_BUCKET = os.environ['GCS_BUCKET']
-UPLOAD_FILE = os.environ['UPLOAD_FILE']
+UPLOAD_FILE = 'confirmed_data.json'
 SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
 
 def download_blob(bucket_name, source_blob_name):
@@ -50,7 +51,7 @@ def get_spreadsheet_data():
 
 def geocode_sheet(values_input):
     df = pd.DataFrame(values_input)
-    df = df.drop([0, 1])
+    df = df.drop([0, 1, 2])
 
     column_names = []
 
@@ -58,7 +59,7 @@ def geocode_sheet(values_input):
         column_names.append(item)
 
     df.columns = column_names
-    df.index = df.index - 2
+    df.index = df.index - 3
     df = df.drop(0)
 
     print(df.iloc[-1])
@@ -84,7 +85,12 @@ def geocode_sheet(values_input):
                        "NWT, NWT": "Northwest Territories",
                        "Haliburton Kawartha Pineridge, Ontario": "Haliburton, Ontario",
                        "Labrador-Grenfell, NL": "Labrador City, NL",
-                       "Fraser, BC": "Fraser Valley, BC"
+                       "Fraser, BC": "Fraser Valley, BC",
+                       "Zone 3 (Fredericton area), New Brunswick": "Fredericton, New Brunswick",
+                       "Zone 1 (Moncton Area), New Brunswick": "Moncton, New Brunswick",
+                       "North, Saskatchewan": "La Ronge, Saskatchewan",
+                       "North, Alberta": "Peerless Lake, Alberta",
+                       "South, Saskatchewan": "Moose Jaw, Saskatchewan"
                        }
 
     output = {'last_updated': last_updated, 'max_cases': int(df.max()), 'confirmed_cases':[]}
