@@ -5,7 +5,7 @@ Make sure it runs smoothly and reports any errors clearly.
 
 import script
 import time
-
+import json
 
 def main(event, context):
     print("Getting data from spreadsheet...")
