@@ -20,6 +20,5 @@ def main(event, context):
     script.output_json(output)
     print("Done")
 
-
 if __name__ == '__main__':
     main(None, None)

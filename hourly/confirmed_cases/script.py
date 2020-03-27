@@ -20,9 +20,10 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 # The ID and range of a sample spreadsheet.
 SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
 SPREADSHEET_RANGE = 'Cases'
-GCS_BUCKET = os.environ['GCS_BUCKET']
+GCS_BUCKET = "flatten-staging-271921.appspot.com"#os.environ['GCS_BUCKET']
 UPLOAD_FILE = 'confirmed_data.json'
-SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
+SHEETS_API_KEY = "AIzaSyDs-bNN44Es1zMpL0pAO4qsnOdz9g4zIok"#os.environ['SHEETS_API_KEY']
+DISPATCHER = covidOntario.dispatcher
 
 def download_blob(bucket_name, source_blob_name):
     """Downloads a blob from the bucket."""
@@ -79,6 +80,7 @@ def geocode_sheet(values_input):
     geolocator = Nominatim(user_agent="COVIDScript")
     geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
 
+    ## finds names that geolocater knows
     name_exceptions = {"Kingston Frontenac Lennox & Addington, Ontario": "Kingston, Ontario",
                        "Zone 2 (Saint John area), New Brunswick": "Saint John, New Brunswick",
                        "Island, BC": "Vancouver Island, BC",
@@ -96,7 +98,10 @@ def geocode_sheet(values_input):
                        "North Bay Parry Sound, Ontario": "North Bay, Ontario",
                        "Leeds Grenville Lanark": "Brockville, Ontario",
                        "Southwestern": "St. Thomas, Ontario",
-                       "Zone 4 (Edmundston area), New Brunswick": "Edmundston, New Brunswick"
+                       "Zone 4 (Edmundston area), New Brunswick": "Edmundston, New Brunswick",
+                       "Porcupine, Ontario": "Timmins, Ontario",
+                       "Central, Alberta": "Red Deer, Alberta",
+                       "South, Alberta": "Lethbridge, Alberta"
                        }
 
     output = {'last_updated': last_updated, 'max_cases': int(df.max()), 'confirmed_cases':[]}
@@ -114,14 +119,15 @@ def geocode_sheet(values_input):
             if str(index).split(', ')[1] == "Ontario":
                 name = str(index)
                 try:
-                    cases = dispatcher[name.split(', ')[0]]()['Positive']
+                    ## gets scraped ontario data for keys in the spreadsheet
+                    cases = DISPATCHER[name.split(', ')[0]]['func']()['Positive']
                     if index in name_exceptions:
                         location = geocode(name_exceptions[str(index)] + ', Canada')
                     else:
                         location = geocode(str(index) + ', Canada')
                     output['confirmed_cases'].append({"name": name, "cases": cases, 'coord': [location.latitude, location.longitude]})
                     print(f"Geocoded:{str(index)} SCRAPE")
-                    dispatcher.pop(name.split(', ')[0], None)
+                    DISPATCHER.pop(name.split(', ')[0], None)
                     continue
                 except:
                     pass
@@ -139,10 +145,11 @@ def geocode_sheet(values_input):
             output['confirmed_cases'].append({'name': str(index), 'cases': int(df.get(key = str(index))), 'coord': [location.latitude, location.longitude]})
             print("Geocoded:" + str(index))
 
-    for key in dispatcher.keys():
+    ## gets ontario data for keys not in the spreadsheet
+    for key in DISPATCHER.keys():
         try:
             name = key+", Ontario"
-            cases = dispatcher[key]()
+            cases = DISPATCHER[key]["func"]()
             if name in name_exceptions:
                 location = geocode(name_exceptions[name] + ', Canada')
             else:
@@ -177,40 +184,3 @@ def output_json(output):
     storage_client = storage.Client()
     bucket = storage_client.bucket(GCS_BUCKET)
     upload_blob(bucket, output_string, UPLOAD_FILE)
-
-dispatcher = {
-    'Algoma': covidOntario.get_algoma_data,
-    'Brant': covidOntario.getBrantCountyData,
-    'Chatham-Kent': covidOntario.getChathamKentData,
-    'Durham': covidOntario.getDurhamData,
-    'Eastern': covidOntario.getEasternOntarioData,
-    #Grey Bruce to go here when ready
-    #Halimand Norfolk to go here when ready
-    "Haliburton Kawartha Pineridge": covidOntario.getHaliburtonKawarthaPineRidgeData,
-    "Halton": covidOntario.getHaltonData,
-    "Hamilton": covidOntario.getHamiltonData,
-    "Hastings Prince Edward": covidOntario.getHastingsPrinceEdwardData,
-    "Huron Perth": covidOntario.getHuronData,
-    "Kingston Frontenac Lennox & Addington": covidOntario.getKingstonFrontenacLennoxAddingtonData,
-    "Lambton County": covidOntario.getLambtonData,
-    "Leeds Grenville Lanark": covidOntario.getLeedsGrenvilleLanarkData,
-    "Middlesex-London": covidOntario.getMiddlesexLondonData,
-    "Niagara": covidOntario.getNiagaraData,
-    "North Bay Parry Sound": covidOntario.getNorthBayParrySoundData,
-    "Northwestern": covidOntario.getNorthWesternData,
-    "Ottawa": covidOntario.getOttawaData,
-    "Peel": covidOntario.getPeelData,
-    "Peterborough": covidOntario.getPeterboroughData,
-    "Porcupine": covidOntario.getPorcupineData,
-    "Renfrew": covidOntario.getRenfrewCountyData,
-    "Simcoe Muskoka": covidOntario.getSimcoeMuskokaData,
-    "Southwestern": covidOntario.getSouthwesternData,
-    "Sudbury": covidOntario.getSudburyData,
-    "Thunder Bay": covidOntario.getThunderBayData,
-    "Timiskaming": covidOntario.getTimiskamingData,
-    "Toronto": covidOntario.getTorontoData,
-    "Waterloo": covidOntario.getWaterlooData,
-    "Wellington Dufferin Guelph": covidOntario.getWellingtonDufferinGuelphData,
-    "Windsor-Essex": covidOntario.getWindsorEssexCountyData,
-    "York": covidOntario.getYorkData
-}

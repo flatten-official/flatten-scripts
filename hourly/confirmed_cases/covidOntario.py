@@ -13,44 +13,9 @@ import json
 from word2number import w2n
 from datetime import date
 
+
 def getSoup(region):
-    urlRegion = {
-        'Algoma': "http://www.algomapublichealth.com/disease-and-illness/infectious-diseases/novel-coronavirus/",
-        'Brant County': "https://www.bchu.org/ServicesWeProvide/InfectiousDiseases/Pages/coronavirus.aspx",
-        'Chatham Kent': "https://ckphu.com/current-situation-in-chatham-kent-and-surrounding-areas/",
-        'Durham': "https://www.durham.ca/en/health-and-wellness/novel-coronavirus-update.aspx#Status-of-cases-in-Durham-Region",
-        'Eastern Ontario': "https://eohu.ca/en/my-health/covid-19-status-update-for-eohu-region",
-        'Grey Bruce': None,
-        'Halimand Norfolk': None,
-        'Haliburton, Kawartha, Pine Ridge District': "https://www.hkpr.on.ca/covid-19-2/covid-19/",
-        'Halton': "https://www.halton.ca/For-Residents/Immunizations-Preventable-Disease/Diseases-Infections/New-Coronavirus",
-        'Hamilton': "https://www.hamilton.ca/coronavirus/status-cases",
-        "Hastings and Prince Edward Counties": "https://hpepublichealth.ca/the-novel-coronavirus-2019ncov/",
-        "Huron and Perth": "https://www.hpph.ca/en/news/coronavirus-covid19-update.aspx#COVID-19-in-Huron-and-Perth",
-        "Kingston Frontenac Lennox and Addington": "https://www.kflaph.ca/en/healthy-living/novel-coronavirus.aspx",
-        "Lambton": "https://lambtonpublichealth.ca/2019-novel-coronavirus/",
-        "Leeds, Grenville and Lanark": "https://healthunit.org/coronavirus/",
-        "London and Middlesex County": "https://www.healthunit.com/novel-coronavirus",
-        "Niagara Region": "https://www.niagararegion.ca/health/covid-19/default.aspx",
-        "North Bay Parry Sound": "https://www.myhealthunit.ca/en/health-topics/coronavirus.asp",
-        "Northwestern Ontario": "https://www.nwhu.on.ca/Pages/coronavirus.aspx",
-        "Ottawa": "https://www.ottawapublichealth.ca/en/reports-research-and-statistics/la-maladie-coronavirus-covid-19.aspx#Ottawa-COVID-19-Case-Details-",
-        "Peel": "https://www.peelregion.ca/coronavirus/#cases",
-        "Peterborough": "https://www.peterboroughpublichealth.ca/your-health/diseases-infections-immunization/diseases-and-infections/novel-coronavirus-2019-ncov/local-covid-19-status/",
-        "Porcupine": "http://www.porcupinehu.on.ca/en/your-health/infectious-diseases/novel-coronavirus/",
-        "Sudbury": "https://www.phsd.ca/health-topics-programs/diseases-infections/coronavirus/current-status-covid-19",
-        "Renfrew County": "https://www.rcdhu.com/novel-coronavirus-covid-19-2/",
-        "Simcoe Muskoka": "http://www.simcoemuskokahealthstats.org/topics/infectious-diseases/a-h/covid-19#Confirmed",
-        "Southwestern": "https://www.swpublichealth.ca/content/community-update-novel-coronavirus-covid-19",
-        "Thunder Bay": "https://www.tbdhu.com/coronavirus#",
-        "Timiskaming": "http://www.timiskaminghu.com/90484/COVID-19",
-        "Toronto": "https://www.toronto.ca/home/covid-19/",
-        "Waterloo": "https://www.regionofwaterloo.ca/en/health-and-wellness/positive-cases-in-waterloo-region.aspx",
-        "Wellington-Dufferin-Guelph": "https://www.wdgpublichealth.ca/your-health/covid-19-information-public/assessment-centre-and-case-data",
-        "Windsor-Essex County": "https://www.wechu.org/cv/local-updates",
-        "York": "https://www.york.ca/wps/portal/yorkhome/health/yr/infectiousdiseasesandprevention/covid19/covid19/!ut/p/z1/jZDfT4MwEMf_Fh94lB6Mjc63ijrKtmBi3LAvpoMOMKwlLYPEv95Ol5glit7D5e7yuR_fQwxliEne1yXvaiV5Y_MXNnulZEHjeAlJGuAICKQk8UMM93MPbT8B-MUIIPaf_hGAjY9P_lpgFfh6Ha1LxFreVde13CuUWS9yq_FoitoIboThsmi16IU8KUdZrvq68ObfwRaxy1WLJxwA3SQh2XgpBHRyBnw_mMVeBAnEKQb6ED5O73DswdI_A-Nqykbtvh5P5G6C7dla7IUW2j1qW666rjU3DjgwDINbKlU2ws3VwYGfWiplOpRdkqg9PGfvq9s5fZs2_YpcfQDml0gV/dz/d5/L2dBISEvZ0FBIS9nQSEh/#.XnvckW57lTY"
-    }
-    page = requests.get(urlRegion[region])
+    page = requests.get(dispatcher[region]["URL"])
     return bs4.BeautifulSoup(page.content, 'html.parser')
 
 def getAlgomaData():
@@ -63,7 +28,7 @@ def getAlgomaData():
     return algomaData
 
 def getBrantCountyData():
-    soup = getSoup('Brant County')
+    soup = getSoup('Brant')
     tables = soup.find_all("table", {"class": "ms-rteTable-default"})
     brantCountyData = {}
     rows = []
@@ -75,7 +40,7 @@ def getBrantCountyData():
     return brantCountyData
 
 def getChathamKentData():
-    soup = getSoup('Chatham Kent')
+    soup = getSoup('Chatham-Kent')
     chathamKentData = {}
     table1 = soup.find("table", {"id": "tablepress-3"})
     table2 = soup.find("table", {"id": "tablepress-4"})
@@ -99,7 +64,7 @@ def getDurhamData():
     return durhamData
 
 def getEasternOntarioData():
-    soup = getSoup("Eastern Ontario")
+    soup = getSoup("Eastern")
     table = soup.find("table", {"class": "table table-bordered"})
     easternOntarioData = {}
     easternOntarioData["Positive"] = len(table.find_all("tr")) - 1
@@ -114,7 +79,7 @@ def getEasternOntarioData():
 #-------------------------------------------------------------------
 
 def getHaliburtonKawarthaPineRidgeData():
-    soup = getSoup('Haliburton, Kawartha, Pine Ridge District')
+    soup = getSoup('Haliburton Kawartha Pineridge')
     table = soup.find("table", {"class": "wp-block-advgb-table aligncenter advgb-table-frontend is-style-stripes"})
     positive = int(table.find_all("tr")[1].find_all("td")[-1].get_text(strip=True))
     return {"Positive": positive}
@@ -131,12 +96,12 @@ def getHamiltonData():
     return data
     
 def getHastingsPrinceEdwardData():
-    soup = getSoup("Hastings and Prince Edward Counties")
+    soup = getSoup("Hastings Prince Edward")
     data = {"Positive": len(soup.find("table", {"class": "has-subtle-pale-blue-background-color has-background"}).find_all("tr")) - 1}
     return data
 
 def getHuronData():
-    soup = getSoup("Huron and Perth")
+    soup = getSoup("Huron Perth")
     table = soup.find("table", {"style": "width: 80%;"})
     data = {}
     rows = table.find_all("tr")
@@ -147,7 +112,7 @@ def getHuronData():
     return data
 
 def getKingstonFrontenacLennoxAddingtonData():
-    soup = getSoup("Kingston Frontenac Lennox and Addington")
+    soup = getSoup("Kingston Frontenac Lennox & Addington")
     table = soup.find("table", {"class": "Left datatable"})
     rows = table.find_all("tr")
     data = {}
@@ -173,7 +138,7 @@ def getLambtonData():
 
 ##NOTE: currently has no cases so they haven't set up a proper site so this will be done later
 def getLeedsGrenvilleLanarkData():
-    soup = getSoup("Leeds, Grenville and Lanark")
+    soup = getSoup("Leeds Grenville Lanark")
     words = soup.find_all("div", {"class": "accordion-body"})[0].find("p").get_text(strip=True).split()
     for word in words[::-1]:
         try:
@@ -188,12 +153,12 @@ def getLeedsGrenvilleLanarkData():
     # raise Exception(NameError)
 
 def getMiddlesexLondonData():
-    soup = getSoup("London and Middlesex County")
+    soup = getSoup("Middlesex-London")
     table = soup.find_all("table")[0]
     return {"Positive": len(table.find_all("tr")) - 1}
 
 def getNiagaraData():
-    soup = getSoup('Niagara Region')
+    soup = getSoup('Niagara')
     cases = int(soup.find("strong", {"id": "strCaseNumbers"}).get_text(strip=True))
     return {"Positive": cases}
 
@@ -212,7 +177,7 @@ def getNorthBayParrySoundData():
 
 ##NOTE this will probably have to be changed as the situation develops
 def getNorthWesternData():
-    soup = getSoup("Northwestern Ontario")
+    soup = getSoup("Northwestern")
     return {"Positive": w2n.word_to_num(soup.find_all("p", {"class": "ms-rteElement-P ms-rteThemeForeColor-2-0"})[1].find("strong").get_text().split()[0])}
 
 def getOttawaData():
@@ -329,7 +294,7 @@ def getWaterlooData():
     return {"Positive": cases}
 
 def getWellingtonDufferinGuelphData():
-    soup = getSoup("Wellington-Dufferin-Guelph")
+    soup = getSoup("Wellington Dufferin Guelph")
     tables = soup.find_all("table")
     cases = len(tables[0].find_all("tr")) - 1
     tested = 0
@@ -338,7 +303,7 @@ def getWellingtonDufferinGuelphData():
     return {"Positive": cases, "Tested": tested}
 
 def getWindsorEssexCountyData():
-    soup = getSoup("Windsor-Essex County")
+    soup = getSoup("Windsor-Essex")
     divs = soup.find_all("div", {'class': "well"})
     nums = []
     for div in divs[:5]:
@@ -352,7 +317,146 @@ def getYorkData():
     soup = getSoup("York")
     table = soup.find("table", {"dir": "ltr"})
     return {"Positive": len(table.find_all("tr")) - 1}
-    
+
+dispatcher = {
+ "Algoma": {
+  "func": getAlgomaData,
+  "URL": "http://www.algomapublichealth.com/disease-and-illness/infectious-diseases/novel-coronavirus/"
+ },
+ "Brant": {
+  "func": getBrantCountyData,
+  "URL": "https://www.bchu.org/ServicesWeProvide/InfectiousDiseases/Pages/coronavirus.aspx"
+ },
+ "Chatham-Kent": {
+  "func": getChathamKentData,
+  "URL": "https://ckphu.com/current-situation-in-chatham-kent-and-surrounding-areas/"
+ },
+ "Durham": {
+  "func": getDurhamData,
+  "URL": "https://www.durham.ca/en/health-and-wellness/novel-coronavirus-update.aspx#Status-of-cases-in-Durham-Region"
+ },
+ "Eastern": {
+  "func": getEasternOntarioData,
+  "URL": "https://eohu.ca/en/my-health/covid-19-status-update-for-eohu-region"
+ },
+ "Grey Bruce": {
+  "func": None,
+  "URL": None
+ },
+ "Halimand Norfolk": {
+  "func": None,
+  "URL": None
+ },
+ "Haliburton Kawartha Pineridge": {
+  "func": getHaliburtonKawarthaPineRidgeData,
+  "URL": "https://www.hkpr.on.ca/covid-19-2/covid-19/"
+ },
+ "Halton": {
+  "func": getHaltonData,
+  "URL": "https://www.halton.ca/For-Residents/Immunizations-Preventable-Disease/Diseases-Infections/New-Coronavirus"
+ },
+ "Hamilton": {
+  "func": getHamiltonData,
+  "URL": "https://www.hamilton.ca/coronavirus/status-cases"
+ },
+ "Hastings Prince Edward": {
+  "func": getHastingsPrinceEdwardData,
+  "URL": "https://hpepublichealth.ca/the-novel-coronavirus-2019ncov/"
+ },
+ "Huron Perth": {
+  "func": getHuronData,
+  "URL": "https://www.hpph.ca/en/news/coronavirus-covid19-update.aspx#COVID-19-in-Huron-and-Perth"
+ },
+ "Kingston Frontenac Lennox & Addington": {
+  "func": getKingstonFrontenacLennoxAddingtonData,
+  "URL": "https://www.kflaph.ca/en/healthy-living/novel-coronavirus.aspx"
+ },
+ "Lambton": {
+  "func": getLambtonData,
+  "URL": "https://lambtonpublichealth.ca/2019-novel-coronavirus/"
+ },
+ "Leeds Grenville Lanark": {
+  "func": getLeedsGrenvilleLanarkData,
+  "URL": "https://healthunit.org/coronavirus/"
+ },
+ "Middlesex-London": {
+  "func": getMiddlesexLondonData,
+  "URL": "https://www.healthunit.com/novel-coronavirus"
+ },
+ "Niagara": {
+  "func": getNiagaraData,
+  "URL": "https://www.niagararegion.ca/health/covid-19/default.aspx"
+ },
+ "North Bay Parry Sound": {
+  "func": getNorthBayParrySoundData,
+  "URL": "https://www.myhealthunit.ca/en/health-topics/coronavirus.asp"
+ },
+ "Northwestern": {
+  "func": getNorthWesternData,
+  "URL": "https://www.nwhu.on.ca/Pages/coronavirus.aspx"
+ },
+ "Ottawa": {
+  "func": getOttawaData,
+  "URL": "https://www.ottawapublichealth.ca/en/reports-research-and-statistics/la-maladie-coronavirus-covid-19.aspx#Ottawa-COVID-19-Case-Details-"
+ },
+ "Peel": {
+  "func": getPeelData,
+  "URL": "https://www.peelregion.ca/coronavirus/#cases"
+ },
+ "Peterborough": {
+  "func": getPeterboroughData,
+  "URL": "https://www.peterboroughpublichealth.ca/your-health/diseases-infections-immunization/diseases-and-infections/novel-coronavirus-2019-ncov/local-covid-19-status/"
+ },
+ "Porcupine": {
+  "func": getPorcupineData,
+  "URL": "http://www.porcupinehu.on.ca/en/your-health/infectious-diseases/novel-coronavirus/"
+ },
+ "Renfrew": {
+  "func": getRenfrewCountyData,
+  "URL": "https://www.rcdhu.com/novel-coronavirus-covid-19-2/"
+ },
+ "Simcoe Muskoka": {
+  "func": getSimcoeMuskokaData,
+  "URL": "http://www.simcoemuskokahealthstats.org/topics/infectious-diseases/a-h/covid-19#Confirmed"
+ },
+ "Southwestern": {
+  "func": getSouthwesternData,
+  "URL": "https://www.swpublichealth.ca/content/community-update-novel-coronavirus-covid-19"
+ },
+ "Sudbury": {
+  "func": getSudburyData,
+  "URL": "https://www.phsd.ca/health-topics-programs/diseases-infections/coronavirus/current-status-covid-19"
+ },
+ "Thunder Bay": {
+  "func": getThunderBayData,
+  "URL": "https://www.tbdhu.com/coronavirus#"
+ },
+ "Timiskaming": {
+  "func": getTimiskamingData,
+  "URL": "http://www.timiskaminghu.com/90484/COVID-19"
+ },
+ "Toronto": {
+  "func": getTorontoData,
+  "URL": "https://www.toronto.ca/home/covid-19/"
+ },
+ "Waterloo": {
+  "func": getWaterlooData,
+  "URL": "https://www.regionofwaterloo.ca/en/health-and-wellness/positive-cases-in-waterloo-region.aspx"
+ },
+ "Wellington Dufferin Guelph": {
+  "func": getWellingtonDufferinGuelphData,
+  "URL": "https://www.wdgpublichealth.ca/your-health/covid-19-information-public/assessment-centre-and-case-data"
+ },
+ "Windsor-Essex": {
+  "func": getWindsorEssexCountyData,
+  "URL": "https://www.wechu.org/cv/local-updates"
+ },
+ "York": {
+  "func": getYorkData,
+  "URL": "https://www.york.ca/wps/portal/yorkhome/health/yr/infectiousdiseasesandprevention/covid19/covid19/!ut/p/z1/jZDfT4MwEMf_Fh94lB6Mjc63ijrKtmBi3LAvpoMOMKwlLYPEv95Ol5glit7D5e7yuR_fQwxliEne1yXvaiV5Y_MXNnulZEHjeAlJGuAICKQk8UMM93MPbT8B-MUIIPaf_hGAjY9P_lpgFfh6Ha1LxFreVde13CuUWS9yq_FoitoIboThsmi16IU8KUdZrvq68ObfwRaxy1WLJxwA3SQh2XgpBHRyBnw_mMVeBAnEKQb6ED5O73DswdI_A-Nqykbtvh5P5G6C7dla7IUW2j1qW666rjU3DjgwDINbKlU2ws3VwYGfWiplOpRdkqg9PGfvq9s5fZs2_YpcfQDml0gV/dz/d5/L2dBISEvZ0FBIS9nQSEh/#.XnvckW57lTY"
+ }
+}
+
 def main():
 
     covidOntario = {}
@@ -374,7 +478,7 @@ def main():
     covidOntario['Middlesex-London'] = getMiddlesexLondonData()
     covidOntario['Niagara Region'] = getNiagaraData()
     covidOntario['North Bay Parry Sound'] = getNorthBayParrySoundData()
-    covidOntario['Northwestern Ontario'] = getNorthWesternData()
+    #covidOntario['Northwestern Ontario'] = getNorthWesternData()
     covidOntario["Ottawa"] = getOttawaData()
     covidOntario["Peel"] = getPeelData()
     covidOntario["Peterborough"] = getPeterboroughData()
