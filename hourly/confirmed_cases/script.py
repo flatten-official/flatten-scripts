@@ -97,7 +97,9 @@ def geocode_sheet(values_input):
                        "Zone 4 (Edmundston area), New Brunswick": "Edmundston, New Brunswick",
                        "Porcupine, Ontario": "Timmins, Ontario",
                        "Central, Alberta": "Red Deer, Alberta",
-                       "South, Alberta": "Lethbridge, Alberta"
+                       "South, Alberta": "Lethbridge, Alberta",
+                       "Eastern, Ontario": "Cornwall, Ontario",
+                       'Central, Saskatchewan': "Humboldt, Saskatchewan"
                        }
 
     output = {'last_updated': last_updated, 'max_cases': int(df.max()), 'confirmed_cases': []}
