@@ -11,9 +11,13 @@ def main(event, context):
 
     data = script.get_spreadsheet_data()
 
+    print("Preprocessing data...")
+
+    confirmed_cases_df, last_updated = script.preprocess_confirmed_cases_sheet(data)
+
     print("Geocoding data...")
 
-    output = script.geocode_sheet(data)
+    output = script.geocode_sheet(confirmed_cases_df, last_updated)
 
     print("Outputting data to file...")
     script.output_json(output)
