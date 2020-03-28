@@ -298,7 +298,12 @@ def upload_blob(bucket, data_string, destination_blob_name):
 
 
 def output_json(output):
-    """Outputs Geocoded Data as a JSON"""
+    """
+    Outputs Geocoded Data as a JSON
+    
+    Parameters:
+        output: The Python Dict to convert into a JSON.
+    """
     output_string = json.dumps(output)
     output_string = output_string.replace("'", r"\'")
 
