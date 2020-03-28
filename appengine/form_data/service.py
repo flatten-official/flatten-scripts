@@ -25,7 +25,7 @@ def upload_blob(bucket, data_string, destination_blob_name):
     )
 
 
-def main(event, context):
+def main():
     """
     Processes the info in the datastore into
     """
@@ -62,7 +62,3 @@ def main(event, context):
     json_str = json.dumps(map_data)
 
     upload_blob(bucket, json_str, UPLOAD_FILE)
-
-
-if __name__ == "__main__":
-    main(None, None)
