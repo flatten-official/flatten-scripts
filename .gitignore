@@ -4,8 +4,5 @@ config.py
 *.ipynb
 __pycache__
 .idea
-<<<<<<< HEAD
-=======
 **/__pycache__
 **/*.pyc
->>>>>>> master
