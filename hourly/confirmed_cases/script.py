@@ -176,7 +176,7 @@ def geocode_sheet(confirmed_cases_df, last_updated):
         # if the city is not reported and the province is not in ontario
         elif city == "Not Reported":
 
-            # skip data entry if city is not reported and province is ontario
+            # If Ontario, skip as the scraper will deal with that information
             if province == "Ontario":
                 continue
 
@@ -189,6 +189,7 @@ def geocode_sheet(confirmed_cases_df, last_updated):
             })
             print("Geocoded:" + str(location))
 
+        # Case for all location information provided
         else:
             # if the province is Ontario, we scrape data from other sites
             if province == "Ontario":
@@ -203,8 +204,6 @@ def geocode_sheet(confirmed_cases_df, last_updated):
                     # replace location name if it exists in the dict of exceptions
                     if location in name_exceptions:
                         geocoded_location = geocode(name_exceptions[str(location)] + ', Canada')
-
-                    # otherwise, simply geocode the location name
                     else:
                         geocoded_location = geocode(str(location) + ', Canada')
 
