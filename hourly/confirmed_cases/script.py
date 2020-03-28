@@ -33,8 +33,8 @@ UPLOAD_FILE = os.environ['UPLOAD_FILE']
 SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
 
 # Initializes Geolocator and RateLimiter objects
-geolocator = Nominatim(user_agent="COVIDScript")
-geocode = RateLimiter(geolocator.geocode, min_delay_seconds=3)
+geolocator = Nominatim(user_agent="COVIDScript", timeout=3)
+geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
 
 
 def download_blob(bucket_name, source_blob_name):
@@ -50,7 +50,8 @@ def download_blob(bucket_name, source_blob_name):
 
 def get_spreadsheet_data():
     """
-    Gets data on confirmed coronavirus cases from Google's API Client.
+    Uses the Google Sheets API to access the database of confirmed cases of COVID-19 in Canada.
+    Credit: https://github.com/ishaberry/Covid19Canada
 
     Returns:
         A 2D list representing a list of cases.
@@ -158,61 +159,90 @@ def geocode_sheet(confirmed_cases_df, last_updated):
     # the "confirmed_cases" key of this dict will get filled with the Geocoded locations of the confirmed cases
     output = {'last_updated': last_updated, 'max_cases': int(confirmed_cases_df.max()), 'confirmed_cases': []}
 
-    # iterate through the df and geocode data
+    # iterate through the confirmed_cases dataframe and geocode the data
     for location, count in confirmed_cases_df.iteritems():
-        if str(location) == "Not Reported, Repatriated":
-            output['confirmed_cases'].append(
-                {'name': str(location), 'cases': int(confirmed_cases_df.get(key=str(location))), 'coord': ["N/A", "N/A"]})
+        # split the string into city, province pairs
+        city_province_list = str(location).split(', ')
+        city, province = city_province_list[0], city_province_list[1]
 
-        elif str(location)[:12] == "Not Reported":
-            if location[14:] == "Ontario":
+        # if the location of the reported case is unknown
+        if str(location) == "Not Reported, Repatriated":
+            output['confirmed_cases'].append({
+                'name': str(location), 
+                'cases': int(count), 
+                "coord": ["N/A", "N/A"]
+            })
+
+        # if the city is not reported and the province is not in ontario
+        elif city == "Not Reported":
+
+            # skip data entry if city is not reported and province is ontario
+            if province == "Ontario":
                 continue
 
-            geocoded_location = geocode(location[14:] + ', Canada')
-            output['confirmed_cases'].append({'name': str(location), 'cases': int(confirmed_cases_df.get(key=str(location))),
-                                              'coord': [geocoded_location.latitude, geocoded_location.longitude]})
+            geocoded_location = geocode(province + ', Canada')
+
+            output['confirmed_cases'].append({
+                'name': str(location), 
+                'cases': int(count),
+                "coord": [geocoded_location.latitude, geocoded_location.longitude]
+            })
             print("Geocoded:" + str(location))
 
         else:
-            if str(location).split(', ')[1] == "Ontario":
-                name = str(location)
-
+            # if the province is Ontario, we scrape data from other sites
+            if province == "Ontario":
                 try:
-                    ## gets scraped ontario data for keys in the spreadsheet
-                    cases = dispatcher[name.split(', ')[0]]['func']()['Positive']
+                    # gets scraped ontario data for keys in the spreadsheet
+                    cases = dispatcher[city]['func']()['Positive']
 
+                    # skip the data entry if there's no cases
                     if cases == 0:
                         continue
 
+                    # replace location name if it exists in the dict of exceptions
                     if location in name_exceptions:
                         geocoded_location = geocode(name_exceptions[str(location)] + ', Canada')
 
+                    # otherwise, simply geocode the location name
                     else:
                         geocoded_location = geocode(str(location) + ', Canada')
 
-                    output['confirmed_cases'].append(
-                        {"name": name, "cases": cases, 'coord': [geocoded_location.latitude, geocoded_location.longitude]})
+                    # append the geocoded_location to the confirmed cases list
+                    output['confirmed_cases'].append({
+                        "name": str(location), 
+                        "cases": cases, 
+                        "coord": [geocoded_location.latitude, geocoded_location.longitude]
+                    })
+                    
                     print(f"Geocoded:{str(location)} SCRAPE")
-                    dispatcher.pop(name.split(', ')[0], None)
+
+                    # remove from dispatch list so we don't Geocode the same location twice
+                    dispatcher.pop(city, None)
                     continue
                 except:
                     pass
 
+            # replace location name if it exists in the dict of exceptions
             if location in name_exceptions:
-                geocoded_location = geocode(
-                    name_exceptions[str(location)] + ', Canada')
+                geocoded_location = geocode(name_exceptions[str(location)] + ', Canada')
             else:
                 geocoded_location = geocode(str(location) + ', Canada')
 
+            # if geocode failed, geocode a newly processed string
             if geocoded_location is None:
                 print(location)
                 geocoded_location = geocode(str(location).split(", ", 1)[1] + ', Canada')
 
-            output['confirmed_cases'].append({'name': str(location), 'cases': int(confirmed_cases_df.get(key=str(location))),
-                                              'coord': [geocoded_location.latitude, geocoded_location.longitude]})
+            output['confirmed_cases'].append({
+                'name': str(location), 
+                'cases': int(count),
+                "coord": [geocoded_location.latitude, geocoded_location.longitude]
+            })
+
             print("Geocoded:" + str(location))
 
-    ## gets ontario data for keys not in the spreadsheet
+    # gets ontario data for keys not in the spreadsheet
     for key in dispatcher.keys():
         try:
             name = key + ", Ontario"
@@ -225,8 +255,12 @@ def geocode_sheet(confirmed_cases_df, last_updated):
                 geocoded_location = geocode(name_exceptions[name] + ', Canada')
             else:
                 geocoded_location = geocode(name + ', Canada')
-            output['confirmed_cases'].append(
-                {"name": name, "cases": cases, 'coord': [geocoded_location.latitude, geocoded_location.longitude]})
+
+            output['confirmed_cases'].append({
+                "name": name, 
+                "cases": cases, 
+                "coord": [geocoded_location.latitude, geocoded_location.longitude]
+            })
             print(f"Geocoded:{name} SCRAPE")
         except:
             print(f"FAILED on {key}")
@@ -235,7 +269,14 @@ def geocode_sheet(confirmed_cases_df, last_updated):
 
 
 def upload_blob(bucket, data_string, destination_blob_name):
-    """Uploads a file to the bucket."""
+    """
+    Uploads a file to the bucket.
+
+    Parameters:
+        bucket: Bucket to upload to.
+        data_string: Data to upload.
+        destination_blob_name: Name of destination blob to upload to.
+    """
 
     blob = bucket.blob(destination_blob_name)
 
@@ -249,6 +290,7 @@ def upload_blob(bucket, data_string, destination_blob_name):
 
 
 def output_json(output):
+    """Outputs Geocoded Data as a JSON"""
     output_string = json.dumps(output)
     output_string = output_string.replace("'", r"\'")
 
