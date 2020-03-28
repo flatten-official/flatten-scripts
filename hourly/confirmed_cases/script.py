@@ -6,7 +6,7 @@ from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 from datetime import datetime
 import os
-import covidOntario
+from covidOntario import dispatcher
 import pytz
 
 # If modifying these scopes, delete the file token.pickle.
@@ -18,7 +18,6 @@ SPREADSHEET_RANGE = 'Cases'
 GCS_BUCKET = os.environ['GCS_BUCKET']
 UPLOAD_FILE = 'confirmed_data.json'
 SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
-DISPATCHER = covidOntario.dispatcher
 
 
 def download_blob(bucket_name, source_blob_name):
@@ -119,7 +118,11 @@ def geocode_sheet(values_input):
                 name = str(index)
                 try:
                     ## gets scraped ontario data for keys in the spreadsheet
-                    cases = DISPATCHER[name.split(', ')[0]]['func']()['Positive']
+                    cases = dispatcher[name.split(', ')[0]]['func']()['Positive']
+
+                    if cases == 0:
+                        continue
+
                     if index in name_exceptions:
                         location = geocode(name_exceptions[str(index)] + ', Canada')
                     else:
@@ -127,7 +130,7 @@ def geocode_sheet(values_input):
                     output['confirmed_cases'].append(
                         {"name": name, "cases": cases, 'coord': [location.latitude, location.longitude]})
                     print(f"Geocoded:{str(index)} SCRAPE")
-                    DISPATCHER.pop(name.split(', ')[0], None)
+                    dispatcher.pop(name.split(', ')[0], None)
                     continue
                 except:
                     pass
@@ -147,10 +150,14 @@ def geocode_sheet(values_input):
             print("Geocoded:" + str(index))
 
     ## gets ontario data for keys not in the spreadsheet
-    for key in DISPATCHER.keys():
+    for key in dispatcher.keys():
         try:
             name = key + ", Ontario"
-            cases = DISPATCHER[key]["func"]()
+            cases = dispatcher[key]["func"]()['Positive']
+
+            if cases == 0:
+                continue
+
             if name in name_exceptions:
                 location = geocode(name_exceptions[name] + ', Canada')
             else:
