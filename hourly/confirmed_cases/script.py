@@ -13,23 +13,10 @@ import pytz
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
-# SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
-# SPREADSHEET_RANGE = 'Cases'
-# GCS_BUCKET = os.environ['GCS_BUCKET']
-# UPLOAD_FILE = 'confirmed_data.json'
-# SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
-
-# setting environment variables
-os.environ['SPREADSHEET_ID'] = "1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo"
-os.environ["GCS_BUCKET"] = "flatten-staging-271921.appspot.com"
-os.environ['UPLOAD_FILE'] = "confirmed_data.json"
-os.environ['SHEETS_API_KEY'] = "AIzaSyDs-bNN44Es1zMpL0pAO4qsnOdz9g4zIok"
-
-# The ID and range of a sample spreadsheet.
-SPREADSHEET_ID = os.environ['SPREADSHEET_ID']
+SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
 SPREADSHEET_RANGE = 'Cases'
 GCS_BUCKET = os.environ['GCS_BUCKET']
-UPLOAD_FILE = os.environ['UPLOAD_FILE']
+UPLOAD_FILE = 'confirmed_data.json'
 SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
 
 # Initializes Geolocator and RateLimiter objects
