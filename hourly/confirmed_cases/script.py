@@ -204,36 +204,30 @@ def geocode_sheet(values_input):
     for key in dispatcher.keys():
         try:
             name = key + ", Ontario"
-            # check if name already exists in cache
-            try:
-                cases = dispatcher[key]["func"]()['Positive']
+            cases = dispatcher[key]["func"]()['Positive']
 
-                if cases == 0:
-                    continue
+            if cases == 0:
+                continue
 
-                # check cache to see if location already exists
-                location_info = location_cache[name]
-                output['confirmed_cases'].append({
-                    'name': name,
-                    'cases': cases,
-                    'coord': location_info["coord"]
-                })
-            except KeyError:
-                if name in name_exceptions:
-                    location = geocode(name_exceptions[name] + ', Canada')
-                else:
-                    location = geocode(name + ', Canada')
-                output['confirmed_cases'].append(
-                    {"name": name, "cases": cases, 'coord': [location.latitude, location.longitude]})
-                print(f"Geocoded:{name} SCRAPE")
-
-                # store inside the cache
-                location_cache[name] = {
-                    "cases": cases,
-                    "coord": [location.latitude, location.longitude]
-                }
+            if name in name_exceptions:
+                location = geocode(name_exceptions[name] + ', Canada')
+            else:
+                location = geocode(name + ', Canada')
         except:
             print(f"FAILED on {key}")
+            continue
+
+        try:
+            location_info = location_cache[name]
+            output['confirmed_cases'].append({
+                'name': name,
+                'cases': cases,
+                'coord': location_info["coord"]
+            })
+        except KeyError:
+            output['confirmed_cases'].append(
+                    {"name": name, "cases": cases, 'coord': [location.latitude, location.longitude]})
+            print(f"Geocoded:{name} SCRAPE")
 
     with open('location_cache.json', 'w') as json_file:
         json.dump(location_cache, json_file, indent=2)
