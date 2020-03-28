@@ -13,12 +13,11 @@ import time
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
+SPREADSHEET_ID = os.environ['SPREADSHEET_ID']
 SPREADSHEET_RANGE = 'Cases'
-SPREADSHEET_ID = "1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo"
-GCS_BUCKET = "flatten-staging-271921.appspot.com"
-UPLOAD_FILE = "confirmed_data.json"
-SHEETS_API_KEY = "AIzaSyDs-bNN44Es1zMpL0pAO4qsnOdz9g4zIok"
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "confirmed_data_generator/credentials.json"
+GCS_BUCKET = os.environ['GCS_BUCKET']
+UPLOAD_FILE = os.environ['UPLOAD_FILE_CONFIRMED']
+SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
 
 def download_blob(bucket_name, source_blob_name):
     """Downloads a blob from the bucket."""
@@ -143,16 +142,6 @@ def main(message_attributes):
     print("Geocoding data...")
 
     output = geocode_sheet(data)
-
-    # output = {
-    #     "confirmed_data_generator": [
-    #         {
-    #             "name": "Yifei Zhang",
-    #             "cases": 1,
-    #             "coord": [2.0, 3.0]
-    #         }
-    #     ]
-    # }
 
     print("Outputting data to file...")
     output_json(output)
