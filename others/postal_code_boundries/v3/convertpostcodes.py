@@ -11,7 +11,6 @@ def convert(filename):
         input_data = json.load(file)
     output_data = input_data
     for i in range(len(output_data["features"])):
-        #output_data['features'][i] = ["NIZE"]
         if output_data["features"][i]['geometry']['type'] == 'Polygon':
             for j in range(len(output_data["features"][i]['geometry']['coordinates'])):
                 coords = []
