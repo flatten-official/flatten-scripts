@@ -2,7 +2,7 @@
 
 ## Testing Locally
 
-Set the environment variables (`export ENV_VAR=VALUE` on Mac) used in the script.
+Set the environment variables (on 'nix, `export ENV_VAR=VALUE`) used in the script.
 Ensure you have the requirements installed, and run `main.py`
 
 You should just be able to steal the values you want from the `app.staging.yaml` file.
