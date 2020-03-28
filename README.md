@@ -24,7 +24,7 @@ The scripts that parse, format and run the data behind the scenes of [flatten.ca
 
 ### Deploying App Engine Services on Cloud Build
 
-Everything should work more or less out of the box, apart from the fact that you have to set the `_BRANCH` envoronment variable to `prod` for prouduction or `dev` for development.
+Everything should work more or less out of the box, apart from the fact that you have to set the `_BRANCH` variable substitution to `prod` for prouduction or `dev` for development.
 
 ## Contact
 Martin, Arthur, Will, Rupert, Ivan, Charlie
