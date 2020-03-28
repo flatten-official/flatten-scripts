@@ -17,5 +17,7 @@
    - 'us-east1'
    - '--platform'
    - 'managed'
+   - '--memory'
+   - '2Gi'
  images:
  - 'gcr.io/$PROJECT_ID/flatten-scripts:$COMMIT_SHA'
