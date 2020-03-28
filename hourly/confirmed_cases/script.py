@@ -156,7 +156,7 @@ def geocode_sheet(values_input):
             else:
                 location = geocode(name + ', Canada')
             output['confirmed_cases'].append(
-                {"name": name, "cases": cases, 'coords': [location.latitude, location.longitude]})
+                {"name": name, "cases": cases, 'coord': [location.latitude, location.longitude]})
             print(f"Geocoded:{name} SCRAPE")
         except:
             print(f"FAILED on {key}")
