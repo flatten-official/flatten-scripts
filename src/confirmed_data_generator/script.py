@@ -129,7 +129,6 @@ def output_json(output):
     output_string = output_string.replace("Vancouver Coastal", "Vancouver")
     output_string = output_string.replace("'", r"\'")
 
-    # stops here because I need to set the GOOGLE_APPLICATION_CREDENTIALS
     storage_client = storage.Client()
     bucket = storage_client.bucket(GCS_BUCKET)
     upload_blob(bucket, output_string, UPLOAD_FILE)
