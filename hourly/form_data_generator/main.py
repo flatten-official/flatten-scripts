@@ -6,9 +6,9 @@ from math import floor
 import os
 
 GCS_BUCKET = os.environ['GCS_BUCKET']
-UPLOAD_FILE = os.environ['UPLOAD_FILE']
-DS_NAMESPACE =  os.environ['DS_NAMESPACE']
-DS_KIND = os.environ['DS_KIND']
+UPLOAD_FILE = 'form_data.json'
+DS_NAMESPACE = os.environ['DS_NAMESPACE']
+DS_KIND = 'form_user'
 
 
 def upload_blob(bucket, data_string, destination_blob_name):
