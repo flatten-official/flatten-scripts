@@ -4,7 +4,6 @@ Make sure it runs smoothly and reports any errors clearly.
 """
 
 import script
-import time
 
 
 def main(event, context):

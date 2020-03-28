@@ -3,16 +3,13 @@ from config import GCS_BUCKET, UPLOAD_FILE, SPREADSHEET_ID, SHEETS_API_KEY
 from google.cloud import storage
 import pandas as pd
 from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow, Flow
-from google.auth.transport.requests import Request
-import os
-import pickle
 import json
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 from datetime import datetime
-import script
 import os
+from covidOntario import dispatcher
+import pytz
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
@@ -28,6 +25,7 @@ UPLOAD_FILE = 'confirmed_data.json'
 SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
 >>>>>>> master
 
+
 def download_blob(bucket_name, source_blob_name):
     """Downloads a blob from the bucket."""
 
@@ -38,8 +36,8 @@ def download_blob(bucket_name, source_blob_name):
     s = blob.download_as_string()
     return s
 
-def get_spreadsheet_data():
 
+def get_spreadsheet_data():
     service = build('sheets', 'v4', developerKey=SHEETS_API_KEY)
 
     # Call the Sheets API
@@ -49,7 +47,7 @@ def get_spreadsheet_data():
     values_input = result_input.get('values', [])
 
     # Part of the sheets API, even if undefined. Do not remove
-    if not values_input and not values_expansion:
+    if not values_input:
         raise Exception("No data found")
 
     return values_input
@@ -69,10 +67,11 @@ def geocode_sheet(values_input):
 
     print(df.iloc[-1])
 
-    now = datetime.now()
+    now = datetime.now(pytz.timezone('US/Eastern'))
     dt_string = now.strftime("%d/%m/%Y %H:%M")
     dt_string.replace('/', '-')
-    last_updated = "Data last accessed at: " + dt_string + ". Latest case reported on: " + str(df.iloc[-1]['date_report']) + "."
+    last_updated = "Data last accessed at: " + dt_string + ". Latest case reported on: " + str(
+        df.iloc[-1]['date_report']) + "."
 
     df = df[['health_region', 'province']]
     df['health_region'] = df['health_region'] + ', ' + df['province']
@@ -83,6 +82,7 @@ def geocode_sheet(values_input):
     geolocator = Nominatim(user_agent="COVIDScript")
     geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
 
+    ## finds names that geolocater knows
     name_exceptions = {"Kingston Frontenac Lennox & Addington, Ontario": "Kingston, Ontario",
                        "Zone 2 (Saint John area), New Brunswick": "Saint John, New Brunswick",
                        "Island, BC": "Vancouver Island, BC",
@@ -96,19 +96,51 @@ def geocode_sheet(values_input):
                        "Zone 1 (Moncton Area), New Brunswick": "Moncton, New Brunswick",
                        "North, Saskatchewan": "La Ronge, Saskatchewan",
                        "North, Alberta": "Peerless Lake, Alberta",
-                       "South, Saskatchewan": "Moose Jaw, Saskatchewan"
+                       "South, Saskatchewan": "Moose Jaw, Saskatchewan",
+                       "North Bay Parry Sound, Ontario": "North Bay, Ontario",
+                       "Leeds Grenville Lanark": "Brockville, Ontario",
+                       "Southwestern": "St. Thomas, Ontario",
+                       "Zone 4 (Edmundston area), New Brunswick": "Edmundston, New Brunswick",
+                       "Porcupine, Ontario": "Timmins, Ontario",
+                       "Central, Alberta": "Red Deer, Alberta",
+                       "South, Alberta": "Lethbridge, Alberta"
                        }
 
-    output = {'last_updated': last_updated, 'max_cases': int(df.max()), 'confirmed_cases':[]}
+    output = {'last_updated': last_updated, 'max_cases': int(df.max()), 'confirmed_cases': []}
 
     for index, row in df.iteritems():
         if str(index) == "Not Reported, Repatriated":
-            output['confirmed_cases'].append({'name': str(index), 'cases': int(df.get(key = str(index))), 'coord': ["N/A", "N/A"]})
+            output['confirmed_cases'].append(
+                {'name': str(index), 'cases': int(df.get(key=str(index))), 'coord': ["N/A", "N/A"]})
         elif str(index)[:12] == "Not Reported":
+            if index[14:] == "Ontario":
+                continue
             location = geocode(index[14:] + ', Canada')
-            output['confirmed_cases'].append({'name': str(index), 'cases': int(df.get(key = str(index))), 'coord': [location.latitude, location.longitude]})
+            output['confirmed_cases'].append({'name': str(index), 'cases': int(df.get(key=str(index))),
+                                              'coord': [location.latitude, location.longitude]})
             print("Geocoded:" + str(index))
         else:
+            if str(index).split(', ')[1] == "Ontario":
+                name = str(index)
+                try:
+                    ## gets scraped ontario data for keys in the spreadsheet
+                    cases = dispatcher[name.split(', ')[0]]['func']()['Positive']
+
+                    if cases == 0:
+                        continue
+
+                    if index in name_exceptions:
+                        location = geocode(name_exceptions[str(index)] + ', Canada')
+                    else:
+                        location = geocode(str(index) + ', Canada')
+                    output['confirmed_cases'].append(
+                        {"name": name, "cases": cases, 'coord': [location.latitude, location.longitude]})
+                    print(f"Geocoded:{str(index)} SCRAPE")
+                    dispatcher.pop(name.split(', ')[0], None)
+                    continue
+                except:
+                    pass
+
             if index in name_exceptions:
                 location = geocode(
                     name_exceptions[str(index)] + ', Canada')
@@ -119,8 +151,28 @@ def geocode_sheet(values_input):
                 print(index)
                 location = geocode(str(index).split(", ", 1)[1] + ', Canada')
 
-            output['confirmed_cases'].append({'name': str(index), 'cases': int(df.get(key = str(index))), 'coord': [location.latitude, location.longitude]})
+            output['confirmed_cases'].append({'name': str(index), 'cases': int(df.get(key=str(index))),
+                                              'coord': [location.latitude, location.longitude]})
             print("Geocoded:" + str(index))
+
+    ## gets ontario data for keys not in the spreadsheet
+    for key in dispatcher.keys():
+        try:
+            name = key + ", Ontario"
+            cases = dispatcher[key]["func"]()['Positive']
+
+            if cases == 0:
+                continue
+
+            if name in name_exceptions:
+                location = geocode(name_exceptions[name] + ', Canada')
+            else:
+                location = geocode(name + ', Canada')
+            output['confirmed_cases'].append(
+                {"name": name, "cases": cases, 'coord': [location.latitude, location.longitude]})
+            print(f"Geocoded:{name} SCRAPE")
+        except:
+            print(f"FAILED on {key}")
 
     return output
 
@@ -141,7 +193,6 @@ def upload_blob(bucket, data_string, destination_blob_name):
 
 def output_json(output):
     output_string = json.dumps(output)
-    output_string = output_string.replace("Vancouver Coastal", "Vancouver")
     output_string = output_string.replace("'", r"\'")
 
     storage_client = storage.Client()
