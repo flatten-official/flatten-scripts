@@ -16,7 +16,7 @@ def convert(filename):
             for j in range(len(output_data["features"][i]['geometry']['coordinates'])):
                 coords = []
                 for lng, lat in TRANSFORMER.itransform(output_data["features"][i]['geometry']['coordinates'][j]):
-                    coords.append([lng, lat])
+                    coords.append([round(lng, 4), round(lat, 4)])
                 output_data["features"][i]['geometry']['coordinates'][j] = coords
                       
         elif output_data["features"][i]['geometry']['type'] == 'MultiPolygon':
@@ -24,7 +24,7 @@ def convert(filename):
                 for k in range(len(output_data["features"][i]['geometry']['coordinates'][j])):
                     coords = []
                     for lng, lat in TRANSFORMER.itransform(output_data["features"][i]['geometry']['coordinates'][j][k]):
-                        coords.append([lng, lat])
+                        coords.append([round(lng, 4), round(lat, 4)])
                     output_data["features"][i]['geometry']['coordinates'][j][k] = coords
 
     with open("converted_boundaries.json", "w") as file:
