@@ -36,21 +36,30 @@ SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
 geolocator = Nominatim(user_agent="COVIDScript", timeout=3)
 geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
 
-
 def download_blob(bucket_name, source_blob_name):
-    """Downloads a blob from the bucket."""
+    """
+    Downloads a blob from the bucket as a string.
+
+    Parameters:
+        bucket_name: Name of the bucket.
+        source_blob_name: Name of source blob.
+
+    Returns:
+        blob_str: The downloaded blob string.
+    """
 
     storage_client = storage.Client()
 
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(source_blob_name)
-    s = blob.download_as_string()
-    return s
+    blob_str = blob.download_as_string()
+    return blob_str
 
 
 def get_spreadsheet_data():
     """
     Uses the Google Sheets API to access the database of confirmed cases of COVID-19 in Canada.
+    COVID-19 in Canada
     Credit: https://github.com/ishaberry/Covid19Canada
 
     Returns:
@@ -96,7 +105,7 @@ def preprocess_confirmed_cases_sheet(confirmed_cases):
     df.columns = df.iloc[0]
     df = df[1:]
 
-    # retrieve the date and time that the code runs at
+    # Provide information on the time of the last update
     now = datetime.now(pytz.timezone('US/Eastern'))
     dt_string = now.strftime("%d/%m/%Y %H:%M")
     dt_string.replace('/', '-')
@@ -228,7 +237,7 @@ def geocode_sheet(confirmed_cases_df, last_updated):
             else:
                 geocoded_location = geocode(str(location) + ', Canada')
 
-            # if geocode failed, geocode a newly processed string
+            # Default to province if the location is not found
             if geocoded_location is None:
                 print(location)
                 geocoded_location = geocode(str(location).split(", ", 1)[1] + ', Canada')
@@ -241,7 +250,7 @@ def geocode_sheet(confirmed_cases_df, last_updated):
 
             print("Geocoded:" + str(location))
 
-    # gets ontario data for keys not in the spreadsheet
+    # Gets ontario data for keys not in the spreadsheet
     for key in dispatcher.keys():
         try:
             name = key + ", Ontario"
