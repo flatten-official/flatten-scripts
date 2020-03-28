@@ -24,7 +24,10 @@ The scripts that parse, format and run the data behind the scenes of [flatten.ca
 
 ### Deploying App Engine Services on Cloud Build
 
-Everything should work more or less out of the box, apart from the fact that you have to set the `_BRANCH` variable substitution to `prod` for prouduction or `dev` for development.
+Everything should work more or less out of the box for a triggered deploy from a merge.
+If you want to test a manual deployment on the staging instance, you have to set the `BRANCH_NAME` variable substitution to `staging` 
+
+`gcloud builds submit --substitutions BRANCH_NAME=staging`
 
 ## Contact
 Martin, Arthur, Will, Rupert, Ivan, Charlie
