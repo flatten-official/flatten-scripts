@@ -138,18 +138,14 @@ def getLambtonData():
 ##NOTE: currently has no cases so they haven't set up a proper site so this will be done later
 def getLeedsGrenvilleLanarkData():
     soup = getSoup("Leeds Grenville Lanark")
-    words = soup.find_all("div", {"class": "accordion-body"})[0].find("p").get_text(strip=True).split()
+    words = soup.find_all("div", {"class": "accordion-collapse"})[0].find("p").get_text(strip=True).split()
     for word in words[::-1]:
         try:
-            if ord(word[0]) >= 65:
-                cases = w2n.word_to_num(word)
-                break
+            cases = int(word)
+            break
         except:
             pass
     return {"Positive": cases}
-    # if(soup.find_all("div", {"class": "accordion-body"})[0].find("p").get_text(strip=True) == "There have been many tests for COVID-19 conducted on people in our community. As of March 26 at 11:00am one test has been positive."):
-    #     return {"Positive": 1}
-    # raise Exception(NameError)
 
 def getMiddlesexLondonData():
     soup = getSoup("Middlesex-London")
