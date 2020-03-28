@@ -1,12 +1,15 @@
 import datetime
 
-from flask import Flask, Response
+from flask import Flask, Response, request
 from service import main
 
 app = Flask(__name__)
 
 @app.route('/')
 def root():
+    # only trigger the service when the cron job is run
+    if not ('X-Appengine-Cron' in request.headers and request.headers['X-Appengine-Cron'] == 'true'):
+        return Response(status=403)
     try:
         main()
         return Response(status=200)
