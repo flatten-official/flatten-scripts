@@ -44,7 +44,12 @@ The `main` function is passed the message attributes as a dictionary. See pre-ex
 ##Testing
 
 ### Local Testing
-This has not been entirely worked out yet. :flushed:
+
+1. Make sure you have all dependencies installed.
+2. Go into whichever directory the `script.py` you want to run is located in.
+3. Take out the `def main(message_attributes):` line and remove the indent of the code below it.
+4. Run `gcloud auth application-default login` and make sure the account you use has a `storage admin` role.
+5. Run `python3 script.py`.
 
 ### Manual Deployment for Testing
 
