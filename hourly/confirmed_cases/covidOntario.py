@@ -13,7 +13,6 @@ import json
 from word2number import w2n
 from datetime import date
 
-
 def getSoup(region):
     page = requests.get(dispatcher[region]["URL"])
     return bs4.BeautifulSoup(page.content, 'html.parser')
@@ -315,7 +314,7 @@ def getWindsorEssexCountyData():
 
 def getYorkData():
     soup = getSoup("York")
-    table = soup.find("table", {"dir": "ltr"})
+    table = soup.find("table", {"style": "border-collapse: collapse; width: 100%; height: 2880px;"})
     return {"Positive": len(table.find_all("tr")) - 1}
 
 dispatcher = {
