@@ -13,10 +13,10 @@ import pytz
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
-SPREADSHEET_ID = os.environ['SHEETS_API_KEY']
-SPREADSHEET_RANGE = os.environ['SPREADSHEET_RANGE']
+SPREADSHEET_ID= '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
+SPREADSHEET_RANGE= 'Cases'
 GCS_BUCKET = os.environ['GCS_BUCKET']
-UPLOAD_FILE = os.environ['UPLOAD_FILE']
+UPLOAD_FILE = 'confirmed_data.json'
 SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
 
 # Downloads a blob from the bucket as a string

@@ -1,8 +1,5 @@
 runtime: python37
 service: confirmed-cases
 env_variables:
-  SPREADSHEET_ID : '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
-  SPREADSHEET_RANGE : 'Cases'
   GCS_BUCKET : 'flatten-271620.appspot.com'
-  UPLOAD_FILE : 'confirmed_data.json'
   SHEETS_API_KEY : 'AIzaSyDs-bNN44Es1zMpL0pAO4qsnOdz9g4zIok'
