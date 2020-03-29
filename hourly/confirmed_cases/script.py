@@ -265,10 +265,11 @@ def get_provincial_totals(output_dict):
     nb_count = mb_count = al_count = nl_count = sk_count = yk_count = nw_count = \
     nu_count = ns_count = pe_count = qc_count = bc_count = on_count = 0
 
-    province = region["name"].split(", ")[1]
-
     for region in output_dict['confirmed_cases']:
         # adds case numbers to their respective province/territory
+
+        province = region["name"].split(", ")[1]
+
         if province == 'Ontario':
             on_count += region['cases']
         elif province == 'BC':

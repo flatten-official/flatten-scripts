@@ -453,7 +453,7 @@ dispatcher = {
  },
  "York": {
   "func": getYorkData,
-  "URL": "https://ww4.yorkmaps.ca/COVID19/PublicCaseListing/Cases.csv"
+  "URL": "https://ww4.yorkmaps.ca/COVID19/PublicCaseListing/TableListingExternalData.csv"
  }
 }
 
