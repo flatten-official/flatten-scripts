@@ -2,7 +2,7 @@
 The scripts that parse, format and run the data behind the scenes of [flatten.ca/heat-map](flatten.ca/heat-map).
 
 ## Important Guidelines
-- All contributions should be made on a new branch and a pull request to *master* should be made.
+- All contributions should be made on a new branch and a pull request to *staging* should be made.
 
 - Use the Issues tabs to keep track of bugs, improvements and more. Use the Projects tab to keep track of work!
 
