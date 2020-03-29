@@ -262,6 +262,66 @@ def geocode_sheet(confirmed_cases_df, last_updated):
 
     return output
 
+def get_provincial_totals(output_dict):
+    # starts counter variables for each province/territory
+    on_count = 0
+    bc_count = 0
+    qc_count = 0
+    pe_count = 0
+    ns_count = 0
+    nb_count = 0
+    mb_count = 0
+    al_count = 0
+    nl_count = 0
+    sk_count = 0
+    yk_count = 0
+    nw_count = 0
+    nu_count = 0
+
+    for region in output_dict['confirmed_cases']:
+        # adds case numbers to their respective province/territory
+        if region['name'].split(', ')[1] == 'Ontario':
+            on_count += region['cases']
+        elif region['name'].split(', ')[1] == 'BC':
+            bc_count += region['cases']
+        elif region['name'].split(', ')[1] == 'Quebec':
+            qc_count += region['cases']
+        elif region['name'].split(', ')[1] == 'PEI':
+            pe_count += region['cases']
+        elif region['name'].split(', ')[1] == 'Nova Scotia':
+            ns_count += region['cases']
+        elif region['name'].split(', ')[1] == 'New Brunswick':
+            nb_count += region['cases']
+        elif region['name'].split(', ')[1] == 'Manitoba':
+            mb_count += region['cases']
+        elif region['name'].split(', ')[1] == 'Alberta':
+            al_count += region['cases']
+        elif region['name'].split(', ')[1] == 'NL':
+            nl_count += region['cases']
+        elif region['name'].split(', ')[1] == 'Saskatchewan':
+            sk_count += region['cases']
+        elif region['name'].split(', ')[1] == 'Yukon':
+            yk_count += region['cases']
+        elif region['name'].split(', ')[1] == 'NWT':
+            nw_count += region['cases']
+        elif region['name'].split(', ')[1] == 'Nunavut':
+            nu_count += region['cases']
+
+    return {
+        'Ontario': on_count,
+        'BC': bc_count,
+        'Quebec': qc_count,
+        'PEI': pe_count,
+        'Nova Scotia': ns_count,
+        'New Brunswick': nb_count,
+        'Manitoba': mb_count,
+        'Alberta': al_count,
+        'NL': nl_count,
+        'Saskatchewan': sk_count,
+        'Yukon': yk_count,
+        'NWT': nw_count,
+        'Nunavut': nu_count
+    }
 
 def upload_blob(bucket, data_string, destination_blob_name):
     """
