@@ -15,9 +15,9 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 # The ID and range of a sample spreadsheet.
 SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
 SPREADSHEET_RANGE = 'Cases'
-GCS_BUCKET = 'flatten-staging-271921.appspot.com'#os.environ['GCS_BUCKET']
+GCS_BUCKET = os.environ['GCS_BUCKET']
 UPLOAD_FILE = 'confirmed_data.json'
-SHEETS_API_KEY = 'AIzaSyDs-bNN44Es1zMpL0pAO4qsnOdz9g4zIok'#os.environ['SHEETS_API_KEY']
+SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
 
 # Downloads a blob from the bucket as a string
 def download_blob(bucket_name, source_blob_name):
