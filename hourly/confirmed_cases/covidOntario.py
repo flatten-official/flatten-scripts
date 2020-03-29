@@ -10,6 +10,7 @@ Born: 2020-03-25
 import bs4
 import requests
 import json
+import pandas as pd
 from word2number import w2n
 from datetime import date
 
@@ -57,10 +58,18 @@ def getChathamKentData():
 
 def getDurhamData():
     soup = getSoup('Durham')
-    table = soup.find("table", {"class": "datatable"})
-    durhamData = {}
-    durhamData["Positive"] = len(table.find_all("tr")) - 1
-    return durhamData
+    # table = soup.find("table", {"class": "datatable"})
+    # durhamData = {}
+    # durhamData["Positive"] = len(table.find_all("tr")) - 1
+    paragraph = soup.find("p", {"class": "emphasis-Green"}).get_text(strip=True)
+    for word in paragraph.split():
+        try:
+            cases = int(word)
+            return {"Positive": cases}
+        except:
+            pass
+    raise NameError
+    
 
 def getEasternOntarioData():
     soup = getSoup("Eastern")
@@ -159,16 +168,13 @@ def getNiagaraData():
 
 def getNorthBayParrySoundData():
     soup = getSoup("North Bay Parry Sound")
-    table = soup.find("table", {"class": "datatable"})
-    rows = table.find_all("tr")
-    data = {}
-    for i in range(len(rows)):
-        dataRow = [cell.get_text(strip=True) for cell in rows[i].find_all("td")]
-        if (i == 3):
-            data["Tested"] = int(dataRow[1])
-        else:
-            data[dataRow[0].split()[0]] = int(dataRow[1])
-    return data
+    tables = soup.find_all("table", {"class": "datatable"})
+    positive = tables[0].find_all("tr")[3].find_all("td")[1].get_text(strip=True)
+    tested = []
+    rows = tables[1].find_all("tr")
+    for i in range(1, 4):
+        tested.append(rows[i].find_all("td")[1].get_text(strip=True))
+    return {"Positive": int(positive), "Negative": int(tested[0]), "Pending": int(tested[1]), "Tested": int(tested[2])}
 
 ##NOTE this will probably have to be changed as the situation develops
 def getNorthWesternData():
@@ -309,9 +315,8 @@ def getWindsorEssexCountyData():
     return {"Positive": positive, "Tested": tested, "Pending": pending, "Negative": tested-positive-pending}
 
 def getYorkData():
-    soup = getSoup("York")
-    table = soup.find("table", {"style": "border-collapse: collapse; width: 100%; height: 2880px;"})
-    return {"Positive": len(table.find_all("tr")) - 1}
+    df = pd.read_csv(dispatcher["York"]["URL"])
+    return {"Positive": len(df)}
 
 dispatcher = {
  "Algoma": {
@@ -448,7 +453,7 @@ dispatcher = {
  },
  "York": {
   "func": getYorkData,
-  "URL": "https://www.york.ca/wps/portal/yorkhome/health/yr/infectiousdiseasesandprevention/covid19/covid19/!ut/p/z1/jZDfT4MwEMf_Fh94lB6Mjc63ijrKtmBi3LAvpoMOMKwlLYPEv95Ol5glit7D5e7yuR_fQwxliEne1yXvaiV5Y_MXNnulZEHjeAlJGuAICKQk8UMM93MPbT8B-MUIIPaf_hGAjY9P_lpgFfh6Ha1LxFreVde13CuUWS9yq_FoitoIboThsmi16IU8KUdZrvq68ObfwRaxy1WLJxwA3SQh2XgpBHRyBnw_mMVeBAnEKQb6ED5O73DswdI_A-Nqykbtvh5P5G6C7dla7IUW2j1qW666rjU3DjgwDINbKlU2ws3VwYGfWiplOpRdkqg9PGfvq9s5fZs2_YpcfQDml0gV/dz/d5/L2dBISEvZ0FBIS9nQSEh/#.XnvckW57lTY"
+  "URL": "https://ww4.yorkmaps.ca/COVID19/PublicCaseListing/TableListingExternalData.csv"
  }
 }
 
