@@ -23,6 +23,32 @@ SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
 geolocator = Nominatim(user_agent="COVIDScript", timeout=3)
 geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
 
+# The keys in this dict are City, Province pairs the Geolocater does not recognize.
+# The script will replace them with the values of the dict.
+name_exceptions = {
+    "Kingston Frontenac Lennox & Addington, Ontario": "Kingston, Ontario",
+    "Zone 2 (Saint John area), New Brunswick": "Saint John, New Brunswick",
+    "Island, BC": "Vancouver Island, BC",
+    "Interior, BC": "Golden, BC",
+    "Grey Bruce, Ontario": "Park Head, Ontario",
+    "NWT, NWT": "Northwest Territories",
+    "Haliburton Kawartha Pineridge, Ontario": "Haliburton, Ontario",
+    "Labrador-Grenfell, NL": "Labrador City, NL",
+    "Fraser, BC": "Fraser Valley, BC",
+    "Zone 3 (Fredericton area), New Brunswick": "Fredericton, New Brunswick",
+    "Zone 1 (Moncton Area), New Brunswick": "Moncton, New Brunswick",
+    "North, Saskatchewan": "La Ronge, Saskatchewan",
+    "North, Alberta": "Peerless Lake, Alberta",
+    "South, Saskatchewan": "Moose Jaw, Saskatchewan",
+    "North Bay Parry Sound, Ontario": "North Bay, Ontario",
+    "Leeds Grenville Lanark": "Brockville, Ontario",
+    "Southwestern": "St. Thomas, Ontario",
+    "Zone 4 (Edmundston area), New Brunswick": "Edmundston, New Brunswick",
+    "Porcupine, Ontario": "Timmins, Ontario",
+    "Central, Alberta": "Red Deer, Alberta",
+    "South, Alberta": "Lethbridge, Alberta"
+}
+
 def download_blob(bucket_name, source_blob_name):
     """
     Downloads a blob from the bucket as a string.
@@ -39,8 +65,7 @@ def download_blob(bucket_name, source_blob_name):
 
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(source_blob_name)
-    blob_str = blob.download_as_string()
-    return blob_str
+    return blob.download_as_string()
 
 
 def get_spreadsheet_data():
@@ -125,33 +150,6 @@ def geocode_sheet(confirmed_cases_df, last_updated):
             - The greatest amount of cases in a single location.
             - A list of Geocoded coordinates for each location that has reported cases.
     """
-
-    # The keys in this dict are City, Province pairs the Geolocater does not recognize.
-    # The script will replace them with the values of the dict.
-    name_exceptions = {
-        "Kingston Frontenac Lennox & Addington, Ontario": "Kingston, Ontario",
-        "Zone 2 (Saint John area), New Brunswick": "Saint John, New Brunswick",
-        "Island, BC": "Vancouver Island, BC",
-        "Interior, BC": "Golden, BC",
-        "Grey Bruce, Ontario": "Park Head, Ontario",
-        "NWT, NWT": "Northwest Territories",
-        "Haliburton Kawartha Pineridge, Ontario": "Haliburton, Ontario",
-        "Labrador-Grenfell, NL": "Labrador City, NL",
-        "Fraser, BC": "Fraser Valley, BC",
-        "Zone 3 (Fredericton area), New Brunswick": "Fredericton, New Brunswick",
-        "Zone 1 (Moncton Area), New Brunswick": "Moncton, New Brunswick",
-        "North, Saskatchewan": "La Ronge, Saskatchewan",
-        "North, Alberta": "Peerless Lake, Alberta",
-        "South, Saskatchewan": "Moose Jaw, Saskatchewan",
-        "North Bay Parry Sound, Ontario": "North Bay, Ontario",
-        "Leeds Grenville Lanark": "Brockville, Ontario",
-        "Southwestern": "St. Thomas, Ontario",
-        "Zone 4 (Edmundston area), New Brunswick": "Edmundston, New Brunswick",
-        "Porcupine, Ontario": "Timmins, Ontario",
-        "Central, Alberta": "Red Deer, Alberta",
-        "South, Alberta": "Lethbridge, Alberta"
-    }
-
     # the "confirmed_cases" key of this dict will get filled with the Geocoded locations of the confirmed cases
     output = {'last_updated': last_updated, 'max_cases': int(confirmed_cases_df.max()), 'confirmed_cases': []}
 
@@ -264,47 +262,38 @@ def geocode_sheet(confirmed_cases_df, last_updated):
 
 def get_provincial_totals(output_dict):
     # starts counter variables for each province/territory
-    on_count = 0
-    bc_count = 0
-    qc_count = 0
-    pe_count = 0
-    ns_count = 0
-    nb_count = 0
-    mb_count = 0
-    al_count = 0
-    nl_count = 0
-    sk_count = 0
-    yk_count = 0
-    nw_count = 0
-    nu_count = 0
+    nb_count = mb_count = al_count = nl_count = sk_count = yk_count = nw_count = \
+    nu_count = ns_count = pe_count = qc_count = bc_count = on_count = 0
+
+    province = region["name"].split(", ")[1]
 
     for region in output_dict['confirmed_cases']:
         # adds case numbers to their respective province/territory
-        if region['name'].split(', ')[1] == 'Ontario':
+        if province == 'Ontario':
             on_count += region['cases']
-        elif region['name'].split(', ')[1] == 'BC':
+        elif province == 'BC':
             bc_count += region['cases']
-        elif region['name'].split(', ')[1] == 'Quebec':
+        elif province == 'Quebec':
             qc_count += region['cases']
-        elif region['name'].split(', ')[1] == 'PEI':
+        elif province == 'PEI':
             pe_count += region['cases']
-        elif region['name'].split(', ')[1] == 'Nova Scotia':
+        elif province == 'Nova Scotia':
             ns_count += region['cases']
-        elif region['name'].split(', ')[1] == 'New Brunswick':
+        elif province == 'New Brunswick':
             nb_count += region['cases']
-        elif region['name'].split(', ')[1] == 'Manitoba':
+        elif province == 'Manitoba':
             mb_count += region['cases']
-        elif region['name'].split(', ')[1] == 'Alberta':
+        elif province == 'Alberta':
             al_count += region['cases']
-        elif region['name'].split(', ')[1] == 'NL':
+        elif province == 'NL':
             nl_count += region['cases']
-        elif region['name'].split(', ')[1] == 'Saskatchewan':
+        elif province == 'Saskatchewan':
             sk_count += region['cases']
-        elif region['name'].split(', ')[1] == 'Yukon':
+        elif province == 'Yukon':
             yk_count += region['cases']
-        elif region['name'].split(', ')[1] == 'NWT':
+        elif province == 'NWT':
             nw_count += region['cases']
-        elif region['name'].split(', ')[1] == 'Nunavut':
+        elif province == 'Nunavut':
             nu_count += region['cases']
 
     return {

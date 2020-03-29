@@ -1,8 +1,6 @@
-config.py
 .DS_Store
 .ipynb_checkpoints
 *.ipynb
-__pycache__
 .idea
 **/__pycache__
 **/*.pyc
