@@ -29,6 +29,13 @@ If you want to test a manual deployment on the staging instance, you have to set
 
 `gcloud builds submit --substitutions BRANCH_NAME=staging`
 
+### Updating cron jobs
+
+Cron jobs will not auto deploy because this requires editor privileges. To redeploy cron jobs, run 
+
+`gcloud app deploy appengine/cron.yaml`
+
+
 ## Contact
 Martin, Arthur, Will, Rupert, Ivan, Charlie
 

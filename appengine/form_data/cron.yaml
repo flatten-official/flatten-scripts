@@ -1,4 +1,0 @@
-cron:
-- description: "Form data COVID 19 Cases"
-  url: /
-  schedule: every 12 hours
