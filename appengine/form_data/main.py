@@ -7,8 +7,6 @@ app = Flask(__name__)
 
 @app.route('/')
 def root():
-    enable_cloud_debugger()
-
     # only trigger the service when the cron job is run
     if not ('X-Appengine-Cron' in request.headers and request.headers['X-Appengine-Cron'] == 'true'):
         return Response(status=403)
@@ -28,6 +26,8 @@ def enable_cloud_debugger():
     except ImportError:
         pass
 
+
+enable_cloud_debugger()
 
 # Only called when testing locally
 if __name__ == '__main__':
