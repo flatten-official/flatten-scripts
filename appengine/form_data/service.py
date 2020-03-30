@@ -5,9 +5,9 @@ import json
 from math import floor
 import os
 
-GCS_BUCKET = 'flatten-staging-271921.appspot.com' #os.environ['GCS_BUCKET']
+GCS_BUCKET = os.environ['GCS_BUCKET']
 UPLOAD_FILE = 'form_data.json'
-DS_NAMESPACE = 'flatten_staging' #os.environ['DS_NAMESPACE']
+DS_NAMESPACE = os.environ['DS_NAMESPACE']
 DS_KIND = 'form-user'
 
 # Downloads a blob from the bucket as a string
@@ -92,5 +92,3 @@ def main(get_all):
     json_str = json.dumps(map_data)
 
     upload_blob(bucket, json_str, UPLOAD_FILE)
-
-main(True)
