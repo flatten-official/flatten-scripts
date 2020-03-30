@@ -3,3 +3,4 @@ service: confirmed-cases
 env_variables:
   GCS_BUCKET : 'flatten-staging-271921.appspot.com'
   SHEETS_API_KEY : 'AIzaSyDs-bNN44Es1zMpL0pAO4qsnOdz9g4zIok'
+  DEBUG : 'False'

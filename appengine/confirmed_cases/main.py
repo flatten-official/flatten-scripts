@@ -2,8 +2,10 @@ import datetime
 
 from flask import Flask, Response, request
 from service import main
+import os
 
 app = Flask(__name__)
+
 
 @app.route('/')
 def root():
@@ -17,6 +19,12 @@ def root():
         print(e)
         return Response(status=500)
 
+
 # for local testing
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    # Using debug as true is a security vulnerability in production.
+    # Anything other than true will result in debug as false.
+    # https://flask.palletsprojects.com/en/1.1.x/quickstart/#a-minimal-application
+    debug = os.environ['debug'].lower() == "true"
+
+    app.run(host='127.0.0.1', port=8080, debug=debug)

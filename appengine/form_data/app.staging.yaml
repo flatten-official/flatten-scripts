@@ -4,3 +4,4 @@ env_variables:
 # The ID and range of a sample spreadsheet.
   GCS_BUCKET: "flatten-staging-271921.appspot.com"
   DS_NAMESPACE: "flatten_staging"
+  DEBUG : 'False'
