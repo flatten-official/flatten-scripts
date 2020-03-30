@@ -11,7 +11,7 @@ def root():
     if not ('X-Appengine-Cron' in request.headers and request.headers['X-Appengine-Cron'] == 'true'):
         return Response(status=403)
     try:
-        main()
+        main(True)
         return Response(status=200)
     except Exception as e:
         print(e)
