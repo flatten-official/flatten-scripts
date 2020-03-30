@@ -7,3 +7,4 @@ google-auth-httplib2
 google-cloud-storage
 word2number
 beautifulsoup4
+google-python-cloud-debugger

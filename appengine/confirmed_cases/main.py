@@ -9,6 +9,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def root():
+    enable_cloud_debugger()
+
     # only trigger the service when the cron job is run
     if not ('X-Appengine-Cron' in request.headers and request.headers['X-Appengine-Cron'] == 'true'):
         return Response(status=403)
@@ -20,11 +22,15 @@ def root():
         return Response(status=500)
 
 
-# for local testing
-if __name__ == '__main__':
-    # Using debug as true is a security vulnerability in production.
-    # Anything other than true will result in debug as false.
-    # https://flask.palletsprojects.com/en/1.1.x/quickstart/#a-minimal-application
-    debug = os.environ['debug'].lower() == "true"
+def enable_cloud_debugger():
+    """https://cloud.google.com/debugger/docs/setup/python?hl=en_GB&_ga=2.68834001.-1991847693.1585366893"""
+    try:
+        import googleclouddebugger
+        googleclouddebugger.enable()
+    except ImportError:
+        pass
 
-    app.run(host='127.0.0.1', port=8080, debug=debug)
+
+# Only called when testing locally
+if __name__ == '__main__':
+    app.run(host='127.0.0.1', port=8080, debug=True)
