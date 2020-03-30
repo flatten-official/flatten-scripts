@@ -9,25 +9,11 @@ The scripts that parse, format and run the data behind the scenes of [flatten.ca
 ## Prerequisites
 [Python 3.5+](https://www.python.org/)
 
-## Setting up
+## Setting up app engine scripts
 
-- Install Google Cloud SDK and in the `[default]` configuration login with your name@flatten.ca account. Tutorial: https://cloud.google.com/sdk/docs/quickstarts.
+- Look at the README in `\appengine` for setting up the app engine scripts.
 
-- Run `gcloud auth application-default login` to generate the credentials for th Python scripts.
-            
-- run `pip install -r requirements.txt` in both `appengine/confirmed_cases` and `appingine/form_data_generator` to install dependencies.
-
-## App Engine
-
-`appengine/` contains the Google App engine services. See their respective READMEs. Note this also contains the `cloudbuild.yaml` that builds it for cloud run.
-
-
-### Deploying App Engine Services on Cloud Build
-
-Everything should work more or less out of the box for a triggered deploy from a merge.
-If you want to test a manual deployment on the staging instance, you have to set the `BRANCH_NAME` variable substitution to `staging` 
-
-`gcloud builds submit --substitutions BRANCH_NAME=staging`
+Note this directory contains the `cloudbuild.yaml` that builds the GAE services.
 
 ### Updating cron jobs
 
@@ -105,4 +91,3 @@ Thank you to Statistics Canada for the following data.
 
 Census Forward Sortation Area Boundary File, 2016 Census._ Statistics Canada Catalogue no. 92-179-X.
 
-## 
