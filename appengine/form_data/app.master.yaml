@@ -1,0 +1,5 @@
+runtime: python37
+service: form-data
+env_variables:
+  GCS_BUCKET: "flatten-271620.appspot.com"
+  DS_NAMESPACE: "flatten_production"

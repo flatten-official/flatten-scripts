@@ -13,8 +13,8 @@ import pytz
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
-SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
-SPREADSHEET_RANGE = 'Cases'
+SPREADSHEET_ID= '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
+SPREADSHEET_RANGE= 'Cases'
 GCS_BUCKET = os.environ['GCS_BUCKET']
 UPLOAD_FILE = 'confirmed_data.json'
 SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
@@ -208,3 +208,17 @@ def output_json(output):
     storage_client = storage.Client()
     bucket = storage_client.bucket(GCS_BUCKET)
     upload_blob(bucket, output_string, UPLOAD_FILE)
+
+
+def main():
+    print("Getting data from spreadsheet...")
+
+    data = get_spreadsheet_data()
+
+    print("Geocoding data...")
+
+    output = geocode_sheet(data)
+
+    print("Outputting data to file...")
+    output_json(output)
+    print("Done")

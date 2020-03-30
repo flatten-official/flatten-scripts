@@ -1,32 +1,25 @@
 # Flatten-Scripts
 The scripts that parse, format and run the data behind the scenes of [flatten.ca/heat-map](flatten.ca/heat-map).
 
-## Repo Structure
-
-`\hourly` folder contains scripts for hourly updating data, including confirmed cases, potential cases and vulnerable populations. 
-
-Both the later two numbers are extracted from flatten.ca forms and are mapped by 3-digit postal code area.
-
-`\others` folder contains scripts for static data, including postal code boundaries and random form samples.
-
 ## Important Guidelines
-- All contributions should be made on a new branch and a pull request to *master* should be made.
+- All contributions should be made on a new branch and a pull request to *staging* should be made.
 
 - Use the Issues tabs to keep track of bugs, improvements and more. Use the Projects tab to keep track of work!
 
 ## Prerequisites
 [Python 3.5+](https://www.python.org/)
 
-## Setting up
+## Setting up app engine scripts
 
-- Install Google Cloud SDK and in the `[default]` configuration login with your name@flatten.ca account. Tutorial: https://cloud.google.com/sdk/docs/quickstarts.
+- Look at the README in `\appengine` for setting up the app engine scripts.
 
-- Run `gcloud auth application-default login` to generate the credentials for th Python scripts.
-            
-- run `pip install -r requirements.txt` in both `\hourly\confirmed_cases` and `\hourly\form_data_generator` to install dependencies.
+Note this directory contains the `cloudbuild.yaml` that builds the GAE services.
 
-## Running a script
-Run the script you want to with Python 3. In the hourly folders, always run `main.py`.
+### Updating cron jobs
+
+Cron jobs will not auto deploy because this requires editor privileges. To redeploy cron jobs, run 
+
+`gcloud app deploy appengine/cron.yaml`
 
 
 ## Contact
@@ -92,32 +85,9 @@ then run
 
 You need to ensure that the firebase rules on the bucket are set up to allow reading of the files externally.
 
-
-### Deploying on Cloud Build
-
-Everything should work more or less out of the box, apart from the fact that you have to set the `_BRANCH` envoronment variable to `prod` for prouduction or `dev` for development.
-
-
-### Deploying the cloud functions
-
-You will need to set the appropriate environment variables for each.
-
-For form_data_generator, these are
-* GCS_BUCKET, should point to that which to upload the data
-* UPLOAD_FILE, the name of the file to upload the confirmed cases data to
-* DS_NAMEPSACE, datastore namespaace to get the data from
-* DS_KIND, the datastore kind to load data from
-
-For `confirmed_cases`, they are:
-* SPREADSHEET_ID, should (at the moment) be 
-* GCS_BUCKET, should point to that which to upload the data
-* UPLOAD_FILE, the name of the file to upload the confirmed cases data to
-* SHEETS_API_KEY, API key for google sheets.
-
 ## Credits
 
 Thank you to Statistics Canada for the following data.
 
 Census Forward Sortation Area Boundary File, 2016 Census._ Statistics Canada Catalogue no. 92-179-X.
 
-## 
