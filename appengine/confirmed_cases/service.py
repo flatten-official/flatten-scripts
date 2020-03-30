@@ -106,7 +106,8 @@ def geocode_sheet(values_input):
                        "Central, Alberta": "Red Deer, Alberta",
                        "South, Alberta": "Lethbridge, Alberta",
                        "Eastern, Ontario": "Cornwall, Ontario",
-                       'Central, Saskatchewan': "Humboldt, Saskatchewan"
+                       'Central, Saskatchewan': "Humboldt, Saskatchewan",
+                       'Algoma, Ontario': 'Sault Ste. Marie, Ontario'
                        }
 
     output = {'last_updated': last_updated, 'max_cases': int(df.max()), 'confirmed_cases': []}

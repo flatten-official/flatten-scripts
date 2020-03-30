@@ -100,7 +100,7 @@ def getHaltonData():
 def getHamiltonData():
     soup = getSoup("Hamilton")
     div = soup.find("div", {"class": "coh-column fourth first"})
-    data = {"Positive": int(div.find("p").find("strong").text.split()[-1])}
+    data = {"Positive": int(div.find("p").find("strong").text.split()[-1][:-1])}
     return data
     
 def getHastingsPrinceEdwardData():
