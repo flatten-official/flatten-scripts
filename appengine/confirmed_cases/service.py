@@ -53,14 +53,10 @@ def get_spreadsheet_data():
     values3_input = result3_input.get('values', [])   
 
     # Part of the sheets API, even if undefined. Do not remove
-    if not values_input:
-        raise Exception("No data found")
-    if not values2_input:
-        raise Exception("No data found")
-    if not values2_input:
+    if not (values_input and values2_input and values3_input):
         raise Exception("No data found")
 
-    return (values_input, values2_input, values3_input)
+    return values_input, values2_input, values3_input
 
 # Uses the spreadsheet and scraper data to assign lat/lon locations
 # to each area with a confirmed case
