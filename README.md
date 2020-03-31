@@ -64,7 +64,16 @@ Martin, Arthur, Will, Rupert, Ivan, Charlie
     ]
 }
 ```
-
+`case_trend.json`
+```
+{"time": 1585692855,
+ "fsa": {"M9C": {"2020-03-31": 0}, 
+         "V6R": {"2020-03-31": 2}, 
+         "M4P": {"2020-03-31": 0}, 
+         "M9A": {"2020-03-31": 0}
+        }
+}
+```
 
 ### Setting up Firebase Storage for the first time
 
