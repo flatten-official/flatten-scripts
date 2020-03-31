@@ -16,7 +16,7 @@ FIELDS = ["postal_code", "timestamp"]+QUESTION_FIELDS
 def retrieve_fields(entity):
     """Given an entity from the datastore, generate the list which will be joined to make the fields in the csv."""
     # timestamp is in ms since UNIX origin, so divide by 1000 to get seconds
-    fields = [entity['form_responses']['postalCode'].upper(), str(entity['timestamp']/1000.)]
+    fields = [entity['form_responses']['postalCode'].upper(), str(entity['timestamp'])]
     for field in QUESTION_FIELDS:
         fields.append(entity['form_responses'][field])
     return fields
@@ -51,6 +51,7 @@ def main():
 
     csv_lines.extend(",".join(retrieve_fields(entity)) for entity in query.fetch())
 
-    file_name = os.path.join(FILE_DIRECTORY, "-".join([str(int(time.time())), END_FILE_NAME]))
+    curr_time_ms = str(int(time.time() * 1000))
+    file_name = os.path.join(FILE_DIRECTORY, "-".join([curr_time_ms, END_FILE_NAME]))
 
     upload_blob(bucket, "\n".join(csv_lines), file_name)
