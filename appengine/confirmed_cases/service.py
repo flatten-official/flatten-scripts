@@ -123,7 +123,7 @@ def geocode_sheet(values_input):
                        "South, Alberta": "Lethbridge, Alberta",
                        "Eastern, Ontario": "Cornwall, Ontario",
                        'Central, Saskatchewan': "Humboldt, Saskatchewan",
-                       'Algoma, Ontario': 'Sault Ste. Marie, Ontario'
+                       'Algoma, Ontario': 'Sault Ste. Marie, Ontario',
                        'Wellington Dufferin Guelph, Ontario': "Guelph, Ontario"
                        }
 

@@ -64,7 +64,48 @@ Martin, Arthur, Will, Rupert, Ivan, Charlie
     ]
 }
 ```
-
+`travel_data.json`
+```
+{
+ "cases": 7448,
+ "travel_cases": 420,
+ "no_travel_cases": 219,
+ "not_reported": 6809,
+ "travel_data": {
+  "Not Reported": 93,
+  "United States": 79,
+  "Iran": 26,
+  "Egypt": 22,
+  "Cruise": 21,
+  .
+  .
+  .
+  "Spain, Finland": 1,
+  "Egypt, Israel, United Kingdom": 1,
+  "Spain, France": 1,
+  "Denmark": 1
+ },
+ "no_travel_data": {
+  "Close Contact": 204,
+  "Community": 15
+ }
+}
+```
+`provincial_data.json`
+```
+{
+ "Quebec": {
+  "cases": 3430,
+  "recovered_cumul": {
+   "30-03-2020": 84,
+   "29-03-2020": 84
+  },
+  "dead_daily": {
+   "30-03-2020": 3
+  }
+ }
+}
+```
 
 ### Setting up Firebase Storage for the first time
 
