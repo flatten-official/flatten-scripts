@@ -1,6 +1,5 @@
 from flask import Flask, Response, request
 from service import main
-from service import case_trend
 import os
 
 app = Flask(__name__)
