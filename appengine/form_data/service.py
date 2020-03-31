@@ -34,47 +34,6 @@ def download_blob(bucket_name, source_blob_name):
     s = blob.download_as_string()
     return s
 
-def case_trend(get_all):
-    datastore_client = datastore.Client(namespace=DS_NAMESPACE)
-
-    storage_client = storage.Client()
-    bucket = storage_client.bucket(GCS_BUCKET)
-    query = datastore_client.query(kind=DS_KIND)
-    if get_all:
-        case_data = {'time': 0, 'fsa': {}}
-    else:
-        case_data = json.loads(download_blob(GCS_BUCKET, 'case_trend.json'))
-        query.add_filter('timestamp', '>', case_data['time']*1000)
-
-    max_timestamp = case_data['time']
-    for entity in query.fetch():
-        try:
-            # make this get the latest form data...
-            postcode = entity['form_responses']['postalCode'].upper()
-            timestamp = entity['timestamp'] / 1000
-            date = datetime.date.fromtimestamp(timestamp).strftime("%Y-%m-%d")
-            pot = 1 if entity['probable'] else 0
-        except KeyError as e:
-            continue
-        if timestamp > max_timestamp:
-            max_timestamp = timestamp
-        
-        if postcode in case_data['fsa']:
-            if date in  case_data['fsa'][postcode]:
-                case_data['fsa'][postcode][date] += pot
-            else:
-                case_data['fsa'][postcode][date] = pot 
-        else:
-             case_data['fsa'][postcode] = {date: pot}
-
-    case_data['time'] = floor(max_timestamp)
-
-    json_str = json.dumps(case_data)
-    upload_blob(bucket, json_str, UPLOAD_CASE_TREND)
-
-
-
-
 def main(get_all):
     """
     Processes the info in the datastore into
