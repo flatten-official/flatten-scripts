@@ -1,0 +1,10 @@
+steps:
+# copy over staging or production configurations
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ["cp", "appengine/confirmed_cases/app.$BRANCH_NAME.yaml", "appengine/confirmed_cases/app.yaml"]
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ["cp", "appengine/form_data/app.$BRANCH_NAME.yaml", "appengine/form_data/app.yaml"]
+# deploy the app engine instances
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['app', 'deploy', 'appengine/confirmed_cases', 'appengine/form_data']
+  timeout: '600s'
