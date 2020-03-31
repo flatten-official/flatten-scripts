@@ -1,5 +1,6 @@
 from flask import Flask, Response, request
 from service import main
+from service import case_trend
 import os
 
 app = Flask(__name__)
@@ -11,7 +12,7 @@ def root():
     if not ('X-Appengine-Cron' in request.headers and request.headers['X-Appengine-Cron'] == 'true'):
         return Response(status=403)
     try:
-        main()
+        main(True)
         return Response(status=200)
     except Exception as e:
         print(e)
