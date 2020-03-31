@@ -88,7 +88,7 @@ def getEasternOntarioData():
 
 def getHaliburtonKawarthaPineRidgeData():
     soup = getSoup('Haliburton Kawartha Pineridge')
-    table = soup.find("table", {"class": "wp-block-advgb-table aligncenter advgb-table-frontend is-style-stripes"})
+    table = soup.find("table", {"class": "wp-block-advgb-table advgb-table-frontend is-style-stripes"})
     positive = int(table.find_all("tr")[1].find_all("td")[-1].get_text(strip=True))
     return {"Positive": positive}
 
@@ -100,7 +100,7 @@ def getHaltonData():
 def getHamiltonData():
     soup = getSoup("Hamilton")
     div = soup.find("div", {"class": "coh-column fourth first"})
-    data = {"Positive": int(div.find("p").find("strong").text.split()[-1])}
+    data = {"Positive": int(div.find("p").find("strong").text.split()[-1][:-1])}
     return data
     
 def getHastingsPrinceEdwardData():
@@ -147,8 +147,8 @@ def getLambtonData():
 ##NOTE: currently has no cases so they haven't set up a proper site so this will be done later
 def getLeedsGrenvilleLanarkData():
     soup = getSoup("Leeds Grenville Lanark")
-    words = soup.find_all("div", {"class": "accordion-collapse"})[0].find("p").get_text(strip=True).split()
-    for word in words[::-1]:
+    words = soup.find_all("div", {"class": "accordion-body"})[0].find_all("li")[0].get_text(strip=True).split()
+    for word in words:
         try:
             cases = int(word)
             break
@@ -219,10 +219,10 @@ def getPeterboroughData():
 
 def getPorcupineData():
     soup = getSoup("Porcupine")
-    table = soup.find("table")
+    table = soup.find_all("table")[1]
     data = {}
     for row in table.find_all("tr"):
-        cells = [row.find("th").get_text(strip=True), row.find("td").get_text(strip=True)]
+        cells = [row.find("th").get_text(strip=True), row.find_all("td")[0].get_text(strip=True)]
         if cells[0].split()[0] == "Tests":
             data["Tested"] = int(cells[1])
         else:
@@ -296,12 +296,7 @@ def getWaterlooData():
 
 def getWellingtonDufferinGuelphData():
     soup = getSoup("Wellington Dufferin Guelph")
-    tables = soup.find_all("table")
-    cases = len(tables[0].find_all("tr")) - 1
-    tested = 0
-    for i in range(1,3):
-        tested += int(tables[i].find_all("tr")[1].find_all("td")[1].get_text(strip=True))
-    return {"Positive": cases, "Tested": tested}
+    ## need to figure this out
 
 def getWindsorEssexCountyData():
     soup = getSoup("Windsor-Essex")
@@ -309,9 +304,9 @@ def getWindsorEssexCountyData():
     nums = []
     for div in divs[:5]:
         nums.append(div.find_all("p")[1].get_text(strip=True))
-    positive = int(nums[0])
-    tested = int(nums[3])
-    pending = int(nums[4])
+    positive = int(nums[0].replace(',',""))
+    tested = int(nums[3].replace(',',""))
+    pending = int(nums[4].replace(',',""))
     return {"Positive": positive, "Tested": tested, "Pending": pending, "Negative": tested-positive-pending}
 
 def getYorkData():
@@ -349,7 +344,7 @@ dispatcher = {
  },
  "Haliburton Kawartha Pineridge": {
   "func": getHaliburtonKawarthaPineRidgeData,
-  "URL": "https://www.hkpr.on.ca/covid-19-2/covid-19/"
+  "URL": "https://www.hkpr.on.ca/"
  },
  "Halton": {
   "func": getHaltonData,
@@ -401,7 +396,7 @@ dispatcher = {
  },
  "Peel": {
   "func": getPeelData,
-  "URL": "https://www.peelregion.ca/coronavirus/#cases"
+  "URL": "https://www.peelregion.ca/coronavirus/testing/#cases"
  },
  "Peterborough": {
   "func": getPeterboroughData,
@@ -445,7 +440,7 @@ dispatcher = {
  },
  "Wellington Dufferin Guelph": {
   "func": getWellingtonDufferinGuelphData,
-  "URL": "https://www.wdgpublichealth.ca/your-health/covid-19-information-public/assessment-centre-and-case-data"
+  "URL": "https://app.powerbi.com/view?r=eyJrIjoiMDE0OGVmODctYTcxYS00M2RlLTgzODItMjIxYmM1MzY2YjEyIiwidCI6IjA5Mjg0MzdlLTFhZTItNGJhNy1hZmQxLTY5NDhmY2I5MWM0OCJ9"
  },
  "Windsor-Essex": {
   "func": getWindsorEssexCountyData,

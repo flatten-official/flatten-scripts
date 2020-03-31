@@ -17,11 +17,11 @@ SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
 SPREADSHEET_CASES = 'Cases'
 SPREADSHEET_REC = 'Recovered'
 SPREADSHEET_DEATH = 'Mortality'
-GCS_BUCKET = os.environ['GCS_BUCKET']
+GCS_BUCKET = "flatten-staging-271921.appspot.com"#os.environ['GCS_BUCKET']
 UPLOAD_CONFIRMED = 'confirmed_data.json'
 UPLOAD_TRAVEL = 'travel_data.json'
 UPLOAD_PROVINCIAL = 'provincial_data.json'
-SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
+SHEETS_API_KEY = "AIzaSyDs-bNN44Es1zMpL0pAO4qsnOdz9g4zIok"#os.environ['SHEETS_API_KEY']
 
 # Downloads a blob from the bucket as a string
 def download_blob(bucket_name, source_blob_name):
@@ -122,7 +122,8 @@ def geocode_sheet(values_input):
                        "Central, Alberta": "Red Deer, Alberta",
                        "South, Alberta": "Lethbridge, Alberta",
                        "Eastern, Ontario": "Cornwall, Ontario",
-                       'Central, Saskatchewan': "Humboldt, Saskatchewan"
+                       'Central, Saskatchewan': "Humboldt, Saskatchewan",
+                       'Wellington Dufferin Guelph, Ontario': "Guelph, Ontario"
                        }
 
     output = {'last_updated': last_updated, 'max_cases': int(df.max()), 'confirmed_cases': []}
@@ -316,3 +317,19 @@ def output_json(output, travel_out, provincial_out):
     storage_client = storage.Client()
     bucket = storage_client.bucket(GCS_BUCKET)
     upload_blob(bucket, output_string, UPLOAD_CONFIRMED)
+    upload_blob(bucket, travel_string, UPLOAD_TRAVEL)
+    upload_blob(bucket, provincial_string, UPLOAD_PROVINCIAL)
+
+def main():
+    print("Getting data from spreadsheet...")
+
+    confirmed, recovered, dead = get_spreadsheet_data()
+
+    print("Geocoding data...")
+
+    confirmed_output = geocode_sheet(confirmed)
+    travel_data = get_travel_data(confirmed)
+    provincial_data = get_provincial_totals(confirmed_output, recovered, dead)
+    print("Outputting data to file...")
+    output_json(confirmed_output, travel_data, provincial_data)
+    print("Done")

@@ -1,0 +1,4 @@
+cron:
+- description: "Confirmed COVID-19 Cases"
+  url: /
+  schedule: every 1 hours
