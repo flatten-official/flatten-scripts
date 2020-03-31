@@ -261,57 +261,31 @@ def geocode_sheet(confirmed_cases_df, last_updated):
     return output
 
 def get_provincial_totals(output_dict):
-    # starts counter variables for each province/territory
-    nb_count = mb_count = al_count = nl_count = sk_count = yk_count = nw_count = \
-    nu_count = ns_count = pe_count = qc_count = bc_count = on_count = 0
+    # counts confirmed cases for each province
+    confirmed_cases_count = {
+        'Ontario': 0,
+        'BC': 0,
+        'Quebec': 0,
+        'PEI': 0,
+        'Nova Scotia': 0,
+        'New Brunswick': 0,
+        'Manitoba': 0,
+        'Alberta': 0,
+        'NL': 0,
+        'Saskatchewan': 0,
+        'Yukon': 0,
+        'NWT': 0,
+        'Nunavut': 0
+    }
 
     for region in output_dict['confirmed_cases']:
         # adds case numbers to their respective province/territory
-
         province = region["name"].split(", ")[1]
 
-        if province == 'Ontario':
-            on_count += region['cases']
-        elif province == 'BC':
-            bc_count += region['cases']
-        elif province == 'Quebec':
-            qc_count += region['cases']
-        elif province == 'PEI':
-            pe_count += region['cases']
-        elif province == 'Nova Scotia':
-            ns_count += region['cases']
-        elif province == 'New Brunswick':
-            nb_count += region['cases']
-        elif province == 'Manitoba':
-            mb_count += region['cases']
-        elif province == 'Alberta':
-            al_count += region['cases']
-        elif province == 'NL':
-            nl_count += region['cases']
-        elif province == 'Saskatchewan':
-            sk_count += region['cases']
-        elif province == 'Yukon':
-            yk_count += region['cases']
-        elif province == 'NWT':
-            nw_count += region['cases']
-        elif province == 'Nunavut':
-            nu_count += region['cases']
+        # add the confirmed cases to their respective provinces
+        confirmed_cases_count[province] += region["cases"]
 
-    return {
-        'Ontario': on_count,
-        'BC': bc_count,
-        'Quebec': qc_count,
-        'PEI': pe_count,
-        'Nova Scotia': ns_count,
-        'New Brunswick': nb_count,
-        'Manitoba': mb_count,
-        'Alberta': al_count,
-        'NL': nl_count,
-        'Saskatchewan': sk_count,
-        'Yukon': yk_count,
-        'NWT': nw_count,
-        'Nunavut': nu_count
-    }
+    return confirmed_cases_count
 
 def upload_blob(bucket, data_string, destination_blob_name):
     """
