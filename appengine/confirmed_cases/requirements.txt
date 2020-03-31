@@ -4,6 +4,7 @@ geopy
 google_auth_oauthlib
 google-api-python-client
 google-auth-httplib2
+google-api-python-client
 google-cloud-storage
 word2number
 beautifulsoup4
