@@ -14,11 +14,11 @@ On 'nix, to set environment variables run `export ENV_VAR=VALUE`. Set `DEBUG` to
    
 3. Run `gcloud auth application-default login` to generate the credentials for th Python scripts. Requires GCloud Admin SDK.
 
-3. Run `main.py`. This will launch the server on port 8080.
+4. :warning: make sure you are testing on the correct project - you want to set your project to staging - `gcloud config set project flatten-staging-271921` `:warning:
 
-4. Ping the server to get the script started. Ensure to set the `X-Appengine-Cron` header to `true`. This is how we ensure no external requests are accepted on GAE (GAE doesn't allow any such requests through the firewall).
+5. Run `main.py`. This will launch the server on port 8080.
 
-`curl -i -H "X-Appengine-Cron: true" localhost:8080`
+6. Ping the server to get the script started. Ensure to set the `X-Appengine-Cron` header to `true`. This is how we ensure no external requests are accepted on GAE (GAE doesn't allow any such requests through the firewall). This is done on curl using `curl -i -H "X-Appengine-Cron: true" localhost:8080`
 
 ## Deploying to App Engine (for testing)
 
