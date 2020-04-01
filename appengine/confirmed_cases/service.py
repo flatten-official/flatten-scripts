@@ -22,7 +22,7 @@ NAME_EXCEPTIONS = {
     "Labrador-Grenfell, NL": "Labrador City, NL",
     "Fraser, BC": "Fraser Valley, BC",
     "Zone 3 (Fredericton area), New Brunswick": "Fredericton, New Brunswick",
-    "Zone 1 (Moncton Area), New Brunswick": "Moncton, New Brunswick",
+    "Zone 1 (Moncton area), New Brunswick": "Moncton, New Brunswick",
     "North, Saskatchewan": "La Ronge, Saskatchewan",
     "North, Alberta": "Peerless Lake, Alberta",
     "South, Saskatchewan": "Moose Jaw, Saskatchewan",
@@ -37,9 +37,12 @@ NAME_EXCEPTIONS = {
     'Central, Saskatchewan': "Humboldt, Saskatchewan",
     'Algoma, Ontario': 'Sault Ste. Marie, Ontario',
     'Wellington Dufferin Guelph, Ontario': "Guelph, Ontario",
-    'Zone 5 (Campbellton Area), New Brunswick': 'Campbellton, New Brunswick',
-    'Zone 4, Central, Nova Scotia': 'Halifax, Nova Scotia',
-    'Zone 1 - Western, Nova Scotia': 'Caledonia, Nova Scotia'
+    'Zone 5 (Campbellton area), New Brunswick': 'Campbellton, New Brunswick',
+    'Zone 4 - Central, Nova Scotia': 'Halifax, Nova Scotia',
+    'Zone 1 - Western, Nova Scotia': 'Caledonia, Nova Scotia',
+    'Haldimand Norfolk, Ontario': 'Haldimand, Ontario',
+    'Terres-Cries-de-la-Baie-James, Quebec': 'Chibougamau, Quebec'
+
 }
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
@@ -170,7 +173,6 @@ def get_coords(name, geo_coder):
     Returns the coordinates of the `name` location using the geo_coder.
     """
     location = geo_coder(name + ', Canada')
-
     # Default to province if geocoding failed
     if location is None:
         print(f"WARNING: Failed to geocode {name}.")
