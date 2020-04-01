@@ -36,7 +36,10 @@ NAME_EXCEPTIONS = {
     "Eastern, Ontario": "Cornwall, Ontario",
     'Central, Saskatchewan': "Humboldt, Saskatchewan",
     'Algoma, Ontario': 'Sault Ste. Marie, Ontario',
-    'Wellington Dufferin Guelph, Ontario': "Guelph, Ontario"
+    'Wellington Dufferin Guelph, Ontario': "Guelph, Ontario",
+    'Zone 5 (Campbellton Area), New Brunswick': 'Campbellton, New Brunswick',
+    'Zone 4, Central, Nova Scotia': 'Halifax, Nova Scotia',
+    'Zone 1 - Western, Nova Scotia': 'Caledonia, Nova Scotia'
 }
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
@@ -269,7 +272,10 @@ def get_provincial_totals(output_dict, rec_df, dead_df):
         # also converts to dictionary form
         provincial_data[province]['dead_daily'] = dead_df.loc[dead_df['province'] == province][
             'date_death_report'].value_counts(sort=False).to_dict()
-
+        ## gets total recovered and total dead for a province
+        provincial_data[province]['total_recovered'] = max(provincial_data[province]['recovered_cumul'].values())
+        provincial_data[province]['total_dead'] = sum(provincial_data[province]['dead_daily'].values())
+        
     return provincial_data
 
 

@@ -24,9 +24,13 @@ def getAlgomaData():
     soup = getSoup('Algoma')
     table = soup.find("table", {'style': "width: 300px; height: 25px; float: left;"})
     algomaData = {}
+    count = 0
     for row in table.find_all("tr"):
+        if count == 4:
+            break
         dataRow = [cell.get_text(strip=True) for cell in row.find_all("td")]
         algomaData[dataRow[0]] = int(dataRow[1])
+        count += 1
     return algomaData
 
 
@@ -128,6 +132,10 @@ def getHuronData():
     elems = [int(cell.get_text(strip=True)) for cell in rows[1].find_all("td")]
     for i in range(len(headers)):
         data[headers[i]] = elems[i]
+    data['Positive'] = data['Confirmedpositive']
+    data.pop('Confirmedpositive', None)
+    data['Positive**'] = data['Presumptivepositive*']
+    data.pop('Presumptivepositive*', None)
     return data
 
 
@@ -193,13 +201,25 @@ def getNorthBayParrySoundData():
     return {"Positive": int(positive), "Negative": int(tested[0]), "Pending": int(tested[1]), "Tested": int(tested[2])}
 
 
-##NOTE this will probably have to be changed as the situation develops
 def getNorthWesternData():
     soup = getSoup("Northwestern")
-    return {"Positive": w2n.word_to_num(
-        soup.find_all("p", {"class": "ms-rteElement-P ms-rteThemeForeColor-2-0"})[1].find("strong").get_text().split()[
-            0])}
-
+    table = soup.find("table", {'class': "ms-rteTable-0"})
+    rows = table.find_all('tr')
+    data = {}
+    for i in range(3):
+        title = rows[i].find("th").get_text(strip=True).split()[0]
+        num = rows[i].find("td").get_text(strip=True)
+        if i == 0:
+            title = title[2:]
+            num = int(num[:-1])
+        elif i == 1:
+            num = int(num[3:])
+        else:
+            num = int(num)
+        data[title] = num
+    data["Tested"] = sum(data.values())
+    return data
+        
 
 def getOttawaData():
     soup = getSoup("Ottawa")
@@ -264,14 +284,24 @@ def getSudburyData():
             "Tested": int(cells[6].get_text(strip=True))}
 
 
-##NOTE: No cases so no proper website yet, will likely need to be changed soon
 def getRenfrewCountyData():
-    soup = getSoup("Renfrew County")
-    interestingText = soup.find("div", {"id": "collapse-5"}).find_all("p")[1].get_text(strip=True)
-    if interestingText == "March 25, 2019 –Renfrew County and District Health Unit (RCDHU) confirms the first positive laboratory confirmed case of novel coronavirus 2019 (COVID-19) in the region. A woman in her 90s developed symptoms and was tested by Pembroke Regional Hospital (PRH) on March 23,2020. She is currently an inpatient at PRH.":
-        return {"Positive": 1}
-    raise Exception(NameError)
-
+    soup = getSoup("Renfrew")
+    divs = soup.find_all('div', {'class': 'col-md-6'})#.get_text(strip=True)
+    divs2 = soup.find_all('div', {'class': 'col-md-4'})
+    divs += divs2
+    nums = []
+    for div in divs:
+        try:
+            text = div.find('div', {'class':'panel-body'}).get_text(strip=True)
+            nums.append(int(text))
+        except:
+            pass
+    return {
+        "Positive": nums[0],
+        "Tested": nums[2],
+        "Negative": nums[3],
+        "Pending": nums[4]
+    }
 
 def getSimcoeMuskokaData():
     soup = getSoup("Simcoe Muskoka")
@@ -351,7 +381,7 @@ def getYorkData():
 dispatcher = {
     "Algoma": {
         "func": getAlgomaData,
-        "URL": "http://www.algomapublichealth.com/disease-and-illness/infectious-diseases/novel-coronavirus/"
+        "URL": "http://www.algomapublichealth.com/disease-and-illness/infectious-diseases/novel-coronavirus/current-status-covid-19/"
     },
     "Brant": {
         "func": getBrantCountyData,
@@ -423,7 +453,7 @@ dispatcher = {
     },
     "Northwestern": {
         "func": getNorthWesternData,
-        "URL": "https://www.nwhu.on.ca/Pages/coronavirus.aspx"
+        "URL": "https://www.nwhu.on.ca/covid19/Pages/home.aspx/"
     },
     "Ottawa": {
         "func": getOttawaData,
