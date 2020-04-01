@@ -92,7 +92,12 @@ def getEasternOntarioData():
 
 # def getGreyBruceData():
 
-# def getHalimandNorfolkData():
+def getHalimandNorfolkData():
+    soup = getSoup("Halimand Norfolk")
+    span = soup.find("span", {'style': "color: #008000;"})
+    p = span.find_parent("p")
+    positive = int(p.find_all("strong")[1].get_text(strip=True))
+    return {"Positive": positive}
 
 # -------------------------------------------------------------------
 
@@ -407,8 +412,8 @@ dispatcher = {
         "URL": None
     },
     "Halimand Norfolk": {
-        "func": None,
-        "URL": None
+        "func": getHalimandNorfolkData,
+        "URL": "https://hnhu.org/health-topic/coronavirus-covid-19/"
     },
     "Haliburton Kawartha Pineridge": {
         "func": getHaliburtonKawarthaPineRidgeData,
@@ -539,4 +544,5 @@ def main():
 
 
 if __name__ == '__main__':
+    getHalimandNorfolkData()
     main()
