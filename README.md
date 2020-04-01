@@ -102,7 +102,9 @@ Note: countries are doubled counted since sometimes, one infected person travell
   },
   "dead_daily": {
    "30-03-2020": 3
-  }
+  },
+  "total_recovered": 84,
+  "total_dead": 3
  }
 }
 ```
