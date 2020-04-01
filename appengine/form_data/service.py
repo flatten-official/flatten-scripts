@@ -4,12 +4,20 @@ import google
 import json
 from math import floor
 import os
+import csv
 
 GCS_BUCKETS = os.environ['GCS_BUCKETS'].split(',')
 GCS_PATHS = os.environ['GCS_PATHS'].split(',')
 UPLOAD_FILE = 'form_data.json'
 DS_NAMESPACE = os.environ['DS_NAMESPACE']
 DS_KIND = 'form-user'
+
+
+def load_excluded_postal_codes(fname="excluded_postal_codes.csv"):
+    with open(fname) as csvfile:
+        reader = csv.reader(csvfile)
+        first_row = next(reader)
+    return first_row
 
 
 def upload_blob(bucket, data_string, destination_blob_name):
@@ -37,6 +45,10 @@ def main():
 
     map_data = {'time': floor(datetime.datetime.utcnow().timestamp()), 'max': 0, 'fsa': {}}
 
+    excluded = load_excluded_postal_codes()
+    for fsa in excluded:
+        map_data['fsa'][fsa] = {'fsa_excluded': True, 'number_reports': 0}
+
     query = datastore_client.query(kind=DS_KIND)
     total_responses = 0
     for entity in query.fetch():
@@ -47,14 +59,17 @@ def main():
             risk = 1 if entity['at_risk'] else 0
         except KeyError as e:
             continue
+
         total_responses += 1
 
         if postcode in map_data['fsa']:
             map_data['fsa'][postcode]['number_reports'] += 1
+            if postcode in excluded:
+                continue
             map_data['fsa'][postcode]['pot'] += pot
             map_data['fsa'][postcode]['risk'] += risk
         else:
-            map_data['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk}
+            map_data['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'fsa_excluded': False}
         map_data['max'] = max(map_data['max'],
                               map_data['fsa'][postcode]['pot'] + 2 * map_data['fsa'][postcode]['risk'])
     map_data['total_responses'] = total_responses
