@@ -80,9 +80,6 @@ Martin, Arthur, Will, Rupert, Ivan, Charlie
   .
   .
   .
-  "Spain, Finland": 1,
-  "Egypt, Israel, United Kingdom": 1,
-  "Spain, France": 1,
   "Denmark": 1
  },
  "no_travel_data": {
@@ -91,6 +88,8 @@ Martin, Arthur, Will, Rupert, Ivan, Charlie
  }
 }
 ```
+Note: countries are doubled counted since sometimes, one infected person travelled to multiple countries.
+
 `provincial_data.json`
 ```
 {
@@ -109,7 +108,7 @@ Martin, Arthur, Will, Rupert, Ivan, Charlie
 
 ### Setting up Firebase Storage for the first time
 
-This only needs to be done once per project, so don't worry about it.
+This only needs to be done once per project (not per user), so don't worry about it.
 
 To allow the frontend of the map to read from the cloud storage buckets (storing the data), you will need to set the origin policy to allow reading of the cloud storage buckets. Add the following to a file called cors.json:
 ```
