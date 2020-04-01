@@ -41,8 +41,10 @@ NAME_EXCEPTIONS = {
     'Zone 4 - Central, Nova Scotia': 'Halifax, Nova Scotia',
     'Zone 1 - Western, Nova Scotia': 'Caledonia, Nova Scotia',
     'Haldimand Norfolk, Ontario': 'Haldimand, Ontario',
-    'Terres-Cries-de-la-Baie-James, Quebec': 'Chibougamau, Quebec'
-
+    'Terres-Cries-de-la-Baie-James, Quebec': 'Chibougamau, Quebec',
+    'Gaspésie-Îles-de-la-Madeleine, Quebec': 'Cap-aux-Meules, Quebec',
+    'Western, NL': 'Corner Brook, NL',
+    'Far North, Saskatchewan': 'Stony Rapids, Saskatchewan'
 }
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
