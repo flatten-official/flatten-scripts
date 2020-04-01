@@ -5,7 +5,8 @@ import json
 from math import floor
 import os
 
-GCS_BUCKET = os.environ['GCS_BUCKET']
+GCS_BUCKETS = os.environ['GCS_BUCKETS'].split(',')
+GCS_PATHS = os.environ['GCS_PATHS'].split(',')
 UPLOAD_FILE = 'form_data.json'
 DS_NAMESPACE = os.environ['DS_NAMESPACE']
 DS_KIND = 'form-user'
@@ -33,7 +34,6 @@ def main():
     datastore_client = datastore.Client(namespace=DS_NAMESPACE)
 
     storage_client = storage.Client()
-    bucket = storage_client.bucket(GCS_BUCKET)
 
     map_data = {'time': floor(datetime.datetime.utcnow().timestamp()), 'max': 0, 'fsa': {}}
 
@@ -61,4 +61,7 @@ def main():
 
     json_str = json.dumps(map_data)
 
-    upload_blob(bucket, json_str, UPLOAD_FILE)
+    for bucket, path in zip(GCS_BUCKETS, GCS_PATHS):
+        bucket = storage_client.bucket(bucket)
+        file_path = os.path.join(path, UPLOAD_FILE)
+        upload_blob(bucket, json_str, file_path)
