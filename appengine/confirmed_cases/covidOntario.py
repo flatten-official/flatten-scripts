@@ -181,7 +181,8 @@ def getLeedsGrenvilleLanarkData():
 def getMiddlesexLondonData():
     soup = getSoup("Middlesex-London")
     table = soup.find_all("table")[0]
-    return {"Positive": len(table.find_all("tr")) - 1}
+    positive = table.find_all('tr')[1].find_all("td")[1].get_text(strip=True)
+    return {"Positive": int(positive)}
 
 
 def getNiagaraData():
@@ -305,8 +306,8 @@ def getRenfrewCountyData():
 
 def getSimcoeMuskokaData():
     soup = getSoup("Simcoe Muskoka")
-    table = soup.find_all("table")[0]
-    return {"Positive": len(table.find_all("tr")) - 1}
+    table = soup.find_all("table", {"style": "border: currentColor; width: 233.75pt; border-image: none;"})[0]
+    return {"Positive": int(table.find_all('tr')[-1].find_all("td")[1].get_text(strip=True))}
 
 
 def getSouthwesternData():
@@ -358,7 +359,9 @@ def getWaterlooData():
 
 def getWellingtonDufferinGuelphData():
     soup = getSoup("Wellington Dufferin Guelph")
-    ## need to figure this out
+    table = soup.find_all('table')[0]
+    positive = table.find_all('tr')[1].find_all('td')[1].get_text(strip=True)
+    return {"Positive": int(positive)}
 
 
 def getWindsorEssexCountyData():
@@ -505,7 +508,7 @@ dispatcher = {
     },
     "Wellington Dufferin Guelph": {
         "func": getWellingtonDufferinGuelphData,
-        "URL": "https://app.powerbi.com/view?r=eyJrIjoiMDE0OGVmODctYTcxYS00M2RlLTgzODItMjIxYmM1MzY2YjEyIiwidCI6IjA5Mjg0MzdlLTFhZTItNGJhNy1hZmQxLTY5NDhmY2I5MWM0OCJ9"
+        "URL": "https://www.wdgpublichealth.ca/your-health/covid-19-information-public/status-cases-wdg"
     },
     "Windsor-Essex": {
         "func": getWindsorEssexCountyData,
