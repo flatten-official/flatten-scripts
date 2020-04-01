@@ -20,6 +20,7 @@ Note this directory contains the `cloudbuild.yaml` that builds the GAE services.
 Cron jobs will not auto deploy because this requires editor privileges. To redeploy cron jobs, run 
 
 `gcloud app deploy appengine/cron.yaml`
+`gcloud app deploy appengine/cron.yaml --project flatten-271620`
 
 
 ## Contact
