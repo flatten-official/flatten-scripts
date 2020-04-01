@@ -2,6 +2,6 @@ runtime: python37
 service: form-data
 env_variables:
   # comma separated list of buckets and paths to upload to
-  GCS_BUCKETS: "flatten-staging-271921.appspot.com,montreal-data-staging"
-  GCS_PATHS: ",form-data"
+  GCS_BUCKETS: "flatten-staging-271921.appspot.com,montreal-data-staging,flatten-staging-dataset"
+  GCS_PATHS: ",form-data,form-data"
   DS_NAMESPACE: "flatten_staging"
