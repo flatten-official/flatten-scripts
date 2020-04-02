@@ -11,7 +11,6 @@ import bs4
 import requests
 import json
 import pandas as pd
-from word2number import w2n
 from datetime import date
 
 
@@ -66,29 +65,21 @@ def getChathamKentData():
 
 
 def getDurhamData():
-    soup = getSoup('Durham')
-    # table = soup.find("table", {"class": "datatable"})
-    # durhamData = {}
-    # durhamData["Positive"] = len(table.find_all("tr")) - 1
-    paragraph = soup.find("p", {"class": "emphasis-Green"}).get_text(strip=True)
-    for word in paragraph.split():
-        try:
-            cases = int(word)
-            return {"Positive": cases}
-        except:
-            pass
-    raise NameError
+    df = pd.read_csv(ontarioData)
+    cases = df.loc[df['Reporting_PHU_City'] == 'Whitby']
+    return {"Positive": len(cases)}
 
 
 def getEasternOntarioData():
     soup = getSoup("Eastern")
-    table = soup.find("table", {"class": "table table-bordered"})
-    easternOntarioData = {}
-    easternOntarioData["Positive"] = len(table.find_all("tr")) - 1
-    return easternOntarioData
-
-
-# TODO find the data for these regions ------------------------------
+    text = soup.find("div", {'class': "alert alert-warning text-center"}).find('strong').get_text(strip=True)
+    for wrd in text.split()[::-1]:
+        try:
+            cases = int(wrd)
+            return {"Positive": cases}
+        except:
+            pass
+    raise NameError
 
 def getGreyBruceData():
     df = pd.read_csv(ontarioData)
@@ -102,8 +93,6 @@ def getHaldimandNorfolkData():
     positive = int(p.find_all("strong")[1].get_text(strip=True))
     return {"Positive": positive}
 
-# -------------------------------------------------------------------
-
 def getHaliburtonKawarthaPineRidgeData():
     soup = getSoup('Haliburton Kawartha Pineridge')
     table = soup.find("table", {"class": "wp-block-advgb-table advgb-table-frontend is-style-stripes"})
@@ -113,7 +102,8 @@ def getHaliburtonKawarthaPineRidgeData():
 
 def getHaltonData():
     soup = getSoup('Halton')
-    data = {"Positive": len(soup.find("table", {"class": "table table-striped"}).find_all("tr")) - 1}
+    table = soup.find("table", {"class": "table table-striped"}).find_all("tr")[-1]
+    data = {"Positive": int(table.find_all("td")[1].get_text(strip=True))}
     return data
 
 
@@ -157,7 +147,6 @@ def getKingstonFrontenacLennoxAddingtonData():
     return data
 
 
-## for this one pending and negative results are also available but text parsing is necessary, might add later
 def getLambtonData():
     soup = getSoup("Lambton")
     table = soup.find("table", {"class": "wp-block-table"})
@@ -165,17 +154,18 @@ def getLambtonData():
     return {"Positive": cases}
 
 
-##NOTE: currently has no cases so they haven't set up a proper site so this will be done later
 def getLeedsGrenvilleLanarkData():
     soup = getSoup("Leeds Grenville Lanark")
-    words = soup.find_all("div", {"class": "accordion-body"})[0].find_all("li")[0].get_text(strip=True).split()
-    for word in words:
+    ul = soup.find_all('ul')
+    li = ul[7].find_all('li')[0]
+    strong = li.find('strong')
+    for word in strong.get_text(strip=True).split():
         try:
             cases = int(word)
-            break
+            return {"Positive": cases}
         except:
             pass
-    return {"Positive": cases}
+    raise NameError
 
 
 def getMiddlesexLondonData():
@@ -233,7 +223,7 @@ def getOttawaData():
 def getPeelData():
     soup = getSoup("Peel")
     table = soup.find("table", {"class": "charttable white grid row-hover half margin_top_20"})
-    cases = int(table.find_all("tr")[-1].find_all("td")[1].get_text(strip=True))
+    cases = int(table.find_all("tr")[-2].find_all("td")[1].get_text(strip=True))
     return {"Positive": cases}
 
 
@@ -316,12 +306,18 @@ def getThunderBayData():
     soup = getSoup("Thunder Bay")
     table = soup.find("table")
     data = {}
-    for row in table.find_all("tr"):
+    for row in table.find_all("tr")[1:]:
         cells = [cell.get_text(strip=True) for cell in row.find_all("td")]
         if (cells[0].split()[0] == "Tests"):
             data["Testing"] = int(cells[1])
         else:
             data[cells[0].split()[0]] = int(cells[1])
+    data['Positive'] = data['Confirmed']
+    data.pop('Confirmed', None)
+    data['Tested'] = data['Total']
+    data.pop('Total', None)
+    data['Pending'] = data['Currently']
+    data.pop('Currently', None)
     return data
 
 
@@ -483,7 +479,7 @@ dispatcher = {
     },
     "Thunder Bay": {
         "func": getThunderBayData,
-        "URL": "https://www.tbdhu.com/coronavirus#"
+        "URL": "https://www.tbdhu.com/coronavirus"
     },
     "Timiskaming": {
         "func": getTimiskamingData,
@@ -531,3 +527,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    
