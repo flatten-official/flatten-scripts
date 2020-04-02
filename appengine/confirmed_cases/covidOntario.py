@@ -102,7 +102,8 @@ def getHaliburtonKawarthaPineRidgeData():
 
 def getHaltonData():
     soup = getSoup('Halton')
-    data = {"Positive": len(soup.find("table", {"class": "table table-striped"}).find_all("tr")) - 1}
+    table = soup.find("table", {"class": "table table-striped"}).find_all("tr")[-1]
+    data = {"Positive": int(table.find_all("td")[1].get_text(strip=True))}
     return data
 
 
@@ -222,7 +223,7 @@ def getOttawaData():
 def getPeelData():
     soup = getSoup("Peel")
     table = soup.find("table", {"class": "charttable white grid row-hover half margin_top_20"})
-    cases = int(table.find_all("tr")[-1].find_all("td")[1].get_text(strip=True))
+    cases = int(table.find_all("tr")[-2].find_all("td")[1].get_text(strip=True))
     return {"Positive": cases}
 
 
