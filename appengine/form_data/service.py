@@ -53,6 +53,7 @@ def main():
         try:
             # make this get the latest form data...
             postcode = entity['form_responses']['postalCode'].upper()
+            both = 1 if entity['probable'] and entity['at_risk'] else 0
             pot = 1 if entity['probable'] else 0
             risk = 1 if entity['at_risk'] else 0
         except KeyError as e:
@@ -66,11 +67,12 @@ def main():
                 continue
             map_data['fsa'][postcode]['pot'] += pot
             map_data['fsa'][postcode]['risk'] += risk
+            map_data['fsa'][postcode]['both'] += both
         else:
             if postcode in excluded:
                 map_data['fsa'][postcode] = {'fsa_excluded': True, 'number_reports': 1}
                 continue
-            map_data['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'fsa_excluded': False}
+            map_data['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'both': both, 'fsa_excluded': False}
         map_data['max'] = max(map_data['max'],
                               map_data['fsa'][postcode]['pot'] + 2 * map_data['fsa'][postcode]['risk'])
     map_data['total_responses'] = total_responses
