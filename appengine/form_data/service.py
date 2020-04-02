@@ -46,8 +46,6 @@ def main():
     map_data = {'time': floor(datetime.datetime.utcnow().timestamp()), 'max': 0, 'fsa': {}}
 
     excluded = load_excluded_postal_codes()
-    for fsa in excluded:
-        map_data['fsa'][fsa] = {'fsa_excluded': True, 'number_reports': 0}
 
     query = datastore_client.query(kind=DS_KIND)
     total_responses = 0
@@ -69,6 +67,9 @@ def main():
             map_data['fsa'][postcode]['pot'] += pot
             map_data['fsa'][postcode]['risk'] += risk
         else:
+            if postcode in excluded:
+                map_data['fsa'][postcode] = {'fsa_excluded': True, 'number_reports': 1}
+                continue
             map_data['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'fsa_excluded': False}
         map_data['max'] = max(map_data['max'],
                               map_data['fsa'][postcode]['pot'] + 2 * map_data['fsa'][postcode]['risk'])
