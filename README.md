@@ -20,6 +20,7 @@ Note this directory contains the `cloudbuild.yaml` that builds the GAE services.
 Cron jobs will not auto deploy because this requires editor privileges. To redeploy cron jobs, run 
 
 `gcloud app deploy appengine/cron.yaml`
+`gcloud app deploy appengine/cron.yaml --project flatten-271620`
 
 
 ## Contact
@@ -37,7 +38,10 @@ Martin, Arthur, Will, Rupert, Ivan, Charlie
             "max" : 9992,
             "time" : 29483929829, # UTC unix timestamp in ms since the origin
             "fsa" : {
-                "B1A" : {"number_reports": 4938, "pot": 23, "risk": 18},
+                "B1A" : {"number_reports": 4938,
+                "pot": 23, "risk": 18, # NB these are not included if fsa excluded is true
+                "fsa_excluded": false # flag to include / exclude regions with less than 50 people from census data
+            },
                 .
                 .
                 .
@@ -64,11 +68,53 @@ Martin, Arthur, Will, Rupert, Ivan, Charlie
     ]
 }
 ```
+`travel_data.json`
+```
+{
+ "cases": 7448,
+ "travel_cases": 420,
+ "no_travel_cases": 219,
+ "not_reported": 6809,
+ "travel_data": {
+  "Not Reported": 93,
+  "United States": 79,
+  "Iran": 26,
+  "Egypt": 22,
+  "Cruise": 21,
+  .
+  .
+  .
+  "Denmark": 1
+ },
+ "no_travel_data": {
+  "Close Contact": 204,
+  "Community": 15
+ }
+}
+```
+Note: countries are doubled counted since sometimes, one infected person travelled to multiple countries.
 
+`provincial_data.json`
+```
+{
+ "Quebec": {
+  "cases": 3430,
+  "recovered_cumul": {
+   "30-03-2020": 84,
+   "29-03-2020": 84
+  },
+  "dead_daily": {
+   "30-03-2020": 3
+  },
+  "total_recovered": 84,
+  "total_dead": 3
+ }
+}
+```
 
 ### Setting up Firebase Storage for the first time
 
-This only needs to be done once per project, so don't worry about it.
+This only needs to be done once per project (not per user), so don't worry about it.
 
 To allow the frontend of the map to read from the cloud storage buckets (storing the data), you will need to set the origin policy to allow reading of the cloud storage buckets. Add the following to a file called cors.json:
 ```
