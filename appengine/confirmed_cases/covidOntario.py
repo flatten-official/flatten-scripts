@@ -90,7 +90,10 @@ def getEasternOntarioData():
 
 # TODO find the data for these regions ------------------------------
 
-# def getGreyBruceData():
+def getGreyBruceData():
+    df = pd.read_csv(ontarioData)
+    gb_cases = df.loc[df['Reporting_PHU_City'] == 'Owen Sound']
+    return {"Positive": len(gb_cases)}
 
 def getHaldimandNorfolkData():
     soup = getSoup("Haldimand Norfolk")
@@ -131,17 +134,9 @@ def getHastingsPrinceEdwardData():
 def getHuronData():
     soup = getSoup("Huron Perth")
     table = soup.find("table", {"style": "width: 80%;"})
-    data = {}
-    rows = table.find_all("tr")
-    headers = [cell.get_text(strip=True).split()[-1].title() for cell in rows[0].find_all("th")]
-    elems = [int(cell.get_text(strip=True)) for cell in rows[1].find_all("td")]
-    for i in range(len(headers)):
-        data[headers[i]] = elems[i]
-    data['Positive'] = data['Confirmedpositive']
-    data.pop('Confirmedpositive', None)
-    data['Positive**'] = data['Presumptivepositive*']
-    data.pop('Presumptivepositive*', None)
-    return data
+    row = table.find_all('tr')[-1].find_all('td')[1:]
+    nums = [int(e.get_text(strip=True)) for e in row]
+    return dict(zip(['Positive', "Negative", "Pending", "Tested"], nums))
 
 
 def getKingstonFrontenacLennoxAddingtonData():
@@ -229,13 +224,9 @@ def getNorthWesternData():
 
 def getOttawaData():
     soup = getSoup("Ottawa")
-    text = soup.find("p", {"class": "largeButton-Yellow"}).find("strong").get_text(strip=True).split()
-    for block in text[::-1]:
-        try:
-            cases = int(block)
-            break
-        except:
-            pass
+    div = soup.find("div", {"id": "printAreaContent"})
+    lst = div.find_all("ul")[1]
+    cases = int(lst.find_all('li')[0].get_text(strip=True).split()[0])
     return {"Positive": cases}
 
 
@@ -311,7 +302,7 @@ def getRenfrewCountyData():
 
 def getSimcoeMuskokaData():
     soup = getSoup("Simcoe Muskoka")
-    table = soup.find_all("table", {"style": "border: currentColor; width: 233.75pt; border-image: none;"})[0]
+    table = soup.find_all("table", {"style": "border: medium none; width: 233.75pt;"})[0]
     return {"Positive": int(table.find_all('tr')[-1].find_all("td")[1].get_text(strip=True))}
 
 
@@ -351,15 +342,9 @@ def getTorontoData():
 
 
 def getWaterlooData():
-    soup = getSoup("Waterloo")
-    cases = 0
-    table = soup.find("table", {"class": "datatable"})
-    rows = table.find_all("tr")
-    for i in range(1, len(rows)):
-        caseNum = rows[i].find("td").get_text(strip=True)
-        if (caseNum[-1] != '*'):
-            cases += 1
-    return {"Positive": cases}
+    df = pd.read_csv(ontarioData)
+    waterloo_cases = df.loc[df['Reporting_PHU_City'] == 'Waterloo']
+    return {"Positive": len(waterloo_cases)}
 
 
 def getWellingtonDufferinGuelphData():
@@ -385,6 +370,7 @@ def getYorkData():
     df = pd.read_csv(dispatcher["York"]["URL"])
     return {"Positive": len(df)}
 
+ontarioData = "https://data.ontario.ca/dataset/f4112442-bdc8-45d2-be3c-12efae72fb27/resource/455fd63b-603d-4608-8216-7d8647f43350/download/conposcovidloc.csv"
 
 dispatcher = {
     "Algoma": {
@@ -408,7 +394,7 @@ dispatcher = {
         "URL": "https://eohu.ca/en/my-health/covid-19-status-update-for-eohu-region"
     },
     "Grey Bruce": {
-        "func": None,
+        "func": getGreyBruceData,
         "URL": None
     },
     "Haldimand Norfolk": {
