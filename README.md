@@ -39,7 +39,7 @@ Martin, Arthur, Will, Rupert, Ivan, Charlie
             "time" : 29483929829, # UTC unix timestamp in ms since the origin
             "fsa" : {
                 "B1A" : {"number_reports": 4938,
-                "pot": 23, "risk": 18, # NB these are not included if fsa excluded is true
+                "pot": 23, "risk": 18, "both": 2, # NB these are not included if fsa excluded is true
                 "fsa_excluded": false # flag to include / exclude regions with less than 50 people from census data
             },
                 .
