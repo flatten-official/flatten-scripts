@@ -14,7 +14,23 @@ FILE_DIRECTORY = os.environ['FILE_DIRECTORY']
 
 # fields for the generated csv
 QUESTION_FIELDS = ["q"+str(n) for n in range(1, 9)]
-FIELDS = ["id", "date", "fsa"]+QUESTION_FIELDS
+FIELDS = ["id", "date", "fsa", 'probable', 'vulnerable']+QUESTION_FIELDS
+
+
+def is_vulnerable(form_response):
+    return form_response['q4'] or form_response['q5']
+
+
+def is_probable(form_response):
+    if form_response['q3']: return True
+    if form_response['q1'] and (form_response['q2'] or form_response['q6']): return True
+    if form_response['q6'] and (form_response['q2'] or form_response['q3']): return True
+    if form_response['q7']: return True
+
+    return False
+
+def str_from_bool(bl):
+    return 'y' if bl else 'n'
 
 
 def retrieve_fields(key, form_response):
@@ -28,7 +44,9 @@ def retrieve_fields(key, form_response):
     day = utc.localize(
         datetime.datetime.utcfromtimestamp(timestamp)
     ).strftime('%Y-%m-%d')
-    fields = [unique_id, day, form_response['postalCode'].upper()]
+    probable = str_from_bool(is_probable(form_response))
+    vulnerable = str_from_bool(is_vulnerable(form_response))
+    fields = [unique_id, day, form_response['postalCode'].upper(), probable, vulnerable]
     for field in QUESTION_FIELDS:
         try:
             fields.append(form_response[field])
@@ -53,7 +71,7 @@ def upload_blob(bucket, data_string, destination_blob_name):
 
     print(
         "File {} uploaded to {}.".format(
-            data_string, destination_blob_name
+            destination_blob_name, bucket
         )
     )
 
@@ -74,9 +92,9 @@ def main():
     csv_lines = [",".join(FIELDS)]
 
     for entity in query.fetch():
-        if entity['form_responses']['postalCode'] in excluded:
-            continue
         for form_response in entity['history']:
+            if form_response['postalCode'] in excluded:
+                continue
             fields = retrieve_fields(entity.key.flat_path[-1], form_response)
             csv_lines.append(",".join(fields))
 
