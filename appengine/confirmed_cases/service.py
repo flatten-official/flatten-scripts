@@ -59,9 +59,30 @@ SPREADSHEET_REC = 'Recovered'
 SPREADSHEET_DEATH = 'Mortality'
 
 UPLOAD_CONFIRMED = 'confirmed_data.json'
+UPLOAD_CACHE = 'location_cache.json'
 UPLOAD_TRAVEL = 'travel_data.json'
 UPLOAD_PROVINCIAL = 'provincial_data.json'
 
+# with open("location_cache.json", "r") as json_file:
+#     location_cache = json.load(json_file)
+
+def download_blob(bucket_name, source_blob_name):
+    """
+    Downloads files from GCloud storage.
+
+    Paramters:
+        bucket_name: Name of storage bucket.
+        source
+    """
+    bucket = storage.Client().bucket(bucket_name)
+
+    blob = bucket.blob(source_blob_name)
+    downloaded_file_obj = blob.download_as_string()
+
+    return downloaded_file_obj
+
+# set location_cache as global variable
+location_cache = download_blob(GCS_BUCKET, UPLOAD_CACHE)
 
 def get_spreadsheet_data():
     """
@@ -102,11 +123,15 @@ def get_confirmed_cases(df):
     df_aggregate = df.groupby('health_region').size()  # Aggregate by health province
 
     # Set up the geocoder, with a rate limiter to deal with timeout issues
-    geo_coder = RateLimiter(Nominatim(user_agent="COVIDScript").geocode, min_delay_seconds=.5)
+    geo_coder = RateLimiter(Nominatim(user_agent="COVIDScript", timeout=3).geocode, min_delay_seconds=.5)
 
     # Start with ontario data
     confirmed_cases = get_ontario_confirmed_cases(geo_coder)
     confirmed_cases.extend(get_spreadsheet_confirmed_cases(df_aggregate, geo_coder))
+
+    # write the cache to a json file called location_cache.json
+    with open("location_cache.json", "w") as location_cache_w:
+        location_cache_w.write(json.dumps(location_cache, indent=2))
 
     return {'last_updated': get_time_string(df), 'max_cases': int(df_aggregate.max()),
             'confirmed_cases': confirmed_cases}
@@ -114,9 +139,6 @@ def get_confirmed_cases(df):
 
 def get_spreadsheet_confirmed_cases(df, geo_coder):
     confirmed_cases = []
-
-    with open("location_cache.json", "r") as json_file:
-        location_cache = json.load(json_file)
 
     # Iterate through all the health regions for geocoding
     for region, cases in df.iteritems():
@@ -134,9 +156,7 @@ def get_spreadsheet_confirmed_cases(df, geo_coder):
                 continue
             region = province  # Region is now just the province
 
-        geo_coder_name = NAME_EXCEPTIONS[region] if region in NAME_EXCEPTIONS else region
-
-        confirmed_cases.append(new_confirmed_case_row(region, cases, get_coords(geo_coder_name, geo_coder)))
+        confirmed_cases = add_to_confirmed_cases_list(region, cases, geo_coder, confirmed_cases)
 
     return confirmed_cases
 
@@ -147,7 +167,6 @@ def get_ontario_confirmed_cases(geo_coder):
     # Gets ontario data
     for name, value in dispatcher.items():
         name += ", Ontario"
-
         try:
             cases = value["func"]()['Positive']
         except Exception as e:
@@ -157,9 +176,38 @@ def get_ontario_confirmed_cases(geo_coder):
         if cases == 0:
             continue
 
-        confirmed_cases.append(new_confirmed_case_row(name, cases, get_coords(
-            NAME_EXCEPTIONS[name] if name in NAME_EXCEPTIONS else name, geo_coder
-        )))
+        confirmed_cases = add_to_confirmed_cases_list(name, cases, geo_coder, confirmed_cases)
+
+    return confirmed_cases
+
+def add_to_confirmed_cases_list(name, cases, geo_coder, confirmed_cases):
+    """
+    Adds the cached or geocoded entry to the confirmed_cases list.
+
+    Parameters:
+        name: The location name.
+        confirmed_cases: The list of confirmed cases to add to.
+
+    Returns:
+        The list of confirmed cases with the new cases appended to it.
+    """
+    # get the location name the geocoder recognizes
+    location_name = NAME_EXCEPTIONS[name] if name in NAME_EXCEPTIONS else name
+
+    # check if location already exists in cache and place in cache if it doesn't exist
+    if location_cache.get(name):
+        print("Geocode: {} from cache".format(name))
+        coords = location_cache[name]["coord"]
+    else:
+        coords = get_coords(location_name, geo_coder)
+        print("Geocode: {}".format(name))
+        location_cache[name] = {
+            "cases": cases,
+            "coord": coords
+        }
+
+    # append the case to confirmed_cases list
+    confirmed_cases.append(new_confirmed_case_row(name, cases, coords))
 
     return confirmed_cases
 
