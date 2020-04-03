@@ -104,5 +104,10 @@ new4['normalized_risky'] = ((new4['risky']/new4['count']) * (new4['census total'
 new4.to_csv('final_data.csv')
 
 
+data = pd.read_csv('final_data.csv')
+data = data.set_index('FSA')
+data = data.to_json('normalized_data.json', orient='index')
+
+
 
 
