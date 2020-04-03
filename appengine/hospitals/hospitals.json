@@ -1,0 +1,3216 @@
+{
+  "geocode_successes": [
+    {
+      "name": "Athabasca Healthcare Center",
+      "location": [
+        -113.25577819764706,
+        54.71815025
+      ]
+    },
+    {
+      "name": "Banff Mineral Springs Hospital",
+      "location": [
+        -115.57643898349642,
+        51.178997100000004
+      ]
+    },
+    {
+      "name": "Barrhead Healthcare Centre",
+      "location": [
+        -114.40021240994619,
+        54.119074749999996
+      ]
+    },
+    {
+      "name": "Bassano Health Centre",
+      "location": [
+        -112.4658831,
+        50.7878642
+      ]
+    },
+    {
+      "name": "Beaverlodge Regional Hospital",
+      "location": [
+        -120.0144192,
+        55.3453731
+      ]
+    },
+    {
+      "name": "Oilfields General Hospital",
+      "location": [
+        -114.23475652000116,
+        50.678227500000006
+      ]
+    },
+    {
+      "name": "Crowsnest Pass Hospital",
+      "location": [
+        -114.4944274,
+        49.6189587
+      ]
+    },
+    {
+      "name": "Bonnyville Health Centre",
+      "location": [
+        -110.7351604,
+        54.267778
+      ]
+    },
+    {
+      "name": "Bow Island Health Centre",
+      "location": [
+        -111.3762536,
+        49.868046
+      ]
+    },
+    {
+      "name": "Boyle Healthcare Centre",
+      "location": [
+        -112.80129872045873,
+        54.588331249999996
+      ]
+    },
+    {
+      "name": "Brooks Health Centre",
+      "location": [
+        -111.8889534982784,
+        50.56856555
+      ]
+    },
+    {
+      "name": "Alberta Children's Hospital",
+      "location": [
+        -114.1477078,
+        51.0758262
+      ]
+    },
+    {
+      "name": "East Calgary Health Centre (ECHC)",
+      "location": [
+        -113.9672190999108,
+        51.044899900000004
+      ]
+    },
+    {
+      "name": "Foothills Medical Centre",
+      "location": [
+        -114.13505565301116,
+        51.06541815
+      ]
+    },
+    {
+      "name": "Peter Lougheed Centre",
+      "location": [
+        -113.98276167477401,
+        51.0794477
+      ]
+    },
+    {
+      "name": "Richmond Road Diagnostic & Treatment Centre (RRDTC)",
+      "location": [
+        -114.10981649036492,
+        51.036633300000005
+      ]
+    },
+    {
+      "name": "Rockyview General Hospital",
+      "location": [
+        -114.09711384061018,
+        50.9908499
+      ]
+    },
+    {
+      "name": "Sheldon M. Chumir Health Centre (SMCHC)",
+      "location": [
+        -114.0721785791019,
+        51.04116535
+      ]
+    },
+    {
+      "name": "South Calgary Health Centre (SCHC)",
+      "location": [
+        -114.05904071160504,
+        50.902648299999996
+      ]
+    },
+    {
+      "name": "South Health Campus",
+      "location": [
+        -113.95266063025974,
+        50.88222745
+      ]
+    },
+    {
+      "name": "Tom Baker Cancer Centre",
+      "location": [
+        -114.1334694814061,
+        51.06286865
+      ]
+    },
+    {
+      "name": "St. Mary's Hospital",
+      "location": [
+        -73.62396931442888,
+        45.49487155
+      ]
+    },
+    {
+      "name": "Canmore General Hospital",
+      "location": [
+        -115.3481135,
+        51.0866897
+      ]
+    },
+    {
+      "name": "Cardston Hospital",
+      "location": [
+        -113.3165704,
+        49.2001157
+      ]
+    },
+    {
+      "name": "Our Lady of the Rosary Hospital",
+      "location": [
+        -111.90663589162588,
+        52.22344595
+      ]
+    },
+    {
+      "name": "Claresholm General Hospital",
+      "location": [
+        -113.58271184547154,
+        50.0186085
+      ]
+    },
+    {
+      "name": "Cold Lake Healthcare Centre",
+      "location": [
+        -110.1964028750057,
+        54.4682629
+      ]
+    },
+    {
+      "name": "Consort Health Centre",
+      "location": [
+        -110.7752786,
+        52.0094273
+      ]
+    },
+    {
+      "name": "Coronation Hospital and Care Centre",
+      "location": [
+        -111.45977380044127,
+        52.0964213
+      ]
+    },
+    {
+      "name": "Daysland Health Centre",
+      "location": [
+        -112.2656813,
+        52.8680426
+      ]
+    },
+    {
+      "name": "Devon General Hospital",
+      "location": [
+        -113.73064588634172,
+        53.3512408
+      ]
+    },
+    {
+      "name": "Drayton Valley Hospital and Care Centre",
+      "location": [
+        -114.9693706238244,
+        53.2116293
+      ]
+    },
+    {
+      "name": "Drumheller Health Centre",
+      "location": [
+        -112.7264812687385,
+        51.4694853
+      ]
+    },
+    {
+      "name": "Alberta Hospital Edmonton",
+      "location": [
+        -113.37387239209949,
+        53.6362616
+      ]
+    },
+    {
+      "name": "Cross Cancer Institute",
+      "location": [
+        -113.53104734399979,
+        53.518179200000006
+      ]
+    },
+    {
+      "name": "Edmonton Clinic",
+      "location": [
+        -113.5142799,
+        53.5466637
+      ]
+    },
+    {
+      "name": "Glenrose Rehabilitation Hospital",
+      "location": [
+        -113.49781799420288,
+        53.5598046
+      ]
+    },
+    {
+      "name": "Grey Nuns Community Hospital & Health Centre",
+      "location": [
+        -113.42967363459326,
+        53.46157845
+      ]
+    },
+    {
+      "name": "Leduc Community Hospital & Health Centre",
+      "location": [
+        -113.546054237336,
+        53.2551124
+      ]
+    },
+    {
+      "name": "Misericordia Community Hospital",
+      "location": [
+        -113.61351420859285,
+        53.52111535
+      ]
+    },
+    {
+      "name": "Royal Alexandra Hospital",
+      "location": [
+        -113.49799291551494,
+        53.55748945
+      ]
+    },
+    {
+      "name": "University of Alberta Hospital",
+      "location": [
+        -113.52319247453775,
+        53.5203854
+      ]
+    },
+    {
+      "name": "Edson & District Healthcare Centre",
+      "location": [
+        -116.4428477,
+        53.5858662
+      ]
+    },
+    {
+      "name": "Elk Point Healthcare Centre",
+      "location": [
+        -110.90673561385542,
+        53.8979158
+      ]
+    },
+    {
+      "name": "Fort Macleod Hospital",
+      "location": [
+        -113.3935110521127,
+        49.7262585
+      ]
+    },
+    {
+      "name": "Fort Saskatchewan Community Hospital",
+      "location": [
+        -113.2110389867402,
+        53.692168949999996
+      ]
+    },
+    {
+      "name": "Queen Elizabeth II Hospital",
+      "location": [
+        -118.78609236424782,
+        55.17577155
+      ]
+    },
+    {
+      "name": "Grande Prairie Regional Hospital (2019)",
+      "location": [
+        -118.82409862747885,
+        55.18133465
+      ]
+    },
+    {
+      "name": "Hanna Health Centre",
+      "location": [
+        -111.9269667,
+        51.6428682
+      ]
+    },
+    {
+      "name": "Hardisty Health Centre",
+      "location": [
+        -111.30765753781012,
+        52.6691809
+      ]
+    },
+    {
+      "name": "High Prairie Health Complex",
+      "location": [
+        -116.4552563291249,
+        55.431909649999994
+      ]
+    },
+    {
+      "name": "High River General Hospital",
+      "location": [
+        -113.87909466667688,
+        50.575544199999996
+      ]
+    },
+    {
+      "name": "Hinton Healthcare Centre",
+      "location": [
+        -117.58558249322837,
+        53.39835345
+      ]
+    },
+    {
+      "name": "Innisfail Health Centre",
+      "location": [
+        -113.95206596377957,
+        52.01943375
+      ]
+    },
+    {
+      "name": "Killam Health Centre",
+      "location": [
+        -111.8569101,
+        52.7877367
+      ]
+    },
+    {
+      "name": "Lacombe Hospital and Care Centre",
+      "location": [
+        -113.5893392,
+        52.685239
+      ]
+    },
+    {
+      "name": "Leduc Community Hospital",
+      "location": [
+        -113.546054237336,
+        53.2551124
+      ]
+    },
+    {
+      "name": "Chinook Regional Hospital",
+      "location": [
+        -112.81620870069048,
+        49.68522055
+      ]
+    },
+    {
+      "name": "Lloydminster Hospital",
+      "location": [
+        -109.98961255360733,
+        53.2725645
+      ]
+    },
+    {
+      "name": "Sacred Heart Community Health Centre",
+      "location": [
+        -116.91423854482275,
+        55.71060345
+      ]
+    },
+    {
+      "name": "Medicine Hat Regional Hospital",
+      "location": [
+        -110.7036419423988,
+        50.0357378
+      ]
+    },
+    {
+      "name": "Milk River Health Centre",
+      "location": [
+        -112.07721259653914,
+        49.1489452
+      ]
+    },
+    {
+      "name": "Olds Hospital and Care Centre",
+      "location": [
+        -114.11823471784288,
+        51.80143375
+      ]
+    },
+    {
+      "name": "Peace River Community Health Centre",
+      "location": [
+        -117.35368971167176,
+        56.23018745
+      ]
+    },
+    {
+      "name": "Pincher Creek Hospital",
+      "location": [
+        -113.9502919,
+        49.485667
+      ]
+    },
+    {
+      "name": "Centennial Centre for Mental Health and Brain Injury (Alberta Hospital Ponoka)",
+      "location": [
+        -113.57330765458515,
+        52.6505945
+      ]
+    },
+    {
+      "name": "Ponoka Hospital and Care Centre",
+      "location": [
+        -113.58999196499256,
+        52.68448655
+      ]
+    },
+    {
+      "name": "Raymond Hospital",
+      "location": [
+        -112.666667,
+        49.466667
+      ]
+    },
+    {
+      "name": "Rimbey Hospital and Care Centre",
+      "location": [
+        -114.24614627462834,
+        52.64018575
+      ]
+    },
+    {
+      "name": "Rocky Mountain House Hospital and Care Centre",
+      "location": [
+        -114.91205773182915,
+        52.38196845
+      ]
+    },
+    {
+      "name": "George McDougall Health Centre",
+      "location": [
+        -112.4657306215768,
+        54.1215948
+      ]
+    },
+    {
+      "name": "Central Peace Health Complex",
+      "location": [
+        -118.83872512761289,
+        55.7769019
+      ]
+    },
+    {
+      "name": "Sturgeon Community Hospital & Health Center",
+      "location": [
+        -113.62588844110243,
+        53.655272
+      ]
+    },
+    {
+      "name": "St. Paul Health Care Centre",
+      "location": [
+        -111.29096607931854,
+        53.988600399999996
+      ]
+    },
+    {
+      "name": "Stettler Hospital and Care Centre",
+      "location": [
+        -112.7130208,
+        52.3228746
+      ]
+    },
+    {
+      "name": "WestView Health Centre",
+      "location": [
+        -113.97612134062265,
+        53.5373785
+      ]
+    },
+    {
+      "name": "Sundre Hospital and Care Centre",
+      "location": [
+        -114.63565602975318,
+        51.80759895
+      ]
+    },
+    {
+      "name": "Taber Hospital",
+      "location": [
+        -112.0488074,
+        49.8895343
+      ]
+    },
+    {
+      "name": "Three Hills Health Centre",
+      "location": [
+        -113.266667,
+        51.7
+      ]
+    },
+    {
+      "name": "Tofield Health Centre",
+      "location": [
+        -112.6686537,
+        53.3699134
+      ]
+    },
+    {
+      "name": "St. Mary's Health Centre",
+      "location": [
+        -61.0947664,
+        45.5443456
+      ]
+    },
+    {
+      "name": "St. Joseph's General Hospital",
+      "location": [
+        -82.66083047437132,
+        46.3849979
+      ]
+    },
+    {
+      "name": "Vermilion Health Centre",
+      "location": [
+        -110.8542072,
+        53.3527093
+      ]
+    },
+    {
+      "name": "Viking Health Centre",
+      "location": [
+        -111.7771466,
+        53.0972884
+      ]
+    },
+    {
+      "name": "Wainwright Health Centre",
+      "location": [
+        -110.8612063,
+        52.8374281
+      ]
+    },
+    {
+      "name": "Westlock Healthcare Centre",
+      "location": [
+        -113.85351683574635,
+        54.1475482
+      ]
+    },
+    {
+      "name": "Wetaskiwin Hospital and Care Centre",
+      "location": [
+        -113.36782133279891,
+        52.98584445
+      ]
+    },
+    {
+      "name": "Whitecourt Healthcare Centre",
+      "location": [
+        -115.67496835109263,
+        54.1311441
+      ]
+    },
+    {
+      "name": "Menno Hospital",
+      "location": [
+        -122.31126346975275,
+        49.038926450000005
+      ]
+    },
+    {
+      "name": "Abbotsford Regional Hospital and Cancer Centre",
+      "location": [
+        -122.31331702891637,
+        49.03673025
+      ]
+    },
+    {
+      "name": "Ashcroft and District Hospital",
+      "location": [
+        -121.2835436,
+        50.7212409
+      ]
+    },
+    {
+      "name": "Bella Coola General Hospital",
+      "location": [
+        -126.7570804,
+        52.3735771
+      ]
+    },
+    {
+      "name": "Burnaby Hospital",
+      "location": [
+        -122.9725459,
+        49.2433804
+      ]
+    },
+    {
+      "name": "Fellburn Hospital",
+      "location": [
+        -122.97626288749868,
+        49.279740950000004
+      ]
+    },
+    {
+      "name": "Lakes District Hospital and Health Centre",
+      "location": [
+        -125.76127256150394,
+        54.2360265
+      ]
+    },
+    {
+      "name": "Campbell River & District General Hospital",
+      "location": [
+        -125.2441538,
+        50.023071
+      ]
+    },
+    {
+      "name": "Castlegar and District Community Health Centre",
+      "location": [
+        -117.66151801217424,
+        49.314993799999996
+      ]
+    },
+    {
+      "name": "Chemainus Health Care Centre",
+      "location": [
+        -123.71597810651366,
+        48.9273395
+      ]
+    },
+    {
+      "name": "Chetwynd General Hospital",
+      "location": [
+        -121.6381789,
+        55.6958928
+      ]
+    },
+    {
+      "name": "Chilliwack General Hospital",
+      "location": [
+        -121.96485716719084,
+        49.16730645
+      ]
+    },
+    {
+      "name": "Dr. Helmcken Memorial Hospital",
+      "location": [
+        -120.018302,
+        51.6455115
+      ]
+    },
+    {
+      "name": "St. Joseph's General Hospital (Comox Valley)",
+      "location": [
+        -82.66083047437132,
+        46.3849979
+      ]
+    },
+    {
+      "name": "Belvedere Care Centre",
+      "location": [
+        -122.8785698229799,
+        49.24008325
+      ]
+    },
+    {
+      "name": "Riverview Hospital",
+      "location": [
+        -113.6752797,
+        53.4414503
+      ]
+    },
+    {
+      "name": "East Kootenay Regional Hospital",
+      "location": [
+        -115.7499516827092,
+        49.51159235
+      ]
+    },
+    {
+      "name": "Creston Valley Hospital",
+      "location": [
+        -116.5121386,
+        49.0956773
+      ]
+    },
+    {
+      "name": "Dawson Creek and District Hospital",
+      "location": [
+        -120.23572528007101,
+        55.74969445
+      ]
+    },
+    {
+      "name": "Delta Hospital",
+      "location": [
+        -123.06125243089483,
+        49.085682399999996
+      ]
+    },
+    {
+      "name": "Cowichan District Hospital",
+      "location": [
+        -123.72288243910614,
+        48.7860859
+      ]
+    },
+    {
+      "name": "Elk Valley Hospital",
+      "location": [
+        -115.05635416792302,
+        49.5135975
+      ]
+    },
+    {
+      "name": "Fort Nelson General Hospital",
+      "location": [
+        -122.7049735049242,
+        58.8089455
+      ]
+    },
+    {
+      "name": "Stuart Lake General Hospital",
+      "location": [
+        -124.24202536775226,
+        54.440323750000005
+      ]
+    },
+    {
+      "name": "Fort St. John General Hospital",
+      "location": [
+        -120.846943,
+        56.2524039
+      ]
+    },
+    {
+      "name": "Lady Minto Gulf Islands Hospital",
+      "location": [
+        -123.5087226,
+        48.8625593
+      ]
+    },
+    {
+      "name": "Golden and District General Hospital",
+      "location": [
+        -116.9670826,
+        51.2973984
+      ]
+    },
+    {
+      "name": "Boundary Hospital",
+      "location": [
+        -118.468667305464,
+        49.02999845
+      ]
+    },
+    {
+      "name": "Fraser Canyon Hospital",
+      "location": [
+        -121.425315,
+        49.3770197
+      ]
+    },
+    {
+      "name": "Invermere and District Hospital",
+      "location": [
+        -116.0302062,
+        50.504853
+      ]
+    },
+    {
+      "name": "Royal Inland Hospital",
+      "location": [
+        -120.33442892472065,
+        50.6694781
+      ]
+    },
+    {
+      "name": "Victorian Community Health Centre of Kaslo",
+      "location": [
+        -116.9144432,
+        49.9134061
+      ]
+    },
+    {
+      "name": "Kelowna General Hospital",
+      "location": [
+        -119.4915179,
+        49.872783
+      ]
+    },
+    {
+      "name": "Kitimat General Hospital",
+      "location": [
+        -128.6540519,
+        54.0535577
+      ]
+    },
+    {
+      "name": "Ladysmith and District General Hospital",
+      "location": [
+        -123.8157964,
+        48.9936579
+      ]
+    },
+    {
+      "name": "Langley Memorial Hospital",
+      "location": [
+        -122.61166744542867,
+        49.094477499999996
+      ]
+    },
+    {
+      "name": "Lillooet District Hospital",
+      "location": [
+        -121.9398265,
+        50.6912237
+      ]
+    },
+    {
+      "name": "St Bartholomew's Hospital",
+      "location": [
+        -97.0809759,
+        49.867572
+      ]
+    },
+    {
+      "name": "Mackenzie and District Hospital",
+      "location": [
+        -123.1005717,
+        55.337471550000004
+      ]
+    },
+    {
+      "name": "Ridge Meadows Hospital & Health Care Centre",
+      "location": [
+        -122.629536,
+        49.2151238
+      ]
+    },
+    {
+      "name": "McBride and District Hospital",
+      "location": [
+        -120.1617011,
+        53.3010371
+      ]
+    },
+    {
+      "name": "Mission Memorial Hospital",
+      "location": [
+        -122.3311689829623,
+        49.135136900000006
+      ]
+    },
+    {
+      "name": "Arrow Lakes Hospital",
+      "location": [
+        -117.794981,
+        50.238755
+      ]
+    },
+    {
+      "name": "Nanaimo Regional General Hospital",
+      "location": [
+        -123.96984534779168,
+        49.184874300000004
+      ]
+    },
+    {
+      "name": "Kootenay Lake Hospital",
+      "location": [
+        -117.28532774101463,
+        49.4946571
+      ]
+    },
+    {
+      "name": "Slocan Community Health Centre",
+      "location": [
+        -117.37390990334427,
+        49.9837542
+      ]
+    },
+    {
+      "name": "Queen's Park Hospital",
+      "location": [
+        -122.90247979763478,
+        49.21646425
+      ]
+    },
+    {
+      "name": "Royal Columbian Hospital",
+      "location": [
+        -122.89144748550551,
+        49.22664005
+      ]
+    },
+    {
+      "name": "Lions Gate Hospital",
+      "location": [
+        -123.06767192461284,
+        49.320978350000004
+      ]
+    },
+    {
+      "name": "South Okanagan General Hospital",
+      "location": [
+        -119.53900043064311,
+        49.1835315
+      ]
+    },
+    {
+      "name": "100 Mile District General Hospital",
+      "location": [
+        -121.2921765,
+        51.6386088
+      ]
+    },
+    {
+      "name": "Penticton Regional Hospital",
+      "location": [
+        -119.57776140305529,
+        49.4814367
+      ]
+    },
+    {
+      "name": "West Coast General Hospital",
+      "location": [
+        -124.78214946399838,
+        49.24857105
+      ]
+    },
+    {
+      "name": "Port Alice Hospital",
+      "location": [
+        -127.4871286,
+        50.4254065
+      ]
+    },
+    {
+      "name": "Port Hardy Hospital",
+      "location": [
+        -127.50285126402541,
+        50.71997325
+      ]
+    },
+    {
+      "name": "Port McNeill and District Hospital",
+      "location": [
+        -127.0839027,
+        50.5893452
+      ]
+    },
+    {
+      "name": "Eagle Ridge Hospital",
+      "location": [
+        -122.82369973641946,
+        49.28553745
+      ]
+    },
+    {
+      "name": "Powell River General Hospital",
+      "location": [
+        -124.51832647386219,
+        49.850865049999996
+      ]
+    },
+    {
+      "name": "Prince George Regional Hospital",
+      "location": [
+        -122.7637411,
+        53.9125198
+      ]
+    },
+    {
+      "name": "Prince Rupert Regional Hospital",
+      "location": [
+        -130.32549,
+        54.3126572
+      ]
+    },
+    {
+      "name": "Princeton General Hospital",
+      "location": [
+        -120.52645140910022,
+        49.45459015
+      ]
+    },
+    {
+      "name": "Queen Charlotte Islands General Hospital",
+      "location": [
+        -131.89407508944993,
+        52.689369299999996
+      ]
+    },
+    {
+      "name": "G.R. Baker Memorial Hospital",
+      "location": [
+        -122.49950134449723,
+        52.981009400000005
+      ]
+    },
+    {
+      "name": "Queen Victoria Hospital",
+      "location": [
+        -75.70124503257261,
+        45.424154099999996
+      ]
+    },
+    {
+      "name": "Richmond Hospital",
+      "location": [
+        -123.137414,
+        49.163168
+      ]
+    },
+    {
+      "name": "Saanich Peninsula Hospital",
+      "location": [
+        -123.40965275113078,
+        48.596332200000006
+      ]
+    },
+    {
+      "name": "Shuswap Lake General Hospital",
+      "location": [
+        -119.27440550193434,
+        50.704241550000006
+      ]
+    },
+    {
+      "name": "Sechelt Hospital",
+      "location": [
+        -123.74959079232329,
+        49.475636050000006
+      ]
+    },
+    {
+      "name": "Bulkley Valley District Hospital",
+      "location": [
+        -127.16305754437924,
+        54.78504315
+      ]
+    },
+    {
+      "name": "Sparwood Health Centre",
+      "location": [
+        -114.89280755978623,
+        49.7213838
+      ]
+    },
+    {
+      "name": "Squamish General Hospital",
+      "location": [
+        -123.1558612,
+        49.6980743
+      ]
+    },
+    {
+      "name": "Stewart Health Centre",
+      "location": [
+        -129.9911761,
+        55.9383088
+      ]
+    },
+    {
+      "name": "Summerland Health Centre",
+      "location": [
+        -119.666667,
+        49.6
+      ]
+    },
+    {
+      "name": "Surrey Memorial Hospital",
+      "location": [
+        -122.84278785848045,
+        49.17622715
+      ]
+    },
+    {
+      "name": "Mills Memorial Hospital",
+      "location": [
+        -128.59615296002042,
+        54.51032235
+      ]
+    },
+    {
+      "name": "Tofino General Hospital",
+      "location": [
+        -125.90869007300392,
+        49.1513631
+      ]
+    },
+    {
+      "name": "Amherst Hospital & Nursing Home",
+      "location": [
+        -123.11166929934191,
+        49.217300800000004
+      ]
+    },
+    {
+      "name": "BC Cancer Agency",
+      "location": [
+        -123.11900916067017,
+        49.2617799
+      ]
+    },
+    {
+      "name": "Braddan Private Hospital",
+      "location": [
+        -123.1610416529879,
+        49.2697848
+      ]
+    },
+    {
+      "name": "George Pearson Centre",
+      "location": [
+        -123.12106360978368,
+        49.21874765
+      ]
+    },
+    {
+      "name": "Holy Family Hospital",
+      "location": [
+        -123.07308567047292,
+        49.21282155
+      ]
+    },
+    {
+      "name": "Lakeview Care Centre",
+      "location": [
+        -123.06648814723717,
+        49.25348995
+      ]
+    },
+    {
+      "name": "Louis Brier Hospital",
+      "location": [
+        -123.12922395000001,
+        49.23461675
+      ]
+    },
+    {
+      "name": "Mount Saint Joseph Hospital",
+      "location": [
+        -123.09535841553297,
+        49.25834595
+      ]
+    },
+    {
+      "name": "Normandy Hospital",
+      "location": [
+        0.9589259,
+        49.3666589
+      ]
+    },
+    {
+      "name": "St. Paul's Hospital",
+      "location": [
+        -123.12891028932134,
+        49.28061615
+      ]
+    },
+    {
+      "name": "Vancouver General Hospital",
+      "location": [
+        -123.12212805845834,
+        49.26151875
+      ]
+    },
+    {
+      "name": "St. John Hospital",
+      "location": [
+        -124.01097108367668,
+        54.0285303
+      ]
+    },
+    {
+      "name": "Vernon Jubilee Hospital",
+      "location": [
+        -119.27173248342278,
+        50.25694285
+      ]
+    },
+    {
+      "name": "Aberdeen Hospital",
+      "location": [
+        -123.34324160465658,
+        48.4421967
+      ]
+    },
+    {
+      "name": "Mt. Tolmie Hospital",
+      "location": [
+        -123.325604,
+        48.4567902
+      ]
+    },
+    {
+      "name": "Glengarry Hospital",
+      "location": [
+        -123.3325628657989,
+        48.41570085
+      ]
+    },
+    {
+      "name": "Priory Hospital",
+      "location": [
+        -123.48827996082501,
+        48.44513565
+      ]
+    },
+    {
+      "name": "Queen Alexandra Centre for Children's Health",
+      "location": [
+        -123.3002608275664,
+        48.4712567
+      ]
+    },
+    {
+      "name": "Royal Jubilee Hospital",
+      "location": [
+        -123.32668475502044,
+        48.4326433
+      ]
+    },
+    {
+      "name": "Gorge Road Hospital",
+      "location": [
+        -123.38810164430217,
+        48.44178385
+      ]
+    },
+    {
+      "name": "Victoria General Hospital",
+      "location": [
+        -97.15288538574667,
+        49.80655415
+      ]
+    },
+    {
+      "name": "R.W. Large Memorial Hospital",
+      "location": [
+        -128.14331958433718,
+        52.1612112
+      ]
+    },
+    {
+      "name": "Whistler Health Care Centre",
+      "location": [
+        -122.9550512942801,
+        50.1200096
+      ]
+    },
+    {
+      "name": "Peace Arch Hospital",
+      "location": [
+        -122.7923186613842,
+        49.0303878
+      ]
+    },
+    {
+      "name": "Cariboo Memorial Hospital",
+      "location": [
+        -122.8630322,
+        49.2768008
+      ]
+    },
+    {
+      "name": "Thompson General Hospital",
+      "location": [
+        -97.85669535833762,
+        55.73532035
+      ]
+    },
+    {
+      "name": "Selkirk & District General Hospital",
+      "location": [
+        -96.880188,
+        50.146986
+      ]
+    },
+    {
+      "name": "Bethesda Hospital",
+      "location": [
+        -96.68019567858107,
+        49.5296139
+      ]
+    },
+    {
+      "name": "Boundary Trails Health Centre",
+      "location": [
+        -98.0029745,
+        49.1890526
+      ]
+    },
+    {
+      "name": "The Children's Hospital of Winnipeg",
+      "location": [
+        -97.1562840445228,
+        49.90397405
+      ]
+    },
+    {
+      "name": "Concordia Hospital",
+      "location": [
+        -97.0659572,
+        49.913676
+      ]
+    },
+    {
+      "name": "Deer Lodge Centre",
+      "location": [
+        -97.23551306100173,
+        49.87828424999999
+      ]
+    },
+    {
+      "name": "Grace Hospital",
+      "location": [
+        -97.2774423298994,
+        49.8824127
+      ]
+    },
+    {
+      "name": "Health Sciences Centre",
+      "location": [
+        -52.743392545481555,
+        47.570857000000004
+      ]
+    },
+    {
+      "name": "Misericordia Health Centre",
+      "location": [
+        -97.16002120272887,
+        49.879564450000004
+      ]
+    },
+    {
+      "name": "Riverview Health Centre",
+      "location": [
+        -97.1204393,
+        49.8687206
+      ]
+    },
+    {
+      "name": "Saint Boniface General Hospital",
+      "location": [
+        -97.12486746053793,
+        49.88497695
+      ]
+    },
+    {
+      "name": "Seven Oaks General Hospital",
+      "location": [
+        -97.14889680049394,
+        49.955298
+      ]
+    },
+    {
+      "name": "Bonne Bay Health Centre",
+      "location": [
+        -57.87529508892785,
+        49.53656935
+      ]
+    },
+    {
+      "name": "Calder Health Centre",
+      "location": [
+        -101.75033835263453,
+        51.15964975
+      ]
+    },
+    {
+      "name": "Carbonear General Hospital",
+      "location": [
+        -53.2262756,
+        47.72470935
+      ]
+    },
+    {
+      "name": "Western Memorial Regional Hospital",
+      "location": [
+        -57.93061981999322,
+        48.948977049999996
+      ]
+    },
+    {
+      "name": "Fogo Island Hospital",
+      "location": [
+        -54.1452461,
+        49.6610089
+      ]
+    },
+    {
+      "name": "Labrador South Health Centre",
+      "location": [
+        121.0145377,
+        14.6622524
+      ]
+    },
+    {
+      "name": "Gaultois Clinic",
+      "location": [
+        -55.9033543,
+        47.6060352
+      ]
+    },
+    {
+      "name": "Central Newfoundland Regional Health Centre",
+      "location": [
+        -55.64455674389475,
+        48.93400105
+      ]
+    },
+    {
+      "name": "Labrador Health Centre",
+      "location": [
+        -60.33801735773113,
+        53.2959641
+      ]
+    },
+    {
+      "name": "Hermitage Clinic",
+      "location": [
+        -55.926256,
+        47.5562915
+      ]
+    },
+    {
+      "name": "La Scie Medical Centre",
+      "location": [
+        -55.609664161258664,
+        49.950112399999995
+      ]
+    },
+    {
+      "name": "Lewisporte Lab & X-Ray Clinic",
+      "location": [
+        -55.059357,
+        49.246293
+      ]
+    },
+    {
+      "name": "Bay D'Espoir Medical Clinic",
+      "location": [
+        -55.8449661845338,
+        47.877267
+      ]
+    },
+    {
+      "name": "Placentia Health Centre",
+      "location": [
+        -53.9635466,
+        47.2435087
+      ]
+    },
+    {
+      "name": "Dr. Charles S. Curtis Memorial Hospital",
+      "location": [
+        -55.58664570599039,
+        51.36234315
+      ]
+    },
+    {
+      "name": "St. Clare's Mercy Hospital",
+      "location": [
+        -52.72151606717969,
+        47.557439599999995
+      ]
+    },
+    {
+      "name": "Waterford Hospital",
+      "location": [
+        -65.9774956,
+        44.568811
+      ]
+    },
+    {
+      "name": "Sir Thomas Roddick Hospital",
+      "location": [
+        -58.5526309,
+        48.5593888
+      ]
+    },
+    {
+      "name": "Fort Simpson Hospital",
+      "location": [
+        -121.3205988618235,
+        61.834927050000005
+      ]
+    },
+    {
+      "name": "Fort Smith Health Centre",
+      "location": [
+        -111.890259,
+        60.005852
+      ]
+    },
+    {
+      "name": "H.H. Williams Memorial Hospital",
+      "location": [
+        -115.77951670650344,
+        60.81608085
+      ]
+    },
+    {
+      "name": "Inuvik Regional Hospital",
+      "location": [
+        -133.7030392219246,
+        68.35377455
+      ]
+    },
+    {
+      "name": "Stanton Regional Hospital",
+      "location": [
+        -123.8237305,
+        48.9679193
+      ]
+    },
+    {
+      "name": "Cumberland Regional Health Care Centre",
+      "location": [
+        -64.1966585011098,
+        45.80408405
+      ]
+    },
+    {
+      "name": "St. Martha's Regional Hospital",
+      "location": [
+        -61.9821027656203,
+        45.627957550000005
+      ]
+    },
+    {
+      "name": "South Shore Regional Hospital",
+      "location": [
+        -64.51075560416203,
+        44.38309195
+      ]
+    },
+    {
+      "name": "Digby General Hospital",
+      "location": [
+        -65.76206761847615,
+        44.6164463
+      ]
+    },
+    {
+      "name": "Strait Richmond Hospital",
+      "location": [
+        -61.22277216821086,
+        45.6173849
+      ]
+    },
+    {
+      "name": "Halifax Regional Municipality",
+      "location": [
+        -63.10506112928188,
+        44.7498988
+      ]
+    },
+    {
+      "name": "Dartmouth General Hospital",
+      "location": [
+        -63.54768591558812,
+        44.65397095
+      ]
+    },
+    {
+      "name": "Nova Scotia Hospital",
+      "location": [
+        -63.549347914694934,
+        44.65186505
+      ]
+    },
+    {
+      "name": "East Coast Forensic Hospital",
+      "location": [
+        -63.59141256220403,
+        44.7215161
+      ]
+    },
+    {
+      "name": "IWK Health Centre",
+      "location": [
+        -63.58373148434495,
+        44.637863800000005
+      ]
+    },
+    {
+      "name": "Cobequid Community Health Centre",
+      "location": [
+        -63.65858485766047,
+        44.7569128
+      ]
+    },
+    {
+      "name": "Musquodoboit Valley Memorial Hospital",
+      "location": [
+        -63.1403223,
+        45.0403001
+      ]
+    },
+    {
+      "name": "Twin Oaks Memorial Hospital",
+      "location": [
+        -63.15838067531453,
+        44.7830043
+      ]
+    },
+    {
+      "name": "Eastern Shore Memorial Hospital",
+      "location": [
+        -62.5327695,
+        44.9207756
+      ]
+    },
+    {
+      "name": "Inverness Consolidated Memorial Hospital",
+      "location": [
+        -61.2918234,
+        46.1993716
+      ]
+    },
+    {
+      "name": "Valley Regional Hospital",
+      "location": [
+        -64.5005251,
+        45.0828229
+      ]
+    },
+    {
+      "name": "Queens General Hospital",
+      "location": [
+        -64.70580153812548,
+        44.0376493
+      ]
+    },
+    {
+      "name": "Soldiers Memorial Hospital",
+      "location": [
+        -65.05923489186554,
+        44.946796750000004
+      ]
+    },
+    {
+      "name": "Northside General Hospital",
+      "location": [
+        -60.23567391188753,
+        46.218195550000004
+      ]
+    },
+    {
+      "name": "North Cumberland Memorial Hospital",
+      "location": [
+        -63.65896982752767,
+        45.85611475
+      ]
+    },
+    {
+      "name": "Roseway Hospital",
+      "location": [
+        -65.3099264,
+        43.7495078
+      ]
+    },
+    {
+      "name": "Cape Breton Regional Hospital",
+      "location": [
+        -60.17460974078011,
+        46.11263085
+      ]
+    },
+    {
+      "name": "Lillian Fraser Memorial Hospital",
+      "location": [
+        -63.296297753533466,
+        45.71149165
+      ]
+    },
+    {
+      "name": "Colchester Hospital",
+      "location": [
+        -63.3488873,
+        45.4377329
+      ]
+    },
+    {
+      "name": "Yarmouth Regional Hospital",
+      "location": [
+        -66.12156074331644,
+        43.85036935
+      ]
+    },
+    {
+      "name": "South Cumberland Community Care Center",
+      "location": [
+        -64.32609451027963,
+        45.40907145
+      ]
+    },
+    {
+      "name": "Qikiqtani General Hospital",
+      "location": [
+        -68.50902918594744,
+        63.7502049
+      ]
+    },
+    {
+      "name": "Glengarry Memorial Hospital",
+      "location": [
+        -74.64451015,
+        45.30684285
+      ]
+    },
+    {
+      "name": "Stevenson Memorial Hospital",
+      "location": [
+        -79.87480653645204,
+        44.155408949999995
+      ]
+    },
+    {
+      "name": "Atikokan General Hospital",
+      "location": [
+        -91.59766527042748,
+        48.754468200000005
+      ]
+    },
+    {
+      "name": "North Hastings Hospital (Quinte Health Care)",
+      "location": [
+        -77.86465387869154,
+        45.05523985000001
+      ]
+    },
+    {
+      "name": "Royal Victoria Regional Health Centre",
+      "location": [
+        -79.66304326936898,
+        44.41476385
+      ]
+    },
+    {
+      "name": "St. Francis Memorial Hospital",
+      "location": [
+        -77.69456521371173,
+        45.48217845
+      ]
+    },
+    {
+      "name": "Belleville General Hospital (Quinte Health Care)",
+      "location": [
+        -77.36457956422561,
+        44.16317755
+      ]
+    },
+    {
+      "name": "Lakeridge Health Bowmanville",
+      "location": [
+        -78.67809609998065,
+        43.90922875
+      ]
+    },
+    {
+      "name": "South Muskoka Memorial Hospital",
+      "location": [
+        -79.31468748812092,
+        45.047781650000005
+      ]
+    },
+    {
+      "name": "Brampton Civic Hospital",
+      "location": [
+        -79.74383437758848,
+        43.7469379
+      ]
+    },
+    {
+      "name": "Brockville General Hospital",
+      "location": [
+        -75.68103769825254,
+        44.597728000000004
+      ]
+    },
+    {
+      "name": "Brantford General Hospital",
+      "location": [
+        -80.27622990376506,
+        43.15185315
+      ]
+    },
+    {
+      "name": "Joseph Brant Memorial Hospital",
+      "location": [
+        -80.263169,
+        43.1408254
+      ]
+    },
+    {
+      "name": "Cambridge Memorial Hospital",
+      "location": [
+        -80.32880802701499,
+        43.37835865
+      ]
+    },
+    {
+      "name": "Campbellford Memorial Hospital",
+      "location": [
+        -77.78991791811856,
+        44.3128423
+      ]
+    },
+    {
+      "name": "Carlton Place & District Memorial Hospital",
+      "location": [
+        -80.4301383,
+        43.6796256
+      ]
+    },
+    {
+      "name": "Public General Hospital",
+      "location": [
+        -75.69450659999998,
+        45.44268235
+      ]
+    },
+    {
+      "name": "Northumberland Hills Hospital",
+      "location": [
+        -78.19795221016122,
+        43.977903999999995
+      ]
+    },
+    {
+      "name": "Collingwood General And Marine Hospital",
+      "location": [
+        -80.20285440636248,
+        44.49989255
+      ]
+    },
+    {
+      "name": "Dryden Regional Health Centre",
+      "location": [
+        -92.83923860446303,
+        49.769686050000004
+      ]
+    },
+    {
+      "name": "Haldimand War Memorial Hospital",
+      "location": [
+        -79.62493608361149,
+        42.9054734
+      ]
+    },
+    {
+      "name": "Englehart and District Hospital",
+      "location": [
+        -79.88008204861109,
+        47.822939649999995
+      ]
+    },
+    {
+      "name": "Espanola General Hospital",
+      "location": [
+        -81.78155353238834,
+        46.2487788
+      ]
+    },
+    {
+      "name": "Groves Memorial Community Hospital",
+      "location": [
+        -80.37379941381526,
+        43.7056844
+      ]
+    },
+    {
+      "name": "Georgetown Hospital",
+      "location": [
+        -79.93372528438312,
+        43.6446052
+      ]
+    },
+    {
+      "name": "Geraldton District Hospital",
+      "location": [
+        -86.95626869377367,
+        49.72343705
+      ]
+    },
+    {
+      "name": "Alexandra Marine and General Hospital",
+      "location": [
+        -81.70556246867676,
+        43.74987915
+      ]
+    },
+    {
+      "name": "Guelph General Hospital",
+      "location": [
+        -80.252612296639,
+        43.55608665
+      ]
+    },
+    {
+      "name": "Homewood Health Centre",
+      "location": [
+        -80.25684606206829,
+        43.5568934
+      ]
+    },
+    {
+      "name": "St. Joseph's Health Centre",
+      "location": [
+        -79.45014220870584,
+        43.6403905
+      ]
+    },
+    {
+      "name": "Hagersville West Haldimand General Hospital",
+      "location": [
+        -80.04432476982817,
+        42.95840515
+      ]
+    },
+    {
+      "name": "Haliburton Hospital",
+      "location": [
+        -78.5148132,
+        45.1525396
+      ]
+    },
+    {
+      "name": "Hamilton General Hospital",
+      "location": [
+        -79.85543175966147,
+        43.262315599999994
+      ]
+    },
+    {
+      "name": "Chedoke Hospital",
+      "location": [
+        -79.91589507532034,
+        43.23882325
+      ]
+    },
+    {
+      "name": "Juravinski Cancer Centre",
+      "location": [
+        -79.84563277243977,
+        43.24018825
+      ]
+    },
+    {
+      "name": "St. Peter's Hospital",
+      "location": [
+        -79.8371336470742,
+        43.24457755
+      ]
+    },
+    {
+      "name": "H\u00f4pital G\u00e9n\u00e9ral de Hawkesbury & District General Hospital Inc.",
+      "location": [
+        -74.607283480723,
+        45.599605
+      ]
+    },
+    {
+      "name": "H\u00f4pital Notre-Dame Hospital",
+      "location": [
+        -83.67913668132162,
+        49.68537135
+      ]
+    },
+    {
+      "name": "Huntsville Memorial District Hospital",
+      "location": [
+        -79.2063168,
+        45.3402557
+      ]
+    },
+    {
+      "name": "Alexandra Hospital",
+      "location": [
+        -80.87593924131366,
+        43.0317196
+      ]
+    },
+    {
+      "name": "Ross Memorial Hospital",
+      "location": [
+        -78.75080026866578,
+        44.35319545
+      ]
+    },
+    {
+      "name": "Lake Of The Woods District Hospital",
+      "location": [
+        -94.49929990618102,
+        49.7677173
+      ]
+    },
+    {
+      "name": "Kingston General Hospital",
+      "location": [
+        -76.49342510485046,
+        44.223848399999994
+      ]
+    },
+    {
+      "name": "Kirkland and District Hospital",
+      "location": [
+        -80.01517195006181,
+        48.15342855
+      ]
+    },
+    {
+      "name": "Grand River Hospital",
+      "location": [
+        -80.51205053702128,
+        43.456290550000006
+      ]
+    },
+    {
+      "name": "St. Mary's General Hospital",
+      "location": [
+        -80.50130985435514,
+        43.4385387
+      ]
+    },
+    {
+      "name": "Manitoulin Health Centre",
+      "location": [
+        -81.92655640049497,
+        45.9785545
+      ]
+    },
+    {
+      "name": "University Hospital",
+      "location": [
+        -81.27498024912947,
+        43.01300605
+      ]
+    },
+    {
+      "name": "Victoria Hospital",
+      "location": [
+        -81.22547160644876,
+        42.9602596
+      ]
+    },
+    {
+      "name": "Parkwood Hospital",
+      "location": [
+        -80.9825029,
+        46.6479077
+      ]
+    },
+    {
+      "name": "Manitouwadge General Hospital",
+      "location": [
+        -85.8384058,
+        49.121541
+      ]
+    },
+    {
+      "name": "Grey Bruce Health Services",
+      "location": [
+        -80.91357898450327,
+        44.5686114
+      ]
+    },
+    {
+      "name": "Georgian Bay General Hospital",
+      "location": [
+        -80.71301499826568,
+        45.2358586
+      ]
+    },
+    {
+      "name": "Mindemoya Hospital",
+      "location": [
+        -82.16635230839243,
+        45.738072
+      ]
+    },
+    {
+      "name": "Minden Hospital",
+      "location": [
+        -78.72493,
+        44.9254436
+      ]
+    },
+    {
+      "name": "Credit Valley Hospital",
+      "location": [
+        -79.70371643001891,
+        43.55949325
+      ]
+    },
+    {
+      "name": "Mississauga Hospital",
+      "location": [
+        -79.60808433976982,
+        43.5719262
+      ]
+    },
+    {
+      "name": "Moose Factory Hospital",
+      "location": [
+        -80.609436,
+        51.258477
+      ]
+    },
+    {
+      "name": "Louise Marshall Hospital",
+      "location": [
+        -80.73756092366804,
+        43.973810150000006
+      ]
+    },
+    {
+      "name": "Lennox & Addington County General Hospital",
+      "location": [
+        -76.96703418350059,
+        44.23982085
+      ]
+    },
+    {
+      "name": "Southlake Regional Health Centre",
+      "location": [
+        -79.4516772068777,
+        44.0602821
+      ]
+    },
+    {
+      "name": "Nipigon District Memorial Hospital",
+      "location": [
+        -88.2761071219038,
+        49.0154641
+      ]
+    },
+    {
+      "name": "North Bay Regional Health Centre",
+      "location": [
+        -79.49958456102885,
+        46.33497525
+      ]
+    },
+    {
+      "name": "Oakville-Trafalgar Memorial Hospital",
+      "location": [
+        -79.76487967514903,
+        43.4517078
+      ]
+    },
+    {
+      "name": "Soldiers' Memorial Hospital",
+      "location": [
+        -65.05923489186554,
+        44.946796750000004
+      ]
+    },
+    {
+      "name": "Lakeridge Health Oshawa",
+      "location": [
+        -78.86924334582326,
+        43.9057235
+      ]
+    },
+    {
+      "name": "Children's Hospital of Eastern Ontario",
+      "location": [
+        -75.65145512630224,
+        45.4014492
+      ]
+    },
+    {
+      "name": "Montfort Hospital",
+      "location": [
+        -75.63940533536035,
+        45.445899499999996
+      ]
+    },
+    {
+      "name": "National Defence Medical Centre",
+      "location": [
+        -75.65825642476784,
+        45.40139445
+      ]
+    },
+    {
+      "name": "The Ottawa Hospital",
+      "location": [
+        -75.72059219183689,
+        45.39147405
+      ]
+    },
+    {
+      "name": "Civic Hospital",
+      "location": [
+        -75.7196907,
+        45.3960008
+      ]
+    },
+    {
+      "name": "General Hospital",
+      "location": [
+        -123.12440315,
+        49.2618956
+      ]
+    },
+    {
+      "name": "Riverside Hospital",
+      "location": [
+        -108.2892248,
+        50.481292
+      ]
+    },
+    {
+      "name": "Queensway Carleton Hospital",
+      "location": [
+        -75.8078951885197,
+        45.3351437
+      ]
+    },
+    {
+      "name": "University of Ottawa Heart Institute",
+      "location": [
+        -75.72059172434302,
+        45.3941889
+      ]
+    },
+    {
+      "name": "Royal Ottawa Mental Health Centre",
+      "location": [
+        -75.7306420562928,
+        45.3889115
+      ]
+    },
+    {
+      "name": "Palmerston & District Hospital",
+      "location": [
+        -80.84302731359541,
+        43.838877999999994
+      ]
+    },
+    {
+      "name": "West Parry Sound Health Centre",
+      "location": [
+        -80.01683255269877,
+        45.340553850000006
+      ]
+    },
+    {
+      "name": "Pembroke Regional Hospital",
+      "location": [
+        -77.10705143149906,
+        45.814731550000005
+      ]
+    },
+    {
+      "name": "Great War Memorial Hospital",
+      "location": [
+        -76.25292096952509,
+        44.9056331
+      ]
+    },
+    {
+      "name": "Peterborough Regional Health Centre",
+      "location": [
+        -78.34798553819297,
+        44.29938765
+      ]
+    },
+    {
+      "name": "Lakeridge Health Port Perry",
+      "location": [
+        -78.95442093018512,
+        44.1051733
+      ]
+    },
+    {
+      "name": "Margaret Cochenour Memorial Hospital",
+      "location": [
+        -93.8216806209806,
+        51.01359095
+      ]
+    },
+    {
+      "name": "Renfrew Victoria Hospital",
+      "location": [
+        -76.69737113298183,
+        45.4819638
+      ]
+    },
+    {
+      "name": "Bluewater Health",
+      "location": [
+        -82.39033522687043,
+        42.97675195
+      ]
+    },
+    {
+      "name": "Sault Area Hospital",
+      "location": [
+        -84.31140094387678,
+        46.547507350000004
+      ]
+    },
+    {
+      "name": "Norfolk General Hospital",
+      "location": [
+        -80.31389770907487,
+        42.8353002
+      ]
+    },
+    {
+      "name": "Hotel Dieu Shaver Health and Rehabilitation Centre",
+      "location": [
+        -79.24221073073153,
+        43.12261425
+      ]
+    },
+    {
+      "name": "St.Catharines General Site",
+      "location": [
+        -79.23656351697042,
+        43.12228275
+      ]
+    },
+    {
+      "name": "West Nipissing General Hospital",
+      "location": [
+        -79.91758794550829,
+        46.372226
+      ]
+    },
+    {
+      "name": "St. Thomas Elgin General Hospital",
+      "location": [
+        -81.18036509121237,
+        42.7631685
+      ]
+    },
+    {
+      "name": "Stratford General Hospital",
+      "location": [
+        -80.99680889577436,
+        43.3680595
+      ]
+    },
+    {
+      "name": "Health Sciences North",
+      "location": [
+        -80.99648235296357,
+        46.46694765
+      ]
+    },
+    {
+      "name": "Temiskaming Hospital",
+      "location": [
+        -79.69332915847494,
+        47.49562325
+      ]
+    },
+    {
+      "name": "Thunder Bay Regional Health Sciences Centre",
+      "location": [
+        -89.26959381214951,
+        48.423537350000004
+      ]
+    },
+    {
+      "name": "Timmins & District Hospital",
+      "location": [
+        -81.31430311028885,
+        48.487497149999996
+      ]
+    },
+    {
+      "name": "Baycrest Health Sciences",
+      "location": [
+        -79.43410385928414,
+        43.7302773
+      ]
+    },
+    {
+      "name": "Etobicoke General Hospital",
+      "location": [
+        -79.59788584813774,
+        43.7290756
+      ]
+    },
+    {
+      "name": "Hospital for Sick Children",
+      "location": [
+        -79.38760057839349,
+        43.657371749999996
+      ]
+    },
+    {
+      "name": "Humber River Regional Hospital",
+      "location": [
+        -79.6742654,
+        43.8612963
+      ]
+    },
+    {
+      "name": "North York General Hospital",
+      "location": [
+        -79.3625576854712,
+        43.7692285
+      ]
+    },
+    {
+      "name": "Queensway Health Centre",
+      "location": [
+        -79.56272346216254,
+        43.6099866
+      ]
+    },
+    {
+      "name": "Scarborough Hospital",
+      "location": [
+        -79.257774,
+        43.773077
+      ]
+    },
+    {
+      "name": "Scarborough Hospital - Grace",
+      "location": [
+        -79.2054395625573,
+        43.7810872
+      ]
+    },
+    {
+      "name": "Bridgepoint Active Healthcare",
+      "location": [
+        -79.35457975999338,
+        43.666546350000004
+      ]
+    },
+    {
+      "name": "Mount Sinai Hospital",
+      "location": [
+        -79.3903184208715,
+        43.657436849999996
+      ]
+    },
+    {
+      "name": "St. John's Rehab Hospital",
+      "location": [
+        -79.3777893,
+        43.7187027
+      ]
+    },
+    {
+      "name": "St. Michael's Hospital",
+      "location": [
+        -79.37780684414469,
+        43.6536408
+      ]
+    },
+    {
+      "name": "Toronto East General Hospital",
+      "location": [
+        -79.32493147310899,
+        43.689953200000005
+      ]
+    },
+    {
+      "name": "Toronto Grace Health Centre",
+      "location": [
+        -79.2331151,
+        43.7427925
+      ]
+    },
+    {
+      "name": "University Health Network",
+      "location": [
+        -81.27569212499044,
+        43.00135625
+      ]
+    },
+    {
+      "name": "Toronto General Hospital",
+      "location": [
+        -79.38815803478147,
+        43.658587600000004
+      ]
+    },
+    {
+      "name": "Toronto Western Hospital",
+      "location": [
+        -79.40549604487205,
+        43.653566999999995
+      ]
+    },
+    {
+      "name": "Women's College Hospital",
+      "location": [
+        -79.38754180202815,
+        43.661733999999996
+      ]
+    },
+    {
+      "name": "Trenton Memorial Hospital (Quinte Health Care)",
+      "location": [
+        -77.58849076252113,
+        44.10049135
+      ]
+    },
+    {
+      "name": "Uxbridge Cottage Hospital",
+      "location": [
+        -79.12786185855956,
+        44.1023697
+      ]
+    },
+    {
+      "name": "South Bruce Grey Health Centre",
+      "location": [
+        -81.0,
+        44.0304152
+      ]
+    },
+    {
+      "name": "Winchester District Memorial Hospital",
+      "location": [
+        -75.35482956831969,
+        45.087967000000006
+      ]
+    },
+    {
+      "name": "Windsor Regional Hospital",
+      "location": [
+        -123.13981920422188,
+        49.2912412
+      ]
+    },
+    {
+      "name": "Wingham and District Hospital",
+      "location": [
+        -81.30669580210713,
+        43.8848634
+      ]
+    },
+    {
+      "name": "Woodstock General Hospital",
+      "location": [
+        -80.75327964240813,
+        43.106786400000004
+      ]
+    },
+    {
+      "name": "Markham Stouffville Hospital",
+      "location": [
+        -79.23123140839704,
+        43.8834241
+      ]
+    },
+    {
+      "name": "Mackenzie Richmond Hill Hospital",
+      "location": [
+        -79.4266122,
+        43.8747978
+      ]
+    },
+    {
+      "name": "Mackenzie Vaughan Hospital",
+      "location": [
+        -79.54327207688925,
+        43.8497942
+      ]
+    },
+    {
+      "name": "Western Hospital",
+      "location": [
+        -64.0659121,
+        46.810952
+      ]
+    },
+    {
+      "name": "Hillsborough Hospital",
+      "location": [
+        -63.09289674359346,
+        46.2569296
+      ]
+    },
+    {
+      "name": "Queen Elizabeth Hospital",
+      "location": [
+        -63.100768482681744,
+        46.2554564
+      ]
+    },
+    {
+      "name": "Community Hospital",
+      "location": [
+        -76.0277832,
+        44.9071754
+      ]
+    },
+    {
+      "name": "Souris Hospital",
+      "location": [
+        -62.24410809365082,
+        46.351843900000006
+      ]
+    },
+    {
+      "name": "Prince County Hospital",
+      "location": [
+        -63.77315610734347,
+        46.41762015
+      ]
+    },
+    {
+      "name": "H\u00f4pital de Gatineau",
+      "location": [
+        -75.69099857484899,
+        45.49324945
+      ]
+    },
+    {
+      "name": "H\u00f4pital de Hull",
+      "location": [
+        -75.74604701550575,
+        45.4448557
+      ]
+    },
+    {
+      "name": "Jewish Rehabilitation Hospital",
+      "location": [
+        -73.73740372227351,
+        45.5485147
+      ]
+    },
+    {
+      "name": "H\u00f4pital Charles-LeMoyne",
+      "location": [
+        -73.48666337915421,
+        45.49718435
+      ]
+    },
+    {
+      "name": "Centre hospitalier de Lachine",
+      "location": [
+        -73.67695841099027,
+        45.441017
+      ]
+    },
+    {
+      "name": "H\u00f4pital Notre-Dame",
+      "location": [
+        -73.56331530146929,
+        45.52607705
+      ]
+    },
+    {
+      "name": "H\u00f4pital Saint-Luc",
+      "location": [
+        -73.27015411500358,
+        45.332188900000006
+      ]
+    },
+    {
+      "name": "Centre hospitalier universitaire Sainte-Justine",
+      "location": [
+        -73.62482162016684,
+        45.50303475
+      ]
+    },
+    {
+      "name": "Centre de r\u00e9adaptation Marie-Enfant",
+      "location": [
+        -73.57728365891535,
+        45.575206
+      ]
+    },
+    {
+      "name": "H\u00f4pital du Sacr\u00e9-C\u0153ur de Montr\u00e9al",
+      "location": [
+        -73.71415342906414,
+        45.53261595
+      ]
+    },
+    {
+      "name": "H\u00f4pital Jean-Talon",
+      "location": [
+        -73.60945714054745,
+        45.54594025
+      ]
+    },
+    {
+      "name": "H\u00f4pital Maisonneuve-Rosemont",
+      "location": [
+        -73.56230799753085,
+        45.57751915
+      ]
+    },
+    {
+      "name": "H\u00f4pital Rivi\u00e8re-des-Prairies",
+      "location": [
+        -73.61161886921434,
+        45.6233111
+      ]
+    },
+    {
+      "name": "H\u00f4pital Santa Cabrini",
+      "location": [
+        -73.57190241120648,
+        45.5801446
+      ]
+    },
+    {
+      "name": "Lakeshore General Hospital",
+      "location": [
+        -73.83364777648663,
+        45.448341150000005
+      ]
+    },
+    {
+      "name": "McGill University Health Centre",
+      "location": [
+        -73.60049761870515,
+        45.47369965
+      ]
+    },
+    {
+      "name": "Montreal General Hospital",
+      "location": [
+        -73.58847029023214,
+        45.49731175
+      ]
+    },
+    {
+      "name": "Montreal Neurological Hospital",
+      "location": [
+        -73.58091784400872,
+        45.50917825
+      ]
+    },
+    {
+      "name": "Douglas Hospital",
+      "location": [
+        -73.58605441109555,
+        45.44211105
+      ]
+    },
+    {
+      "name": "Royal Victoria Hospital",
+      "location": [
+        -73.58221424935063,
+        45.50772795
+      ]
+    },
+    {
+      "name": "Barrie Memorial Hospital",
+      "location": [
+        -73.999363,
+        45.1263085
+      ]
+    },
+    {
+      "name": "H\u00f4tel-Dieu de Qu\u00e9bec",
+      "location": [
+        -71.21042500362483,
+        46.8155652
+      ]
+    },
+    {
+      "name": "H\u00f4pital Saint-Fran\u00e7ois d'Assise",
+      "location": [
+        -71.23689008714423,
+        46.828167750000006
+      ]
+    },
+    {
+      "name": "H\u00f4pital de l\u2019Enfant-J\u00e9sus",
+      "location": [
+        -71.22788067256903,
+        46.838695200000004
+      ]
+    },
+    {
+      "name": "H\u00f4pital du Saint-Sacrement",
+      "location": [
+        -71.24626006730523,
+        46.79977065
+      ]
+    },
+    {
+      "name": "H\u00f4pital du Suro\u00eet",
+      "location": [
+        -74.1304059952119,
+        45.25027145
+      ]
+    },
+    {
+      "name": "Balcarres Hospital",
+      "location": [
+        -103.5427231,
+        50.804747
+      ]
+    },
+    {
+      "name": "Big River Hospital",
+      "location": [
+        -52.8024804,
+        47.672584
+      ]
+    },
+    {
+      "name": "Canora Hospital",
+      "location": [
+        -73.6343987,
+        45.5139038
+      ]
+    },
+    {
+      "name": "Cupar Health Centre",
+      "location": [
+        -104.2139781,
+        50.9476885
+      ]
+    },
+    {
+      "name": "Davidson Hospital",
+      "location": [
+        -105.9845963,
+        51.2647972
+      ]
+    },
+    {
+      "name": "Fillmore Health Centre",
+      "location": [
+        -103.433333,
+        49.883333
+      ]
+    },
+    {
+      "name": "Foam Lake Health Centre",
+      "location": [
+        -103.5315944,
+        51.647238
+      ]
+    },
+    {
+      "name": "Humboldt District Hospital",
+      "location": [
+        -105.1209317,
+        52.2129974
+      ]
+    },
+    {
+      "name": "Kerrobert Hospital",
+      "location": [
+        -109.1365445,
+        51.9158875
+      ]
+    },
+    {
+      "name": "Kindersley Hospital",
+      "location": [
+        -109.1581355,
+        51.4687094
+      ]
+    },
+    {
+      "name": "La Ronge Health Centre",
+      "location": [
+        -105.28970774905193,
+        55.10484945
+      ]
+    },
+    {
+      "name": "Lanigan Hospital",
+      "location": [
+        -105.0331377,
+        51.8457609
+      ]
+    },
+    {
+      "name": "Leader Hospital",
+      "location": [
+        -109.5449145,
+        50.8878217
+      ]
+    },
+    {
+      "name": "Loon Lake Hospital",
+      "location": [
+        -109.160556,
+        54.025278
+      ]
+    },
+    {
+      "name": "Maidstone Hospital",
+      "location": [
+        -109.2964654,
+        53.0861081
+      ]
+    },
+    {
+      "name": "Maple Creek Hospital",
+      "location": [
+        -109.6609859,
+        49.8043107
+      ]
+    },
+    {
+      "name": "Meadow Lake Hospital",
+      "location": [
+        -108.435059,
+        54.13026
+      ]
+    },
+    {
+      "name": "Melfort Hospital",
+      "location": [
+        -104.6135544,
+        52.8613707
+      ]
+    },
+    {
+      "name": "Nipawin Hospital",
+      "location": [
+        -104.017181,
+        53.362846
+      ]
+    },
+    {
+      "name": "Battlefords Union Hospital",
+      "location": [
+        -108.28872107463494,
+        52.77279035
+      ]
+    },
+    {
+      "name": "Redvers Health Centre",
+      "location": [
+        -101.6979903,
+        49.5727567
+      ]
+    },
+    {
+      "name": "Regina General Hospital",
+      "location": [
+        -104.60096003545902,
+        50.4445069
+      ]
+    },
+    {
+      "name": "Pasqua Hospital",
+      "location": [
+        -104.63870290185417,
+        50.4539448
+      ]
+    },
+    {
+      "name": "Royal University Hospital",
+      "location": [
+        -106.64116934093933,
+        52.13137375
+      ]
+    },
+    {
+      "name": "Saskatoon City Hospital",
+      "location": [
+        -106.6243417,
+        52.1471902
+      ]
+    },
+    {
+      "name": "York Regional Health Centre",
+      "location": [
+        -122.64704642972255,
+        49.156558700000005
+      ]
+    },
+    {
+      "name": "Whitehorse General Hospital",
+      "location": [
+        -135.04376943025005,
+        60.71811365000001
+      ]
+    },
+    {
+      "name": "Watson Lake Community Hospital",
+      "location": [
+        -128.71022172886978,
+        60.07025835
+      ]
+    },
+    {
+      "name": "Governor General",
+      "location": [
+        -62.6248566,
+        45.1486368
+      ]
+    },
+    {
+      "name": "Healthcare",
+      "location": [
+        -79.35457975999338,
+        43.666546350000004
+      ]
+    },
+    {
+      "name": "Hospitals in Canada",
+      "location": [
+        -94.1714057,
+        58.7720584
+      ]
+    },
+    {
+      "name": "Community portal",
+      "location": [
+        -0.8097021,
+        38.6750263
+      ]
+    }
+  ],
+  "geocode_failures": [
+    "Cochrane Community Health Centre",
+    "St Joseph's Auxiliary Hospital",
+    "Lamont Health Care Centre",
+    "Mayerthorpe Healthcare Centre",
+    "Big Country Health Centre",
+    "Province General Care Hospital",
+    "Red Deer Regional Hospital and Care Centre",
+    "Strathmore District Health Services",
+    "Vulcan Community Health Centre",
+    "Cormorant Island Community Health Centre",
+    "St. Michael's Centre Extended Care Hospital",
+    "Peace Lutheran Extended Care Centre",
+    "Wrinch Memorial Hospital",
+    "Overlander Extended Care Hospital",
+    "Queen Charlotte Islands General Hospital \u2013 Masset Site",
+    "Nicola Valley Health Centre",
+    "Mount St. Francis Hospital",
+    "Eagle Park Health Care Facility",
+    "Kootenay Boundary Regional Hospital",
+    "British Columbia's Children's Hospital",
+    "B.C. Women's Hospital & Health Centre",
+    "Cambie Surgery Centre",
+    "G. F. Strong Centre",
+    "Kensington Private Hospital",
+    "Mary Pack Arthritis Centre",
+    "Shriners Hospitals for Children",
+    "Sunny Hill Health Centre for Children",
+    "Vancouver Hospital and Health Sciences Centre",
+    "U.B.C. Health Sciences Centre Hospital",
+    "Altona Community Memorial Health Centre / Eastview Place",
+    "Beausejour Hospital District NO. 29",
+    "Brandon Regional Hospital",
+    "Baie Verte Peninsula Health Centre",
+    "Bonavista Peninsula Health Centre",
+    "Dr. Hugh Twomey Health Centre",
+    "Brookfield Bonnews Health Care Centre",
+    "A.M Guy Memorial Health Centre",
+    "Burin Peninsula Health Care Centre",
+    "Charlottetown Community Clinic",
+    "Dr. G.B. Cross Memorial Hospital",
+    "Dr. J. I. O'Connell Centre",
+    "Strait of Belle Isle Health Centre",
+    "James Paton Memorial Hospital",
+    "Grand Bank Community Health Centre",
+    "Green Bay Community Health Centre",
+    "Connaigre Peninsula Community Health Centre",
+    "Harbour Deep Community Clinic",
+    "Mary's Harbour Community Clinic",
+    "McCallum Visiting Clinic",
+    "Mount Carmel Medical Clinic",
+    "Dr. A.A. Wilkinson Memorial Health Centre",
+    "Dr. Charles L. Legrow Health Centre",
+    "Port Hope Simpson Community Clinic",
+    "Rufus Guinchard Health Centre",
+    "Mose Ambrose Clinic",
+    "Rencontre Clinic",
+    "White Bay Central Health Centre",
+    "Dr. Leonard A. Miller Centre",
+    "Dr. Walter Templeman Health Centre",
+    "General Hospital, Health Sciences Centre",
+    "Janeway Children's Health and Rehabilitation Centre",
+    "U.S. Memorial Health Centre",
+    "St. Lewis Community Clinic",
+    "St. Mary's Bay Medical Clinic",
+    "Notre Dame Bay Memorial Health Care Centre",
+    "Dr. W.H. Newhook Community Health Centre",
+    "Queen Elizabeth II Health Sciences Centre",
+    "Buchanan Memorial Hospital",
+    "Brampton Memorial Hospital Campus",
+    "Community Hospital McConnell Site",
+    "Durham Memorial Hospital",
+    "Niagara Health System",
+    "West Lincoln Memorial Hospital-Hamilton Health Sciences",
+    "Henderson General Hospital",
+    "McMaster Children's Hospital",
+    "Kincardine South Bruce Grey Health Centre",
+    "Providence Continuing Care Centre",
+    "London Health Sciences Centre",
+    "Children's Hospital at London Health Sciences Centre",
+    "St. Joseph's Health Care, London",
+    "Wilson Memorial Hospital",
+    "Milton District Hospital",
+    "Headwaters Health Care Centre",
+    "Charlotte Eleanor Englehart Hospital of Bluewater Health",
+    "Smith Falls Community Hospital",
+    "Matthews Memorial Hospital",
+    "Bellwood Health Services",
+    "Clarke Institute of Psychiatry",
+    "North York General Hospital - Branson",
+    "Rouge Valley Health System",
+    "Sinai Health System",
+    "Sunnybrook Health Sciences Centre",
+    "Princess Margaret Cancer Centre",
+    "Toronto Rehabilitation Institute",
+    "Chatham-Kent Health Alliance, Sydenham Campus",
+    "H\u00f4tel-Dieu Grace Hospital",
+    "Shouldice Hernia Centre",
+    "Kings County Memorial",
+    "Stewart Memorial Hospital",
+    "Centre hospitalier Pierre-Boucher",
+    "Centre hospitalier Angrignon",
+    "Centre hospitalier de Fleury",
+    "Centre hospitalier de LaSalle",
+    "Centre hospitalier de Mont-Sina\u00ef",
+    "Centre hospitalier de St-Mary",
+    "Centre hospitalier de Verdun",
+    "Centre hospitalier juif de l'Esp\u00e9rance",
+    "Centre hospitalier Richardson",
+    "Centre hospitalier de l'Universit\u00e9 de Montr\u00e9al",
+    "H\u00f4tel-Dieu de Montr\u00e9al",
+    "Centre hospitalier Ville \u00c9mard",
+    "Jewish General Hospital",
+    "Montreal Children's Hospital",
+    "Allan Memorial Institute",
+    "Montreal Chest Institute",
+    "Montreal Heart Institute",
+    "Shriners Hospital for Children \u2013 Canada",
+    "Centre hospitalier Honor\u00e9-Mercier",
+    "Centre hospitalier universitaire de Qu\u00e9bec",
+    "Centre hospitalier de l'Universit\u00e9 Laval",
+    "Centre hospitalier affili\u00e9 universitaire de Qu\u00e9bec",
+    "H\u00f4tel-Dieu de St. J\u00e8r\u00f4me",
+    "Assiniboia Union Hospital",
+    "Broadview Union Hospital",
+    "Carrot River Union Hospital",
+    "L. Gervais Memorial Hospital Centre",
+    "Kamsack Union Hospital",
+    "Moose Jaw Union Hospital",
+    "Swift Current Regional Hospital",
+    "Dawson City Community Hospital"
+  ]
+}
