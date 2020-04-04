@@ -108,6 +108,31 @@ Note: countries are doubled counted since sometimes, one infected person travell
 }
 ```
 
+`hospitals.json`
+```
+{
+  "geocode_successes": [
+    {
+      "name": "Athabasca Healthcare Center",
+      "location": [
+        -113.25577819764706,
+        54.71815025
+      ]
+    },
+    {
+      "name": "Banff Mineral Springs Hospital",
+      "location": [
+        -115.57643898349642,
+        51.178997100000004
+      ]
+    }
+  ],
+  "geocode_failures": [
+    "Cochrane Community Health Centre",
+    "St Joseph's Auxiliary Hospital"
+  ]
+}
+```
 ### Setting up Firebase Storage for the first time
 
 This only needs to be done once per project (not per user), so don't worry about it.
