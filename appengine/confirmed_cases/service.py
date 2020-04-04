@@ -54,6 +54,7 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 # The ID and range of a sample spreadsheet.
 SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
 GCS_BUCKET = os.environ['GCS_BUCKET']
+CACHE_BUCKET = os.environ['CACHE_BUCKET']
 
 SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
 SPREADSHEET_CASES = 'Cases'
@@ -65,9 +66,6 @@ UPLOAD_CACHE = 'location_cache.json'
 UPLOAD_TRAVEL = 'travel_data.json'
 UPLOAD_PROVINCIAL = 'provincial_data.json'
 
-# with open("location_cache.json", "r") as json_file:
-#     location_cache = json.load(json_file)
-
 def download_blob(bucket_name, source_blob_name):
     """
     Downloads files from GCloud storage.
@@ -76,7 +74,8 @@ def download_blob(bucket_name, source_blob_name):
         bucket_name: Name of storage bucket.
         source
     """
-    bucket = storage.Client().bucket(bucket_name)
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
 
     blob = bucket.blob(source_blob_name)
     downloaded_file_obj = blob.download_as_string()
@@ -84,7 +83,7 @@ def download_blob(bucket_name, source_blob_name):
     return downloaded_file_obj
 
 # set location_cache as global variable
-location_cache = download_blob(GCS_BUCKET, UPLOAD_CACHE)
+location_cache = json.loads(download_blob(CACHE_BUCKET, UPLOAD_CACHE))
 
 def get_spreadsheet_data():
     """
@@ -339,10 +338,12 @@ def get_provincial_totals(output_dict, rec_df, dead_df):
 # Uploads the JSON to the bucket
 def write_data_to_bucket(confirmed_out, travel_out, provincial_out):
     bucket = storage.Client().bucket(GCS_BUCKET)
+    cache_bucket = storage.Client().bucket(CACHE_BUCKET)
 
     helper.upload_json(bucket, confirmed_out, UPLOAD_CONFIRMED)
     helper.upload_json(bucket, travel_out, UPLOAD_TRAVEL)
     helper.upload_json(bucket, provincial_out, UPLOAD_PROVINCIAL)
+    helper.upload_json(cache_bucket, location_cache, UPLOAD_CACHE)
 
 
 def main():
