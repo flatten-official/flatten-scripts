@@ -11,3 +11,7 @@ cron:
   url: /
   schedule: every 24 hours
   target: form-data-sanitisation
+- description: "Daily Cloud Datastore Export"
+  url: /cloud-datastore-export
+  target: cloud-datastore-admin
+  schedule: every 24 hours
