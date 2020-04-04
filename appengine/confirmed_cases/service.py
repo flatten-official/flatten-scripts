@@ -44,7 +44,9 @@ NAME_EXCEPTIONS = {
     'Terres-Cries-de-la-Baie-James, Quebec': 'Chibougamau, Quebec',
     'Gaspésie-Îles-de-la-Madeleine, Quebec': 'Cap-aux-Meules, Quebec',
     'Western, NL': 'Corner Brook, NL',
-    'Far North, Saskatchewan': 'Stony Rapids, Saskatchewan'
+    'Far North, Saskatchewan': 'Stony Rapids, Saskatchewan',
+    'Eastern, NL': 'St. John\'s, NL',
+    'Central, NL': 'Gander, NL'
 }
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']

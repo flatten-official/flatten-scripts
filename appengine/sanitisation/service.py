@@ -17,15 +17,15 @@ QUESTION_FIELDS = ["q"+str(n) for n in range(1, 9)]
 FIELDS = ["id", "date", "fsa", 'probable', 'vulnerable']+QUESTION_FIELDS
 
 
-def is_vulnerable(form_response):
-    return form_response['q4'] or form_response['q5']
+def is_vulnerable(response_bools):
+    return response_bools['q4'] or response_bools['q5']
 
 
-def is_probable(form_response):
-    if form_response['q3']: return True
-    if form_response['q1'] and (form_response['q2'] or form_response['q6']): return True
-    if form_response['q6'] and (form_response['q2'] or form_response['q3']): return True
-    if form_response['q7']: return True
+def is_probable(response_bools):
+    if response_bools['q3']: return True
+    if response_bools['q1'] and (response_bools['q2'] or response_bools['q6']): return True
+    if response_bools['q6'] and (response_bools['q2'] or response_bools['q3']): return True
+    if response_bools['q7']: return True
 
     return False
 
@@ -44,8 +44,9 @@ def retrieve_fields(key, form_response):
     day = utc.localize(
         datetime.datetime.utcfromtimestamp(timestamp)
     ).strftime('%Y-%m-%d')
-    probable = str_from_bool(is_probable(form_response))
-    vulnerable = str_from_bool(is_vulnerable(form_response))
+    response_bools = {k: form_response[k] == 'y' for k in QUESTION_FIELDS}
+    probable = str_from_bool(is_probable(response_bools))
+    vulnerable = str_from_bool(is_vulnerable(response_bools))
     fields = [unique_id, day, form_response['postalCode'].upper(), probable, vulnerable]
     for field in QUESTION_FIELDS:
         try:

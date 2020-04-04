@@ -123,10 +123,10 @@ def getHastingsPrinceEdwardData():
 
 def getHuronData():
     soup = getSoup("Huron Perth")
-    table = soup.find("table", {"style": "width: 80%;"})
+    table = soup.find("table", {"style":"width: 672px;height: 261px;"})
     row = table.find_all('tr')[-1].find_all('td')[1:]
     nums = [int(e.get_text(strip=True)) for e in row]
-    return dict(zip(['Positive', "Negative", "Pending", "Tested"], nums))
+    return dict(zip(['Positive', "Negative", "Pending", "Tested", 'Resolved'], nums))
 
 
 def getKingstonFrontenacLennoxAddingtonData():
@@ -262,12 +262,13 @@ def getPorcupineData():
 
 def getSudburyData():
     soup = getSoup("Sudbury")
-    table = soup.find("table", {"id": "tablepress-1409"})
-    cells = [row.find("td", {"class": "column-2"}) for row in table.find_all("tr")]
-    return {"Negative": int(cells[2].get_text(strip=True)),
-            "Pending": int(cells[3].get_text(strip=True)),
-            "Positive": int(cells[4].get_text(strip=True)),
-            "Resolved": int(cells[5].get_text(strip=True)),
+    table = soup.find("table", {"id": "tablepress-1430"})
+    cells = [row.find("td", {"class": "column-2"}) for row in table.find_all("tr")[1:]]
+    return {"Negative": int(cells[1].get_text(strip=True)),
+            "Pending": int(cells[2].get_text(strip=True)),
+            "Positive": int(cells[3].get_text(strip=True)),
+            "Resolved": int(cells[4].get_text(strip=True)),
+            'Deceased': int(cells[5].get_text(strip=True)),
             "Tested": int(cells[6].get_text(strip=True))}
 
 
