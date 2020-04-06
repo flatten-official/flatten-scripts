@@ -30,16 +30,11 @@ def is_probable(response_bools):
     return False
 
 def case_checker(response):
-    if response['schema_ver'] == '2':
-        pot_case = ((response['q4'] == 'y') 
-                    or ('a' in response['q1'] and ('d' in response['q1'] or 'e' in response['q1'] or response['q5'] == 'y')) 
-                    or ('d' in response['q1'] and 'e' in response['q1'] and response['q5'] == 'y'))
+    pot_case = ((response['q4'] == 'y') 
+                or ('fever' in response['q1'] and ('cough' in response['q1'] or 'shortnessOfBreath' in response['q1'] or response['q5'] == 'y')) 
+                or ('cough' in response['q1'] and 'shortnessOfBreath' in response['q1'] and response['q5'] == 'y'))
 
-        vulnerable = (response['q3'] != ['i'] and response['q3'] != []) or 'g' in response['q2'] or 'h' in response['q2']
-    else:
-        pot_case = (response['q3'] == 'y' or (response['q1'] == 'y' and (response['q2'] == 'y' or response['q6'] == 'y'))
-                    or response['q7'] or (response['q6'] == 'y' and (response['q2'] == 'y' or response['q3'] == 'y')))
-        vulnerable = response['q4'] == 'y' or response['q5'] == 'y'
+    vulnerable = (response['q3'] != ['other'] and response['q3'] != []) or '65-74' in response['q2'] or '>75' in response['q2']
     return pot_case, vulnerable
 
 def str_from_bool(bl):
@@ -54,7 +49,7 @@ def retrieve_fields(unique_id, form_response):
     day = utc.localize(
         datetime.datetime.utcfromtimestamp(timestamp)
     ).strftime('%Y-%m-%d')
-    
+
     if form_response['schema_ver'] == '1':
         response_bools = {k: form_response[k] == 'y' for k in QUESTION_FIELDS}
         probable = str_from_bool(is_probable(response_bools))

@@ -37,10 +37,10 @@ def upload_blob(bucket, data_string, destination_blob_name):
 def case_checker(response):
     if response['schema_ver'] == '2':
         pot_case = ((response['q4'] == 'y') 
-                    or ('a' in response['q1'] and ('d' in response['q1'] or 'e' in response['q1'] or response['q5'] == 'y')) 
-                    or ('d' in response['q1'] and 'e' in response['q1'] and response['q5'] == 'y'))
+                    or ('fever' in response['q1'] and ('cough' in response['q1'] or 'shortnessOfBreath' in response['q1'] or response['q5'] == 'y')) 
+                    or ('cough' in response['q1'] and 'shortnessOfBreath' in response['q1'] and response['q5'] == 'y'))
 
-        vulnerable = (response['q3'] != ['i'] and response['q3'] != []) or 'g' in response['q2'] or 'h' in response['q2']
+        vulnerable = (response['q3'] != ['other'] and response['q3'] != []) or '65-74' in response['q2'] or '>75' in response['q2']
     else:
         pot_case = (response['q3'] == 'y' or (response['q1'] == 'y' and (response['q2'] == 'y' or response['q6'] == 'y'))
                     or response['q7'] or (response['q6'] == 'y' and (response['q2'] == 'y' or response['q3'] == 'y')))
