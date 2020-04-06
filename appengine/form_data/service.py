@@ -34,6 +34,23 @@ def upload_blob(bucket, data_string, destination_blob_name):
     )
 
 
+def case_checker(response):
+    if response['schema_ver'] == '2':
+        pot_case = ((response['q4'] == 'y') 
+                    or ('a' in response['q1'] and ('d' in response['q1'] or 'e' in response['q1'] or response['q5'] == 'y')) 
+                    or ('d' in response['q1'] and 'e' in response['q1'] and response['q5'] == 'y'))
+
+        vulnerable = (response['q3'] != ['i'] and response['q3'] != []) or 'g' in response['q2'] or 'h' in response['q2']
+    else:
+        pot_case = (response['q3'] == 'y' or (response['q1'] == 'y' and (response['q2'] == 'y' or response['q6'] == 'y'))
+                    or response['q7'] or (response['q6'] == 'y' and (response['q2'] == 'y' or response['q3'] == 'y')))
+        vulnerable = response['q4'] == 'y' or response['q5'] == 'y'
+    
+    pot_vuln = 1 if (pot_case and vulnerable) else 0
+    pot_case = 1 if pot_case else 0
+    vulnerable = 1 if vulnerable else 0
+    return pot_case, vulnerable, pot_vuln
+        
 def main():
     """
     Processes the info in the datastore into
@@ -50,12 +67,11 @@ def main():
     query = datastore_client.query(kind=DS_KIND)
     total_responses = 0
     for entity in query.fetch():
+        total_responses += 1
         try:
-            # make this get the latest form data...
-            postcode = entity['form_responses']['postalCode'].upper()
-            both = 1 if entity['probable'] and entity['at_risk'] else 0
-            pot = 1 if entity['probable'] else 0
-            risk = 1 if entity['at_risk'] else 0
+            response = entity['users']['Primary']['form_responses'][-1]
+            postcode = response['fsa']
+            pot, risk, both = case_checker(response)
         except KeyError as e:
             continue
 

@@ -29,6 +29,19 @@ def is_probable(response_bools):
 
     return False
 
+def case_checker(response):
+    if response['schema_ver'] == '2':
+        pot_case = ((response['q4'] == 'y') 
+                    or ('a' in response['q1'] and ('d' in response['q1'] or 'e' in response['q1'] or response['q5'] == 'y')) 
+                    or ('d' in response['q1'] and 'e' in response['q1'] and response['q5'] == 'y'))
+
+        vulnerable = (response['q3'] != ['i'] and response['q3'] != []) or 'g' in response['q2'] or 'h' in response['q2']
+    else:
+        pot_case = (response['q3'] == 'y' or (response['q1'] == 'y' and (response['q2'] == 'y' or response['q6'] == 'y'))
+                    or response['q7'] or (response['q6'] == 'y' and (response['q2'] == 'y' or response['q3'] == 'y')))
+        vulnerable = response['q4'] == 'y' or response['q5'] == 'y'
+    return pot_case, vulnerable
+
 def str_from_bool(bl):
     return 'y' if bl else 'n'
 
@@ -41,10 +54,17 @@ def retrieve_fields(unique_id, form_response):
     day = utc.localize(
         datetime.datetime.utcfromtimestamp(timestamp)
     ).strftime('%Y-%m-%d')
-    response_bools = {k: form_response[k] == 'y' for k in QUESTION_FIELDS}
-    probable = str_from_bool(is_probable(response_bools))
-    vulnerable = str_from_bool(is_vulnerable(response_bools))
-    fields = [unique_id, day, form_response['postalCode'].upper(), probable, vulnerable]
+    
+    if form_response['schema_ver'] == '1':
+        response_bools = {k: form_response[k] == 'y' for k in QUESTION_FIELDS}
+        probable = str_from_bool(is_probable(response_bools))
+        vulnerable = str_from_bool(is_vulnerable(response_bools))
+    else:
+        prob, vuln = case_checker(form_response)
+        probable = str_from_bool(prob)
+        vulnerable = str_from_bool(vuln)
+
+    fields = [unique_id, day, form_response['fsa'].upper(), probable, vulnerable]
     for field in QUESTION_FIELDS:
         try:
             fields.append(form_response[field])
@@ -90,8 +110,8 @@ def main():
 
     for entity in query.fetch():
         unique_id = str(uuid.uuid4())
-        for form_response in entity['history']:
-            if form_response['postalCode'] in excluded:
+        for form_response in entity['users']['Primary']['form_responses']:
+            if form_response['fsa'] in excluded:
                 continue
             fields = retrieve_fields(unique_id, form_response)
             csv_lines.append(",".join(fields))
