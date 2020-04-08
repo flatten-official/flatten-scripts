@@ -43,7 +43,7 @@ def case_checker(response):
         vulnerable = (response['conditions'] != ['other'] and response['conditions'] != []) or '65-74' in response['age'] or '>75' in response['age']
     else:
         pot_case = (response['q3'] == 'y' or (response['q1'] == 'y' and (response['q2'] == 'y' or response['q6'] == 'y'))
-                    or response['q7'] or (response['q6'] == 'y' and (response['q2'] == 'y' or response['q3'] == 'y')))
+                    or (response['q7'] == 'y') or (response['q6'] == 'y' and (response['q2'] == 'y' or response['q3'] == 'y')))
         vulnerable = response['q4'] == 'y' or response['q5'] == 'y'
     
     pot_vuln = 1 if (pot_case and vulnerable) else 0
