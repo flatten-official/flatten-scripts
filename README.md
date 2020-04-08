@@ -15,13 +15,9 @@ The scripts that parse, format and run the data behind the scenes of [flatten.ca
 
 Note this directory contains the `cloudbuild.yaml` that builds the GAE services.
 
-### Updating cron jobs
+Make sure the Cloud Build script has the permissions required to deploy a cron job with
 
-Cron jobs will not auto deploy because this requires editor privileges. To redeploy cron jobs, run 
-
-`gcloud app deploy appengine/cron.yaml`
-`gcloud app deploy appengine/cron.yaml --project flatten-271620`
-
+`gcloud projects add-iam-policy-binding $(PROJECT_ID) --member=serviceAccount:$(PROJECT_NUMBER)@cloudbuild.gserviceaccount.com --role=roles/cloudscheduler.admin`
 
 ## Contact
 Martin, Arthur, Will, Rupert, Ivan, Charlie
@@ -112,6 +108,31 @@ Note: countries are doubled counted since sometimes, one infected person travell
 }
 ```
 
+`hospitals.json`
+```
+{
+  "geocode_successes": [
+    {
+      "name": "Athabasca Healthcare Center",
+      "location": [
+        -113.25577819764706,
+        54.71815025
+      ]
+    },
+    {
+      "name": "Banff Mineral Springs Hospital",
+      "location": [
+        -115.57643898349642,
+        51.178997100000004
+      ]
+    }
+  ],
+  "geocode_failures": [
+    "Cochrane Community Health Centre",
+    "St Joseph's Auxiliary Hospital"
+  ]
+}
+```
 ### Setting up Firebase Storage for the first time
 
 This only needs to be done once per project (not per user), so don't worry about it.

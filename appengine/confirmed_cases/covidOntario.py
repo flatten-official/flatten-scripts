@@ -41,27 +41,20 @@ def getBrantCountyData():
     for table in tables:
         for row in table.find_all("tr"):
             rows.append([cell.get_text(strip=True) for cell in row.find_all("td")])
-    brantCountyData["Tested"] = int(rows[1][1][1:])
+    brantCountyData["Tested"] = int(rows[4][1][1:])
     brantCountyData["Positive"] = int(rows[0][1][1:])
     return brantCountyData
 
 
 def getChathamKentData():
     soup = getSoup('Chatham-Kent')
-    chathamKentData = {}
-    table1 = soup.find("table", {"id": "tablepress-3"})
-    table2 = soup.find("table", {"id": "tablepress-4"})
-    rows1 = []
-    rows2 = []
-    for row in table1.find_all("tr"):
-        rows1.append([cell.get_text(strip=True) for cell in row.find_all("td")])
-    for row in table2.find_all("tr"):
-        rows2.append([cell.get_text(strip=True) for cell in row.find_all("td")])
-    chathamKentData["Tested"] = int(rows2[5][1])
-    chathamKentData["Positive"] = int(rows1[1][1])
-    chathamKentData["Pending"] = int(rows2[6][1])
-    chathamKentData["Negative"] = chathamKentData["Tested"] - chathamKentData["Positive"] - chathamKentData["Pending"]
-    return chathamKentData
+    table = soup.find("table", {"id": "tablepress-7"})
+    rows = table.find_all("tr")[1:]
+    nums = []
+    for row in rows:
+        nums.append(int(row.find_all('td')[1].get_text(strip=True)))
+    return {"Positive": nums[0], "Tested": nums[2], 'Pending': nums[3], "Negative": nums[2] - nums[0] - nums[3]}
+    
 
 
 def getDurhamData():
@@ -123,10 +116,10 @@ def getHastingsPrinceEdwardData():
 
 def getHuronData():
     soup = getSoup("Huron Perth")
-    table = soup.find("table", {"style": "width: 80%;"})
+    table = soup.find("table", {"style":"width: 100%;"})
     row = table.find_all('tr')[-1].find_all('td')[1:]
     nums = [int(e.get_text(strip=True)) for e in row]
-    return dict(zip(['Positive', "Negative", "Pending", "Tested"], nums))
+    return dict(zip(['Positive', "Negative", "Pending", "Tested", 'Resolved'], nums))
 
 
 def getKingstonFrontenacLennoxAddingtonData():
@@ -262,12 +255,13 @@ def getPorcupineData():
 
 def getSudburyData():
     soup = getSoup("Sudbury")
-    table = soup.find("table", {"id": "tablepress-1409"})
-    cells = [row.find("td", {"class": "column-2"}) for row in table.find_all("tr")]
-    return {"Negative": int(cells[2].get_text(strip=True)),
-            "Pending": int(cells[3].get_text(strip=True)),
-            "Positive": int(cells[4].get_text(strip=True)),
-            "Resolved": int(cells[5].get_text(strip=True)),
+    table = soup.find("table", {"id": "tablepress-1433"})
+    cells = [row.find("td", {"class": "column-2"}) for row in table.find_all("tr")[1:]]
+    return {"Negative": int(cells[1].get_text(strip=True)),
+            "Pending": int(cells[2].get_text(strip=True)),
+            "Positive": int(cells[3].get_text(strip=True)),
+            "Resolved": int(cells[4].get_text(strip=True)),
+            'Deceased': int(cells[5].get_text(strip=True)),
             "Tested": int(cells[6].get_text(strip=True))}
 
 
@@ -304,10 +298,14 @@ def getSouthwesternData():
 
 def getThunderBayData():
     soup = getSoup("Thunder Bay")
-    table = soup.find("table")
+    table = soup.find("table", {"style": "width: 500px;"})
     data = {}
-    for row in table.find_all("tr")[1:]:
+    for row in table.find_all("tr"):
         cells = [cell.get_text(strip=True) for cell in row.find_all("td")]
+        try:
+            int(cells[1])
+        except:
+            continue
         if (cells[0].split()[0] == "Tests"):
             data["Testing"] = int(cells[1])
         else:
@@ -327,7 +325,9 @@ def getTimiskamingData():
     data = {}
     for row in table.find_all("tr"):
         dataRow = [cell.get_text(strip=True) for cell in row.find_all("td")]
-        data[dataRow[0]] = int(dataRow[1])
+        data[dataRow[0].split()[0]] = int(dataRow[1])
+    data['Tested'] = data['Tests']
+    data.pop('Tests', None)
     return data
 
 
@@ -415,7 +415,7 @@ dispatcher = {
     },
     "Huron Perth": {
         "func": getHuronData,
-        "URL": "https://www.hpph.ca/en/news/coronavirus-covid19-update.aspx#COVID-19-in-Huron-and-Perth"
+        "URL": "https://www.hpph.ca/en/health-matters/covid-19-in-huron-and-perth.aspx"
     },
     "Kingston Frontenac Lennox & Addington": {
         "func": getKingstonFrontenacLennoxAddingtonData,
