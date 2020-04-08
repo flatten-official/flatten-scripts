@@ -90,7 +90,7 @@ def main():
                 continue
             map_data['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'both': both, 'fsa_excluded': False}
 
-    map_data['time'] = max(map_data['time'], entity['created'])  
+        map_data['time'] = max(map_data['time'], entity['created'])  
     map_data['total_responses'] = total_responses
 
     json_str = json.dumps(map_data)
