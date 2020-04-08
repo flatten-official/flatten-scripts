@@ -43,7 +43,7 @@ def case_checker(response):
         vulnerable = (response['conditions'] != ['other'] and response['conditions'] != []) or '65-74' in response['age'] or '>75' in response['age']
     else:
         pot_case = (response['q3'] == 'y' or (response['q1'] == 'y' and (response['q2'] == 'y' or response['q6'] == 'y'))
-                    or response['q7'] or (response['q6'] == 'y' and (response['q2'] == 'y' or response['q3'] == 'y')))
+                    or (response['q7'] == 'y') or (response['q6'] == 'y' and (response['q2'] == 'y' or response['q3'] == 'y')))
         vulnerable = response['q4'] == 'y' or response['q5'] == 'y'
     
     pot_vuln = 1 if (pot_case and vulnerable) else 0
@@ -72,7 +72,7 @@ def main():
             response = entity['users']['Primary']['form_responses'][-1]
             postcode = response['postalCode'].upper()
             pot, risk, both = case_checker(response)
-        except KeyError as e:
+        except (KeyError, IndexError) as e:
             continue
 
         total_responses += 1
