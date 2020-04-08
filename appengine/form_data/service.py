@@ -70,7 +70,7 @@ def main():
 
         try:
             response = entity['users']['Primary']['form_responses'][-1]
-            postcode = response['postalCode']
+            postcode = response['postalCode'].upper()
             pot, risk, both = case_checker(response)
         except KeyError as e:
             continue
