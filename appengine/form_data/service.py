@@ -60,7 +60,7 @@ def main():
 
     storage_client = storage.Client()
 
-    map_data = {'time': floor(datetime.datetime.utcnow().timestamp()), 'fsa': {}}
+    map_data = {'time': 0, 'fsa': {}}
 
     excluded = load_excluded_postal_codes()
 
@@ -89,6 +89,8 @@ def main():
                 map_data['fsa'][postcode] = {'fsa_excluded': True, 'number_reports': 1}
                 continue
             map_data['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'both': both, 'fsa_excluded': False}
+
+    map_data['time'] = max(map_data['time'], entity['created'])  
     map_data['total_responses'] = total_responses
 
     json_str = json.dumps(map_data)
