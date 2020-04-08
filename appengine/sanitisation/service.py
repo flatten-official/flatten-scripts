@@ -9,12 +9,13 @@ import uuid
 GCS_BUCKETS = os.environ['GCS_BUCKETS'].split(',')
 GCS_PATHS = os.environ['GCS_PATHS'].split(',')
 DS_NAMESPACE = os.environ['DS_NAMESPACE']
-DS_KIND = 'form-user'
+DS_KIND = 'FlattenAccount'
 END_FILE_NAME = os.environ['END_FILE_NAME']
 
 # fields for the generated csv
-QUESTION_FIELDS = ["q"+str(n) for n in range(1, 9)]
-FIELDS = ["id", "date", "fsa", 'probable', 'vulnerable']+QUESTION_FIELDS
+QUESTION_FIELDS_1 = ["q"+str(n) for n in range(1, 9)]
+QUESTION_FIELDS_2 = ["symptoms", "conditions", "needs", "age", "contactWithIllness", "travelOutsideCanada", "testedPostive", "sex"]
+FIELDS = ["id", "date", "fsa", 'probable', 'vulnerable']+QUESTION_FIELDS_1
 
 
 def is_vulnerable(response_bools):
@@ -30,11 +31,11 @@ def is_probable(response_bools):
     return False
 
 def case_checker(response):
-    pot_case = ((response['q4'] == 'y') 
-                or ('fever' in response['q1'] and ('cough' in response['q1'] or 'shortnessOfBreath' in response['q1'] or response['q5'] == 'y')) 
-                or ('cough' in response['q1'] and 'shortnessOfBreath' in response['q1'] and response['q5'] == 'y'))
+    pot_case = ((response['contactWithIllness'] == 'y') 
+                    or ('fever' in response['symptoms'] and ('cough' in response['symptoms'] or 'shortnessOfBreath' in response['symptoms'] or response['travelOutsideCanada'] == 'y')) 
+                    or ('cough' in response['symptoms'] and 'shortnessOfBreath' in response['symptoms'] and response['travelOutsideCanada'] == 'y'))
 
-    vulnerable = (response['q3'] != ['other'] and response['q3'] != []) or '65-74' in response['q2'] or '>75' in response['q2']
+    vulnerable = (response['conditions'] != ['other'] and response['conditions'] != []) or '65-74' in response['age'] or '>75' in response['age']
     return pot_case, vulnerable
 
 def str_from_bool(bl):
@@ -50,21 +51,29 @@ def retrieve_fields(unique_id, form_response):
         datetime.datetime.utcfromtimestamp(timestamp)
     ).strftime('%Y-%m-%d')
 
+    
+
     if form_response['schema_ver'] == '1':
-        response_bools = {k: form_response[k] == 'y' for k in QUESTION_FIELDS}
+        response_bools = {k: form_response[k] == 'y' for k in QUESTION_FIELDS_1}
         probable = str_from_bool(is_probable(response_bools))
         vulnerable = str_from_bool(is_vulnerable(response_bools))
+        QFIELDS = QUESTION_FIELDS_1
     else:
         prob, vuln = case_checker(form_response)
         probable = str_from_bool(prob)
         vulnerable = str_from_bool(vuln)
+        QFIELDS = QUESTION_FIELDS_2
+        
+    fields = [unique_id, day, form_response['postalCode'].upper(), probable, vulnerable]
 
-    fields = [unique_id, day, form_response['fsa'].upper(), probable, vulnerable]
-    for field in QUESTION_FIELDS:
-        try:
-            fields.append(form_response[field])
-        except KeyError:
-            fields.append('')
+    for field in QFIELDS:
+            try:
+                if type(form_response[field]) is list:
+                    fields.append(';'.join(form_response[field]))
+                else:
+                    fields.append(form_response[field])
+            except KeyError:
+                fields.append('')
     return fields
 
 
@@ -106,7 +115,7 @@ def main():
     for entity in query.fetch():
         unique_id = str(uuid.uuid4())
         for form_response in entity['users']['Primary']['form_responses']:
-            if form_response['fsa'] in excluded:
+            if form_response['postalCode'] in excluded:
                 continue
             fields = retrieve_fields(unique_id, form_response)
             csv_lines.append(",".join(fields))
