@@ -9,6 +9,7 @@ import csv
 GCS_BUCKETS = os.environ['GCS_BUCKETS'].split(',')
 GCS_PATHS = os.environ['GCS_PATHS'].split(',')
 UPLOAD_FILE = 'form_data.json'
+UPLOAD_FILE_USA = 'form_data_usa.json'
 DS_NAMESPACE = os.environ['DS_NAMESPACE']
 DS_KIND = 'FlattenAccount'
 
@@ -60,12 +61,13 @@ def main():
 
     storage_client = storage.Client()
 
-    map_data = {'time': 0, 'fsa': {}}
+    map_data = {'time': 0, 'total_responses': 0, 'fsa': {}}
+    map_data_usa = {'time': 0, 'total_responses': 0, 'fsa': {}}
 
     excluded = load_excluded_postal_codes()
 
     query = datastore_client.query(kind=DS_KIND)
-    total_responses = 0
+
     for entity in query.fetch():
 
         try:
@@ -74,27 +76,50 @@ def main():
             pot, risk, both = case_checker(response)
         except (KeyError, IndexError) as e:
             continue
+        
+        try:
+            int(postcode)
+            postcode = postcode[:3]
+            map_data_usa['total_responses'] += 1
 
-        total_responses += 1
+            if postcode in map_data_usa['fsa']:
+                map_data_usa['fsa'][postcode]['number_reports'] += 1
+                if postcode in excluded:
+                    continue
+                map_data_usa['fsa'][postcode]['pot'] += pot
+                map_data_usa['fsa'][postcode]['risk'] += risk
+                map_data_usa['fsa'][postcode]['both'] += both
+            else:
+                if postcode in excluded:
+                    map_data_usa['fsa'][postcode] = {'fsa_excluded': True, 'number_reports': 1}
+                    continue
+                map_data_usa['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'both': both, 'fsa_excluded': False}
 
-        if postcode in map_data['fsa']:
-            map_data['fsa'][postcode]['number_reports'] += 1
-            if postcode in excluded:
-                continue
-            map_data['fsa'][postcode]['pot'] += pot
-            map_data['fsa'][postcode]['risk'] += risk
-            map_data['fsa'][postcode]['both'] += both
-        else:
-            if postcode in excluded:
-                map_data['fsa'][postcode] = {'fsa_excluded': True, 'number_reports': 1}
-                continue
-            map_data['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'both': both, 'fsa_excluded': False}
+            map_data_usa['time'] = max(map_data_usa['time'], entity['created']//1000)  
+        except:
+            map_data['total_responses'] += 1
 
-        map_data['time'] = max(map_data['time'], entity['created']//1000)  
-    map_data['total_responses'] = total_responses
+            if postcode in map_data['fsa']:
+                map_data['fsa'][postcode]['number_reports'] += 1
+                if postcode in excluded:
+                    continue
+                map_data['fsa'][postcode]['pot'] += pot
+                map_data['fsa'][postcode]['risk'] += risk
+                map_data['fsa'][postcode]['both'] += both
+            else:
+                if postcode in excluded:
+                    map_data['fsa'][postcode] = {'fsa_excluded': True, 'number_reports': 1}
+                    continue
+                map_data['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'both': both, 'fsa_excluded': False}
+
+            map_data['time'] = max(map_data['time'], entity['created']//1000)  
 
     json_str = json.dumps(map_data)
+    json_str_usa = json.dumps(map_data_usa)
+
     for bucket, path in zip(GCS_BUCKETS, GCS_PATHS):
         bucket = storage_client.bucket(bucket)
         file_path = os.path.join(path, UPLOAD_FILE)
+        file_path_usa = os.path.join(path, UPLOAD_FILE_USA)
         upload_blob(bucket, json_str, file_path)
+        upload_blob(bucket, json_str_usa, file_path_usa)
