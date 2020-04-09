@@ -1,0 +1,7 @@
+runtime: python37
+service: email-data
+env_variables:
+  # comma separated list of buckets and paths to upload to
+  GCS_BUCKETS: "email-data-staging"
+  GCS_PATHS: ""
+  DS_NAMESPACE: "flatten_staging"
