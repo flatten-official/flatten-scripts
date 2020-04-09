@@ -4,7 +4,7 @@ import os
 
 GCS_BUCKETS = os.environ['GCS_BUCKETS'].split(',')
 GCS_PATHS = os.environ['GCS_PATHS'].split(',')
-END_FILE_NAME = 'form_data.json'
+END_FILE_NAME = 'flatten_emails.csv'
 DS_NAMESPACE = os.environ['DS_NAMESPACE']
 DS_KIND = 'FlattenMarketing'
 HEADER = 'email,latest'
