@@ -76,43 +76,30 @@ def main():
             pot, risk, both = case_checker(response)
         except (KeyError, IndexError) as e:
             continue
-        
+
         try:
             int(postcode)
             postcode = postcode[:3]
-            map_data_usa['total_responses'] += 1
-
-            if postcode in map_data_usa['fsa']:
-                map_data_usa['fsa'][postcode]['number_reports'] += 1
-                if postcode in excluded:
-                    continue
-                map_data_usa['fsa'][postcode]['pot'] += pot
-                map_data_usa['fsa'][postcode]['risk'] += risk
-                map_data_usa['fsa'][postcode]['both'] += both
-            else:
-                if postcode in excluded:
-                    map_data_usa['fsa'][postcode] = {'fsa_excluded': True, 'number_reports': 1}
-                    continue
-                map_data_usa['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'both': both, 'fsa_excluded': False}
-
-            map_data_usa['time'] = max(map_data_usa['time'], entity['created']//1000)  
+            mp = map_data_usa
         except:
-            map_data['total_responses'] += 1
+            mp = map_data
 
-            if postcode in map_data['fsa']:
-                map_data['fsa'][postcode]['number_reports'] += 1
-                if postcode in excluded:
-                    continue
-                map_data['fsa'][postcode]['pot'] += pot
-                map_data['fsa'][postcode]['risk'] += risk
-                map_data['fsa'][postcode]['both'] += both
-            else:
-                if postcode in excluded:
-                    map_data['fsa'][postcode] = {'fsa_excluded': True, 'number_reports': 1}
-                    continue
-                map_data['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'both': both, 'fsa_excluded': False}
+        mp['total_responses'] += 1
 
-            map_data['time'] = max(map_data['time'], entity['created']//1000)  
+        if postcode in map_data['fsa']:
+            mp['fsa'][postcode]['number_reports'] += 1
+            if postcode in excluded:
+                continue
+            mp['fsa'][postcode]['pot'] += pot
+            mp['fsa'][postcode]['risk'] += risk
+            mp['fsa'][postcode]['both'] += both
+        else:
+            if postcode in excluded:
+                mp['fsa'][postcode] = {'fsa_excluded': True, 'number_reports': 1}
+                continue
+            mp['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'both': both, 'fsa_excluded': False}
+
+        mp['time'] = max(mp['time'], entity['created']//1000)  
 
     json_str = json.dumps(map_data)
     json_str_usa = json.dumps(map_data_usa)
