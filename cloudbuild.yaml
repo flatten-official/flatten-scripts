@@ -8,7 +8,9 @@ steps:
   args: ["cp", "appengine/sanitisation/app.$BRANCH_NAME.yaml", "appengine/sanitisation/app.yaml"]
 - name: 'gcr.io/cloud-builders/gsutil'
   args: ["cp", "appengine/datastore-backup/app.$BRANCH_NAME.yaml", "appengine/datastore-backup/app.yaml"]
+- name: 'gcr.io/cloud-builders/gsutil'
+  args: ["cp", "appengine/email-data/app.$BRANCH_NAME.yaml", "appengine/email-data/app.yaml"]
 # deploy the app engine instances
 - name: 'gcr.io/cloud-builders/gcloud'
-  args: ['app', 'deploy', 'appengine/confirmed_cases', 'appengine/form_data', 'appengine/sanitisation', 'appengine/cron.yaml']
+  args: ['app', 'deploy', 'appengine/confirmed_cases', 'appengine/form_data', 'appengine/sanitisation', 'appengine/email-data', 'appengine/cron.yaml']
   timeout: '600s'
