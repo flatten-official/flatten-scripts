@@ -53,8 +53,8 @@ Martin, Arthur, Will, Rupert, Ivan, Charlie
             "max" : 9992,
             "time" : 29483929829, # UTC unix timestamp in ms since the origin
             "county" : {
-                # key here is the county FPNAME
-                "013" : {"number_reports": 4938,
+                # key here is the county NSCODE
+                "00198163" : {"number_reports": 4938,
                 "pot": 23, "risk": 18, "both": 2, # NB these are not included if fsa excluded is true
                 "county_excluded": false #  flag to exclude regions with too few people in them
             },
