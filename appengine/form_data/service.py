@@ -55,12 +55,12 @@ def case_checker(response):
 
 def convert_zip_to_county(map_data_usa):
     # open file containing zip codes to county mapping
-    with open('zipcode_to_county_mapping.json', 'r') as zipcodes:
+    with open('zip_lookup.json', 'r') as zipcodes:
         zipcodes_dict = json.load(zipcodes)
 
     county_dict = {}
     for aggregate_fsa, values in map_data_usa.items():
-        county = zipcodes_dict.get(aggregate_fsa)
+        county = zipcodes_dict.get(str(aggregate_fsa))['county_NAME']
         # ignore if zip code does not exist in dict or if it maps to an empty string
         if not county:
             continue
@@ -72,6 +72,11 @@ def convert_zip_to_county(map_data_usa):
             county_dict[county]["both"] += values["both"]
         else:
             county_dict[county] = values
+            county_dict["county_excluded"] = False # for the moment all of these are
+            try:
+                del county_dict["fsa_excluded"]
+            except KeyError:
+                continue
 
     return county_dict
         
