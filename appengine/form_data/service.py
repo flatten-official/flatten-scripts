@@ -96,7 +96,12 @@ def main():
 
         try:
             response = entity['users']['Primary']['form_responses'][-1]
-            postcode = response['postalCode'].upper()
+            if 'postalCode' in response:
+                postcode = response['postalCode'].upper()
+            elif 'zipCode' in response:
+                postcode = response['zipCode'].upper()
+            else:
+                continue
             pot, risk, both = case_checker(response)
         except (KeyError, IndexError) as e:
             continue
