@@ -26,6 +26,7 @@ def upload_blob(bucket, data_string, destination_blob_name):
 
     blob = bucket.blob(destination_blob_name)
 
+    print("STIRNG: ", data_string)
     blob.upload_from_string(data_string)
 
     print(
@@ -72,6 +73,11 @@ def convert_zip_to_county(map_data_usa):
             county_dict[county]["both"] += values["both"]
         else:
             county_dict[county] = values
+            county_dict["county_excluded"] = False # for the moment all of these are
+            try:
+                del county_dict["fsa_excluded"]
+            except KeyError:
+                continue
 
     return county_dict
         
