@@ -60,7 +60,7 @@ def convert_zip_to_county(map_data_usa):
 
     county_dict = {}
     for aggregate_fsa, values in map_data_usa.items():
-        county = zipcodes_dict.get(str(aggregate_fsa))['county_NAME']
+        county = zipcodes_dict.get(str(aggregate_fsa))['county_FPNAME']
         # ignore if zip code does not exist in dict or if it maps to an empty string
         if not county:
             continue
