@@ -79,7 +79,6 @@ def main():
 
         try:
             int(postcode)
-            postcode = postcode[:3]
             mp = map_data_usa
         except:
             mp = map_data
