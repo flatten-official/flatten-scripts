@@ -98,19 +98,15 @@ def main():
             response = entity['users']['Primary']['form_responses'][-1]
             if 'postalCode' in response:
                 postcode = response['postalCode'].upper()
+                mp = map_data
             elif 'zipCode' in response:
                 postcode = response['zipCode'].upper()
+                mp = map_data_usa
             else:
                 continue
             pot, risk, both = case_checker(response)
-        except (KeyError, IndexError) as e:
+        except (KeyError, IndexError, ValueError) as e:
             continue
-
-        try:
-            int(postcode)
-            mp = map_data_usa
-        except:
-            mp = map_data
 
         mp['total_responses'] += 1
 
