@@ -51,6 +51,30 @@ def case_checker(response):
     pot_case = 1 if pot_case else 0
     vulnerable = 1 if vulnerable else 0
     return pot_case, vulnerable, pot_vuln
+
+
+def convert_zip_to_county(map_data_usa):
+    # open file containing zip codes to county mapping
+    with open('zipcode_to_county_mapping.json', 'r') as zipcodes:
+        zipcodes_dict = json.load(zipcodes)
+
+    county_dict = {}
+    for aggregate_fsa, values in map_data_usa["fsa"].items():
+        county = zipcodes_dict.get(aggregate_fsa)
+
+        # ignore if zip code does not exist in dict or if it maps to an empty string
+        if not county:
+            continue
+
+        if county_dict.get(county):
+            county_dict[county]["number_reports"] += values["number_reports"]
+            county_dict[county]["pot"] += values["pot"]
+            county_dict[county]["risk"] += values["risk"]
+            county_dict[county]["both"] += values["both"]
+        else:
+            county_dict[county] = values
+
+    return county_dict
         
 def main():
     """
@@ -101,6 +125,8 @@ def main():
         mp['time'] = max(mp['time'], entity['created']//1000)  
 
     json_str = json.dumps(map_data)
+
+    map_data_usa = convert_zip_to_county(map_data_usa)
     json_str_usa = json.dumps(map_data_usa)
 
     for bucket, path in zip(GCS_BUCKETS, GCS_PATHS):
