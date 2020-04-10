@@ -15,3 +15,7 @@ cron:
   url: /cloud-datastore-export
   target: cloud-datastore-admin
   schedule: every 24 hours
+- description: "Email Export"
+  url: /
+  schedule: every 24 hours
+  target: email-data
