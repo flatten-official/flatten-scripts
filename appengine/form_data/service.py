@@ -9,6 +9,7 @@ import csv
 GCS_BUCKETS = os.environ['GCS_BUCKETS'].split(',')
 GCS_PATHS = os.environ['GCS_PATHS'].split(',')
 UPLOAD_FILE = 'form_data.json'
+UPLOAD_FILE_USA = 'form_data_usa.json'
 DS_NAMESPACE = os.environ['DS_NAMESPACE']
 DS_KIND = 'FlattenAccount'
 
@@ -50,6 +51,30 @@ def case_checker(response):
     pot_case = 1 if pot_case else 0
     vulnerable = 1 if vulnerable else 0
     return pot_case, vulnerable, pot_vuln
+
+
+def convert_zip_to_county(map_data_usa):
+    # open file containing zip codes to county mapping
+    with open('zipcode_to_county_mapping.json', 'r') as zipcodes:
+        zipcodes_dict = json.load(zipcodes)
+
+    county_dict = {}
+    for aggregate_fsa, values in map_data_usa["fsa"].items():
+        county = zipcodes_dict.get(aggregate_fsa)
+
+        # ignore if zip code does not exist in dict or if it maps to an empty string
+        if not county:
+            continue
+
+        if county_dict.get(county):
+            county_dict[county]["number_reports"] += values["number_reports"]
+            county_dict[county]["pot"] += values["pot"]
+            county_dict[county]["risk"] += values["risk"]
+            county_dict[county]["both"] += values["both"]
+        else:
+            county_dict[county] = values
+
+    return county_dict
         
 def main():
     """
@@ -60,41 +85,54 @@ def main():
 
     storage_client = storage.Client()
 
-    map_data = {'time': 0, 'fsa': {}}
+    map_data = {'time': 0, 'total_responses': 0, 'fsa': {}}
+    map_data_usa = {'time': 0, 'total_responses': 0, 'fsa': {}}
 
     excluded = load_excluded_postal_codes()
 
     query = datastore_client.query(kind=DS_KIND)
-    total_responses = 0
+
     for entity in query.fetch():
 
         try:
             response = entity['users']['Primary']['form_responses'][-1]
-            postcode = response['postalCode'].upper()
+            if 'postalCode' in response:
+                postcode = response['postalCode'].upper()
+                mp = map_data
+            elif 'zipCode' in response:
+                postcode = response['zipCode'].upper()
+                mp = map_data_usa
+            else:
+                continue
             pot, risk, both = case_checker(response)
-        except (KeyError, IndexError) as e:
+        except (KeyError, IndexError, ValueError) as e:
             continue
 
-        total_responses += 1
+        mp['total_responses'] += 1
 
         if postcode in map_data['fsa']:
-            map_data['fsa'][postcode]['number_reports'] += 1
+            mp['fsa'][postcode]['number_reports'] += 1
             if postcode in excluded:
                 continue
-            map_data['fsa'][postcode]['pot'] += pot
-            map_data['fsa'][postcode]['risk'] += risk
-            map_data['fsa'][postcode]['both'] += both
+            mp['fsa'][postcode]['pot'] += pot
+            mp['fsa'][postcode]['risk'] += risk
+            mp['fsa'][postcode]['both'] += both
         else:
             if postcode in excluded:
-                map_data['fsa'][postcode] = {'fsa_excluded': True, 'number_reports': 1}
+                mp['fsa'][postcode] = {'fsa_excluded': True, 'number_reports': 1}
                 continue
-            map_data['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'both': both, 'fsa_excluded': False}
+            mp['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'both': both, 'fsa_excluded': False}
 
-        map_data['time'] = max(map_data['time'], entity['created']//1000)  
-    map_data['total_responses'] = total_responses
+        mp['time'] = max(mp['time'], entity['created']//1000)  
 
     json_str = json.dumps(map_data)
+
+    map_data_usa = convert_zip_to_county(map_data_usa)
+    json_str_usa = json.dumps(map_data_usa)
+
     for bucket, path in zip(GCS_BUCKETS, GCS_PATHS):
         bucket = storage_client.bucket(bucket)
         file_path = os.path.join(path, UPLOAD_FILE)
+        file_path_usa = os.path.join(path, UPLOAD_FILE_USA)
         upload_blob(bucket, json_str, file_path)
+        upload_blob(bucket, json_str_usa, file_path_usa)
