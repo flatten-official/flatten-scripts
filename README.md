@@ -44,6 +44,27 @@ Martin, Arthur, Will, Rupert, Ivan, Charlie
     }
 } 
 ```
+
+
+**`form_data_usa.json`**
+```
+{
+            "total_responses" : 6969, # total number of reports recieved
+            "max" : 9992,
+            "time" : 29483929829, # UTC unix timestamp in ms since the origin
+            "county" : {
+                # key here is the county NSCODE
+                "00198163" : {"number_reports": 4938,
+                "pot": 23, "risk": 18, "both": 2, # NB these are not included if fsa excluded is true
+                "county_excluded": false #  flag to exclude regions with too few people in them
+            },
+                .
+                .
+                .
+    }
+} 
+```
+
 `confirmed.json`
 
 ```
