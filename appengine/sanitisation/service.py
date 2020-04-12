@@ -50,11 +50,13 @@ def retrieve_fields(unique_id, form_response):
     day = utc.localize(
         datetime.datetime.utcfromtimestamp(timestamp)
     ).strftime('%Y-%m-%d')
-
-    
-
     if form_response['schema_ver'] == '1':
-        response_bools = {k: form_response[k] == 'y' for k in QUESTION_FIELDS_1}
+        response_bools = {}
+        for k in QUESTION_FIELDS_1:
+            try:
+                response_bools[k] = form_response[k] == 'y'
+            except:
+                response_bools[k] = ''
         probable = str_from_bool(is_probable(response_bools))
         vulnerable = str_from_bool(is_vulnerable(response_bools))
         QFIELDS = QUESTION_FIELDS_1
@@ -63,9 +65,11 @@ def retrieve_fields(unique_id, form_response):
         probable = str_from_bool(prob)
         vulnerable = str_from_bool(vuln)
         QFIELDS = QUESTION_FIELDS_2
-        
-    fields = [unique_id, day, form_response['postalCode'].upper(), probable, vulnerable]
-
+    
+    try:
+        fields = [unique_id, day, form_response['postalCode'].upper(), probable, vulnerable]
+    except KeyError:
+        fields = [unique_id, day, form_response['zipCode'].upper(), probable, vulnerable]
     for field in QFIELDS:
             try:
                 if type(form_response[field]) is list:
@@ -115,8 +119,11 @@ def main():
     for entity in query.fetch():
         unique_id = str(uuid.uuid4())
         for form_response in entity['users']['Primary']['form_responses']:
-            if form_response['postalCode'] in excluded:
-                continue
+            try:
+                if form_response['postalCode'] in excluded:
+                    continue
+            except:
+                pass
             fields = retrieve_fields(unique_id, form_response)
             csv_lines.append(",".join(fields))
 
