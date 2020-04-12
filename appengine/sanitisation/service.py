@@ -115,9 +115,6 @@ def main():
     excluded = load_excluded_postal_codes()
 
     csv_lines = [",".join(FIELDS)]
-    timestamp = int((datetime.datetime.utcnow() - datetime.timedelta(hours=24)).timestamp()) * 1000
-    print(timestamp)
-    query.add_filter('users.Primary.form_responses.timestamp', '>', timestamp)
 
     for entity in query.fetch():
         unique_id = str(uuid.uuid4())
