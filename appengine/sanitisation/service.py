@@ -14,8 +14,8 @@ END_FILE_NAME = os.environ['END_FILE_NAME']
 
 # fields for the generated csv
 QUESTION_FIELDS_1 = ["q"+str(n) for n in range(1, 9)]
-QUESTION_FIELDS_2 = ["symptoms", "conditions", "needs", "age", "contactWithIllness", "travelOutsideCanada", "testedPostive", "sex"]
-FIELDS = ["id", "date", "fsa", 'probable', 'vulnerable']+QUESTION_FIELDS_1
+QUESTION_FIELDS_2 = ["symptoms", "conditions", "age", "contactWithIllness", "travelOutsideCanada", "testedPostive", "sex"]
+FIELDS = ["id", "date", "fsa", 'probable', 'vulnerable']+QUESTION_FIELDS_1+QUESTION_FIELDS_2
 
 
 def is_vulnerable(response_bools):
@@ -59,18 +59,16 @@ def retrieve_fields(unique_id, form_response):
                 response_bools[k] = ''
         probable = str_from_bool(is_probable(response_bools))
         vulnerable = str_from_bool(is_vulnerable(response_bools))
-        QFIELDS = QUESTION_FIELDS_1
     else:
         prob, vuln = case_checker(form_response)
         probable = str_from_bool(prob)
         vulnerable = str_from_bool(vuln)
-        QFIELDS = QUESTION_FIELDS_2
     
     try:
         fields = [unique_id, day, form_response['postalCode'].upper(), probable, vulnerable]
     except KeyError:
         fields = [unique_id, day, form_response['zipCode'].upper(), probable, vulnerable]
-    for field in QFIELDS:
+    for field in QUESTION_FIELDS_1 + QUESTION_FIELDS_2:
             try:
                 if type(form_response[field]) is list:
                     fields.append(';'.join(form_response[field]))
@@ -115,7 +113,6 @@ def main():
     excluded = load_excluded_postal_codes()
 
     csv_lines = [",".join(FIELDS)]
-
     for entity in query.fetch():
         unique_id = str(uuid.uuid4())
         for form_response in entity['users']['Primary']['form_responses']:
