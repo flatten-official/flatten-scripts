@@ -1,15 +1,19 @@
-from google.cloud import storage
+import os
+import pytz
 import pandas as pd
+
+import confirmed_cases.helper as helper
+
+from datetime import datetime
+from dotenv import load_dotenv
+from google.cloud import storage
 from googleapiclient.discovery import build
-import json
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
-from datetime import datetime
-import os
-from covidOntario import dispatcher
-import pytz
+from confirmed_cases.covidOntario import dispatcher
 
-import helper
+
+load_dotenv()
 
 NAME_EXCEPTIONS = {
     "Kingston Frontenac Lennox & Addington, Ontario": "Kingston, Ontario",
@@ -52,8 +56,8 @@ NAME_EXCEPTIONS = {
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
-SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
-GCS_BUCKET = os.environ['GCS_BUCKET']
+SHEETS_API_KEY = os.environ.get('SHEETS_API_KEY')
+GCS_BUCKET = os.environ.get('GCS_BUCKET')
 
 SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
 SPREADSHEET_CASES = 'Cases'
@@ -305,7 +309,7 @@ def main():
     travel_data = get_travel_data(confirmed)
     provincial_data = get_provincial_totals(confirmed_output, recovered, dead)
     print("Outputting data to file...")
-    write_data_to_bucket(confirmed_output, travel_data, provincial_data)
+    # write_data_to_bucket(confirmed_output, travel_data, provincial_data)
     print("Done")
 
 
