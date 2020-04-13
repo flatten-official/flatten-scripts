@@ -14,6 +14,8 @@ def root():
         main()
         return Response(status=200)
     except Exception as e:
+        import traceback, sys
+        traceback.print_exc(file=sys.stdout)
         print(e)
         return Response(status=500)
 
