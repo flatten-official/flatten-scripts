@@ -33,7 +33,7 @@ confirmed_cases_dag = DAG(
 
 clone_repo = BashOperator(
     task_id='clone_scripts_repo',
-    bash_command='cd /Users/shahzad/Development && rm -rf flatten-scripts && git clone https://github.com/flatten-official/flatten-scripts.git'
+    bash_command='cd /home/airflow && rm -rf flatten-scripts && git clone https://github.com/flatten-official/flatten-scripts.git'
 )
 
 run_service = PythonOperator(
