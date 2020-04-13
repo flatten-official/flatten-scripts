@@ -14,6 +14,7 @@ def enable_cloud_debugger():
     except ImportError:
         pass
 
+
 enable_cloud_debugger()
 
 default_args = {
@@ -43,8 +44,3 @@ run_service = PythonOperator(
 )
 
 clone_repo >> run_service
-
-
-
-
-
