@@ -56,7 +56,7 @@ def main():
         map_data_usa = download_blob(bucket, OLD_FILE_USA)
     except Exception as e:
         import traceback, sys
-        traceback.print_exc(sys.stderr)
+        traceback.print_exc(file=sys.stderr)
         map_data = {'time': 0, 'total_responses': 0, 'fsa': {}}
         map_data_usa = {'time': 0, 'total_responses': 0, 'fsa': {}}
 
@@ -67,12 +67,12 @@ def main():
     for entity in query.fetch():
 
         try:
-            response = entity['users']['Primary']['form_responses'][-1]
-            if 'postalCode' in response:
-                postcode = response['postalCode'].upper()
+            response = entity['data']
+            if 'fsa' in response:
+                postcode = response['fsa']['value'].upper()
                 mp = map_data
-            elif 'zipCode' in response:
-                postcode = response['zipCode'].upper()
+            elif 'zip' in response:
+                postcode = response['zip']['value'].upper()
                 mp = map_data_usa
             else:
                 continue
@@ -95,7 +95,7 @@ def main():
                 continue
             mp['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'both': both, 'fsa_excluded': False}
 
-        mp['time'] = max(mp['time'], entity['created']//1000)  
+        mp['time'] = max(mp['time'], entity['timestamp']//1000)  
 
     json_str = json.dumps(map_data)
 
@@ -104,7 +104,6 @@ def main():
         'total_responses': map_data_usa['total_responses'],
         'county': convert_zip_to_county(map_data_usa['fsa'])
     }
-    print(map_data_usa)
     json_str_usa = json.dumps(map_data_usa)
 
     for bucket, path in zip(GCS_BUCKETS, GCS_PATHS):

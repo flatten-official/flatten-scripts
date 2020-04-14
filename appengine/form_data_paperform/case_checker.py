@@ -6,19 +6,19 @@ VUL_AGES = ['65-74', '>75']
 def case_checker(data):
     """Checks whether a paperform submission counts as a potential case or a vulnerable individual"""
     try:
-        positive_travel = data['contact_positive_or_travel'] == "Yes"
-        travelled = data['travelled'] == "Yes"
+        positive_travel = data['contact_positive_or_travel']['value'] == "Yes"
+        travelled = data['travelled']['value'] == "Yes"
     except KeyError:
         logging.warning("Contact positive or travel key does not exist in entry")
         positive_travel = False
         travelled = False
     try:
-        fever = 'Fever' in data['symptoms']
-        cough = 'Cough' in data['symptoms']
-        breathless = 'Shortness of breath' in data['symptoms']
+        fever = 'Fever' in data['symptoms']['value']
+        cough = 'Cough' in data['symptoms']['value']
+        breathless = 'Shortness of breath' in data['symptoms']['value']
     except KeyError:
         logging.warning("Issue parsing symptoms")
-        fever, cough, breathless = False
+        fever = cough = breathless = False
 
     pot_case = (
         positive_travel
@@ -27,8 +27,8 @@ def case_checker(data):
     )
     try:
         vulnerable = (
-            ('Other' not in data['conditions'] and len(data['conditions']) > 0)
-            or data['age'] in VUL_AGES
+            ('Other' not in data['medical_conditions']['value'] and len(data['medical_conditions']['value']) > 0)
+            or data['age']['value'] in VUL_AGES
         )
     except KeyError:
         logging.warning("Issue parsing vulnerable")
