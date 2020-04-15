@@ -1,9 +1,25 @@
+import json
 import requests
+import pandas as pd
 from datetime import datetime
 
 PROVINCES = ["YUKON", "PRINCE EDWARD ISLAND", "NEWFOUNDLAND AND LABRADOR", "NEW BRUNSWICK", "BRITISH COLUMBIA",\
             "NOVA SCOTIA", "SASKATCHEWAN", "ALBERTA", "MANITOBA", "QUEBEC", "ONTARIO", "NORTHWEST TERRITORIES",\
             "NUNAVUT"]
+
+MAPPING = {
+    "AB": "ALBERTA",
+    "BC": "BRITISH COLUMBIA",
+    "SK": "SASKATCHEWAN",
+    "MB": "MANITOBA",
+    "ON": "ONTARIO",
+    "NB": "NEW BRUNSWICK",
+    "NL": "NEWFOUNDLAND AND LABRADOR",
+    "NS": "NOVA SCOTIA",
+    "YT": "YUKON",
+    "NT": "NORTHWEST TERRITORIES",
+    "PE": "PRINCE EDWARD ISLAND"
+}
 
 def convert_unix_timestamp(timestamp):
     """
@@ -13,6 +29,39 @@ def convert_unix_timestamp(timestamp):
         timestamp: A long representing milliseconds since Jan. 1st, 1970
     """
     return datetime.utcfromtimestamp(timestamp/1000).strftime('%Y-%m-%d')
+
+def insert_max_ICU_capacity(ICU_data):
+    data = pd.read_csv("ICU-capacity.csv")
+
+    # isolate the relevant columns
+    province_to_ICU_bed_mapping = data[["Province", "Intensive Care"]]
+    province_to_ICU_bed_mapping = province_to_ICU_bed_mapping.replace(" — ", "0")
+
+    # reformat the nums to remove whitespace and turn them from str to int
+    unprocessed_nums = list(province_to_ICU_bed_mapping["Intensive Care"])
+    processed_list = []
+    for nums in unprocessed_nums:
+        processed_list.append(int(nums.strip()))
+    processed_list
+
+    # append the newly processed row back into the df
+    province_to_ICU_bed_mapping["Intensive Care"] = processed_list
+
+    # aggregate the ICU capacity by province
+    province_to_ICU_bed_mapping = province_to_ICU_bed_mapping.groupby("Province", as_index=False).sum()
+
+    # replace Province abbreviations with actual names
+    province_to_ICU_bed_mapping = province_to_ICU_bed_mapping.replace({"Province": MAPPING})
+
+    # place max icu capacity into correct dict locations
+    for index, fields in province_to_ICU_bed_mapping.iterrows():
+        ICU_data[fields["Province"]]["Max Capacity"] = fields["Intensive Care"]
+
+    # data is missing for Quebec and Nunavut
+    ICU_data["NUNAVUT"]["Max Capacity"] = None
+    ICU_data["QUEBEC"]["Max Capacity"] = None
+
+    return ICU_data
 
 def main():
     payload = {
@@ -39,10 +88,16 @@ def main():
         attributes = data["attributes"]
         date_str = convert_unix_timestamp(attributes["SummaryDate"])
 
-        if attributes["Province"] not in ["REPATRIATED CDN", "REPATRIATED"]:
+        if attributes["Province"] not in ["REPATRIATED CDN", "REPATRIATED", "CANADA"]:
             ICU_data[attributes["Province"]]["Time Series (Daily)"][date_str] = {"Total ICU": attributes["TotalICU"]}
 
-    print(ICU_data)
+    # insert max_capacity into the return dict
+    ICU_data = insert_max_ICU_capacity(ICU_data)
+
+    # print(ICU_data)
+
+    with open("icu_capacity.json", "w") as ICU_capacity_json:
+        json.dump(ICU_data, ICU_capacity_json, indent=2)
 
 if __name__ == "__main__":
     main()
