@@ -14,7 +14,7 @@ END_FILE_NAME = os.environ['END_FILE_NAME']
 
 # fields for the generated csv
 QUESTION_FIELDS_1 = ["q"+str(n) for n in range(1, 9)]
-QUESTION_FIELDS_2 = ["symptoms", "conditions", "age", "contactWithIllness", "travelOutsideCanada", "testedPostive", "sex"]
+QUESTION_FIELDS_2 = ["symptoms", "conditions", "age", "contactWithIllness", "travelOutsideCanada", "testedPostive", "needs", "ethnicity", "sex"]
 FIELDS = ["id", "date", "fsa", 'probable', 'vulnerable']+QUESTION_FIELDS_1+QUESTION_FIELDS_2
 
 
