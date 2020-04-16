@@ -5,8 +5,12 @@ VUL_AGES = ['65-74', '>75']
 def case_checker(data):
     """Checks whether a paperform submission counts as a potential case or a vulnerable individual"""
     try:
-        positive_travel = data['contact_positive_or_travel']['value'] == "Yes"
-        travelled = data['travelled']['value'] == "Yes"
+        if data['lang']['value'] == 'fr':
+            positive_travel = data['contact_positive_or_travel']['value'] == "Oui"
+            travelled = data['travelled']['value'] == "Oui"
+        else:
+            positive_travel = data['contact_positive_or_travel']['value'] == "Yes"
+            travelled = data['travelled']['value'] == "Yes"
     except KeyError:
         logging.warning("Contact positive or travel key does not exist in entry")
         positive_travel = False
@@ -32,11 +36,15 @@ def case_checker(data):
     try:
         dt = data['medical_conditions']['value'][:]
         if data['lang']['value'] == 'fr':
-            dt.remove('Autre')
-            dt.remove('Aucune de ces réponses')
+            if 'Autre' in dt:
+                dt.remove('Autre')
+            if 'Aucune de ces réponses' in dt:
+                dt.remove('Aucune de ces réponses')
         else:
-            dt.remove('Other')
-            dt.remove('None of the above')
+            if 'Other' in dt:
+                dt.remove('Other')
+            if 'None of the above' in dt:
+                dt.remove('None of the above')
         vulnerable = (
             (len(dt) > 0)
             or data['age']['value'] in VUL_AGES
