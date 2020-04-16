@@ -8,8 +8,8 @@ import csv
 
 GCS_BUCKETS = os.environ['GCS_BUCKETS'].split(',')
 GCS_PATHS = os.environ['GCS_PATHS'].split(',')
-UPLOAD_FILE = 'form_data.json'
-UPLOAD_FILE_USA = 'form_data_usa.json'
+UPLOAD_FILE = 'form_data_old.json'
+UPLOAD_FILE_USA = 'form_data_usa_old.json'
 DS_NAMESPACE = os.environ['DS_NAMESPACE']
 DS_KIND = 'FlattenAccount'
 
