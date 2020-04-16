@@ -2,7 +2,6 @@ import logging
 
 VUL_AGES = ['65-74', '>75']
 
-
 def case_checker(data):
     """Checks whether a paperform submission counts as a potential case or a vulnerable individual"""
     try:
@@ -13,9 +12,14 @@ def case_checker(data):
         positive_travel = False
         travelled = False
     try:
-        fever = 'Fever' in data['symptoms']['value']
-        cough = 'Cough' in data['symptoms']['value']
-        breathless = 'Shortness of breath' in data['symptoms']['value']
+        if data['lang']['value'] == 'fr':
+            fever = 'Fièvre' in data['symptoms']['value'] 
+            cough = 'Une nouvelle toux ou une toux qui empire' in data['symptoms']['value']
+            breathless = 'Essoufflement' in data['symptoms']['value']
+        else:
+            fever = 'Fever' in data['symptoms']['value']
+            cough = 'New or worsening cough' in data['symptoms']['value']
+            breathless = 'Shortness of breath' in data['symptoms']['value']
     except KeyError:
         logging.warning("Issue parsing symptoms")
         fever = cough = breathless = False
@@ -26,8 +30,15 @@ def case_checker(data):
         or (cough and breathless and travelled)
     )
     try:
+        dt = data['medical_conditions']['value'][:]
+        if data['lang']['value'] == 'fr':
+            dt.remove('Autre')
+            dt.remove('Aucune de ces réponses')
+        else:
+            dt.remove('Other')
+            dt.remove('None of the above')
         vulnerable = (
-            ('Other' not in data['medical_conditions']['value'] and len(data['medical_conditions']['value']) > 0)
+            (len(dt) > 0)
             or data['age']['value'] in VUL_AGES
         )
     except KeyError:
