@@ -1,6 +1,6 @@
 import logging
 
-VUL_AGES = ['65-74', '>75']
+VUL_AGES = ['65-74', '75 and greater', 'Plus de 75']
 
 def case_checker(data):
     """Checks whether a paperform submission counts as a potential case or a vulnerable individual"""
