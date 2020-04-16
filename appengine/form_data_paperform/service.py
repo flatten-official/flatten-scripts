@@ -52,8 +52,8 @@ def main():
 
     bucket = storage_client.bucket(OLD_DATA_BUCKET)
     try:
-        map_data = download_blob(bucket, OLD_FILE)
-        map_data_usa = download_blob(bucket, OLD_FILE_USA)
+        map_data = json.loads(download_blob(bucket, OLD_FILE))
+        map_data_usa = json.loads(download_blob(bucket, OLD_FILE_USA))
     except Exception as e:
         import traceback, sys
         traceback.print_exc(file=sys.stderr)
