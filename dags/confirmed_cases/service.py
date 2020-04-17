@@ -57,7 +57,7 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
 SHEETS_API_KEY = os.environ.get('SHEETS_API_KEY')
-GCS_BUCKET = os.environ.get('GCS_BUCKET')
+GCS_BUCKET = os.environ.get('GCS_SAVE_BUCKET')
 
 SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
 SPREADSHEET_CASES = 'Cases'
@@ -309,7 +309,7 @@ def main():
     travel_data = get_travel_data(confirmed)
     provincial_data = get_provincial_totals(confirmed_output, recovered, dead)
     print("Outputting data to file...")
-    # write_data_to_bucket(confirmed_output, travel_data, provincial_data)
+    write_data_to_bucket(confirmed_output, travel_data, provincial_data)
     print("Done")
 
 
