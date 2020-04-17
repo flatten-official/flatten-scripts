@@ -62,7 +62,7 @@ SPREADSHEET_CASES = 'Cases'
 SPREADSHEET_REC = 'Recovered'
 SPREADSHEET_DEATH = 'Mortality'
 
-UPLOAD_CONFIRMED = 'confirmed_data.json'
+UPLOAD_CONFIRMED = 'confirmed_data_composer.json'
 UPLOAD_TRAVEL = 'travel_data.json'
 UPLOAD_PROVINCIAL = 'provincial_data.json'
 
