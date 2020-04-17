@@ -4,7 +4,8 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 
-from confirmed_cases.service import main
+from dags.confirmed_cases.service import main
+
 
 def enable_cloud_debugger():
     """https://cloud.google.com/debugger/docs/setup/python?hl=en_GB&_ga=2.68834001.-1991847693.1585366893"""
@@ -26,15 +27,15 @@ default_args = {
 
 confirmed_cases_dag = DAG(
     dag_id='confirmed_cases',
-    start_date=datetime(2020, 4, 13),
+    start_date=datetime(2020, 4, 16),
     schedule_interval='5 */12 * * *',
     default_args=default_args,
     catchup=True
 )
 
-clone_repo = BashOperator(
-    task_id='clone_scripts_repo',
-    bash_command='cd /home/airflow && rm -rf flatten-scripts && git clone https://github.com/flatten-official/flatten-scripts.git'
+echo = BashOperator(
+    task_id='Echo',
+    bash_command='echo "Running Confirmed Cases scripts"'
 )
 
 run_service = PythonOperator(
@@ -43,4 +44,4 @@ run_service = PythonOperator(
     dag=confirmed_cases_dag
 )
 
-clone_repo >> run_service
+echo >> run_service

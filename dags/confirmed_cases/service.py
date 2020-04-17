@@ -2,18 +2,16 @@ import os
 import pytz
 import pandas as pd
 
-import confirmed_cases.helper as helper
+import dags.confirmed_cases.helper as helper
+from dags.confirmed_cases.covidOntario import dispatcher
 
 from datetime import datetime
-from dotenv import load_dotenv
 from google.cloud import storage
 from googleapiclient.discovery import build
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
-from confirmed_cases.covidOntario import dispatcher
 
 
-load_dotenv()
 
 NAME_EXCEPTIONS = {
     "Kingston Frontenac Lennox & Addington, Ontario": "Kingston, Ontario",
