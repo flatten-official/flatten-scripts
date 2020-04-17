@@ -2,8 +2,8 @@ import os
 import pytz
 import pandas as pd
 
-import dags.confirmed_cases.helper as helper
-from dags.confirmed_cases.covidOntario import dispatcher
+import confirmed_cases.helper as helper
+from confirmed_cases.covidOntario import dispatcher
 
 from datetime import datetime
 from google.cloud import storage

@@ -4,7 +4,7 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 
-from dags.confirmed_cases.service import main
+from confirmed_cases.service import main
 
 
 def enable_cloud_debugger():
