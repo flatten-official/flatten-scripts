@@ -14,7 +14,7 @@ UPLOAD_FILE = 'form_data.json'
 UPLOAD_FILE_USA = 'form_data_usa.json'
 
 OLD_FILE = 'form_data_old.json'
-OLD_FILE_USA = 'form_data_old.json'
+OLD_FILE_USA = 'form_data_usa_old.json'
 
 DS_NAMESPACE = os.environ['DS_NAMESPACE']
 DS_KIND = 'PaperformSubmission'
