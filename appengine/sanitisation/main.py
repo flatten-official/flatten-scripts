@@ -31,5 +31,4 @@ enable_cloud_debugger()
 
 # Only called when testing locally
 if __name__ == '__main__':
-    # app.run(host='127.0.0.1', port=8080, debug=True)
-    main()
+    app.run(host='127.0.0.1', port=8080, debug=True)
