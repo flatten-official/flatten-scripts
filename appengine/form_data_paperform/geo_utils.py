@@ -9,7 +9,6 @@ def convert_zip_to_county(map_data_usa, county_dict={}):
         zipcodes_dict = json.load(zipcodes)
 
     for agg_zip, values in map_data_usa.items():
-        print()
         try:
             county = zipcodes_dict.get(str(agg_zip))['county_COUNTYNS']
         except TypeError:
