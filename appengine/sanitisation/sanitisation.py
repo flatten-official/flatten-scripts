@@ -130,7 +130,8 @@ class Sanitisor:
                     # logging.warn(f"Missed {question_key}")
                     continue
 
-            self.add_v1_fields(response_sanitised)
+            if schema == "2":
+                self.add_v1_fields(response_sanitised)
 
             ret.append(response_sanitised)
         return ret
