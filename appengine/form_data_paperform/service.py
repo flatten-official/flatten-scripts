@@ -54,11 +54,12 @@ def main():
     try:
         map_data = json.loads(download_blob(bucket, OLD_FILE))
         map_data_usa = json.loads(download_blob(bucket, OLD_FILE_USA))
+        map_data_usa['zipcode'] = {}
     except Exception as e:
         import traceback, sys
         traceback.print_exc(file=sys.stderr)
         map_data = {'time': 0, 'total_responses': 0, 'fsa': {}}
-        map_data_usa = {'time': 0, 'total_responses': 0, 'fsa': {}}
+        map_data_usa = {'time': 0, 'total_responses': 0, 'zipcode': {}}
 
     excluded = load_excluded_postal_codes()
 
@@ -71,9 +72,11 @@ def main():
             if 'fsa' in response:
                 postcode = response['fsa']['value'].upper()
                 mp = map_data
+                country = 'ca'
             elif 'zip' in response:
                 postcode = response['zip']['value'].upper()
                 mp = map_data_usa
+                country = 'us'
             else:
                 continue
             pot, risk, both = case_checker(response)
@@ -82,18 +85,20 @@ def main():
 
         mp['total_responses'] += 1
 
+        pc_key = 'fsa' if country is 'ca' else 'zipcode'
+
         if postcode in map_data['fsa']:
-            mp['fsa'][postcode]['number_reports'] += 1
+            mp[pc_key][postcode]['number_reports'] += 1
             if postcode in excluded:
                 continue
-            mp['fsa'][postcode]['pot'] += pot
-            mp['fsa'][postcode]['risk'] += risk
-            mp['fsa'][postcode]['both'] += both
+            mp[pc_key][postcode]['pot'] += pot
+            mp[pc_key][postcode]['risk'] += risk
+            mp[pc_key][postcode]['both'] += both
         else:
             if postcode in excluded:
-                mp['fsa'][postcode] = {'fsa_excluded': True, 'number_reports': 1}
+                mp[pc_key][postcode] = {'fsa_excluded': True, 'number_reports': 1}
                 continue
-            mp['fsa'][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'both': both, 'fsa_excluded': False}
+            mp[pc_key][postcode] = {'number_reports': 1, 'pot': pot, 'risk': risk, 'both': both, 'fsa_excluded': False}
 
         mp['time'] = max(mp['time'], entity['timestamp']//1000)  
 
@@ -102,7 +107,7 @@ def main():
     map_data_usa = {
         'time': map_data_usa['time'],
         'total_responses': map_data_usa['total_responses'],
-        'county': convert_zip_to_county(map_data_usa['fsa'])
+        'county': convert_zip_to_county(map_data_usa['zipcode'], county_dict=map_data_usa['county'])
     }
     json_str_usa = json.dumps(map_data_usa)
 
