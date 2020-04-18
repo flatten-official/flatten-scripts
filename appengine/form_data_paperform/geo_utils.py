@@ -2,14 +2,14 @@ import json
 import csv
 
 
-def convert_zip_to_county(map_data_usa):
+def convert_zip_to_county(map_data_usa, county_dict={}):
     """ Maps zip codes to county codes. """
     # open file containing zip codes to county mapping
     with open('zip_lookup.json', 'r') as zipcodes:
         zipcodes_dict = json.load(zipcodes)
 
-    county_dict = {}
     for agg_zip, values in map_data_usa.items():
+        print()
         try:
             county = zipcodes_dict.get(str(agg_zip))['county_COUNTYNS']
         except TypeError:
