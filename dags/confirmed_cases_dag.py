@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
+from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.contrib.operators.file_to_gcs import FileToGoogleCloudStorageOperator
 
@@ -18,10 +19,6 @@ def enable_cloud_debugger():
 
 
 enable_cloud_debugger()
-GCS_BUCKET = os.environ.get('GCS_SAVE_BUCKET')
-confirmed_file = 'confirmed_data_composer.json'
-travel_file = 'travel_data_composer.json'
-provincial_file = 'provincial_data_composer.json'
 
 default_args = {
     'owner': 'Flatten.ca',
@@ -39,34 +36,15 @@ confirmed_cases_dag = DAG(
 )
 
 
+echo = BashOperator(
+    task_id='Echo',
+    bash_command='echo "Running Confirmed Cases scripts"'
+)
+
 run_service = PythonOperator(
-    task_id='get_confirmed_cases',
+    task_id='get_confirmed_cases_and_write_to_bucket',
     python_callable=main,
     dag=confirmed_cases_dag
 )
 
-upload_confirmed = FileToGoogleCloudStorageOperator(
-    task_id='upload_confirmed',
-    src=confirmed_file,
-    dst=confirmed_file,
-    bucket=GCS_BUCKET,
-    dag=confirmed_cases_dag
-)
-
-upload_travel = FileToGoogleCloudStorageOperator(
-    task_id='upload_travel',
-    src=travel_file,
-    dst=travel_file,
-    bucket=GCS_BUCKET,
-    dag=confirmed_cases_dag
-)
-
-upload_provincial = FileToGoogleCloudStorageOperator(
-    task_id='upload_provincial',
-    src=provincial_file,
-    dst=provincial_file,
-    bucket=GCS_BUCKET,
-    dag=confirmed_cases_dag
-)
-
-run_service >> upload_confirmed >> upload_travel >> upload_provincial
+echo >> run_service
