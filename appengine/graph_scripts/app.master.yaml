@@ -1,0 +1,4 @@
+runtime: python37
+service: graph-data
+env_variables:
+  GCS_BUCKET: "flatten-271620.appspot.com"
