@@ -32,7 +32,7 @@ default_args = {
 }
 
 confirmed_cases_dag = DAG(
-    dag_id='get_confirmed_cases',
+    dag_id='run_confirmed_cases',
     start_date=datetime(2020, 4, 18),
     schedule_interval='5 */12 * * *',
     default_args=default_args,
@@ -41,7 +41,7 @@ confirmed_cases_dag = DAG(
 
 
 run_service = PythonOperator(
-    task_id='run_confirmed_cases',
+    task_id='get_confirmed_cases',
     python_callable=main,
     dag=confirmed_cases_dag
 )
