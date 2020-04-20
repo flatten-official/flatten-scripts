@@ -1,16 +1,17 @@
 import os
+import json
 import pytz
 import pandas as pd
 
 import confirmed_cases.helper as helper
 from confirmed_cases.covidOntario import dispatcher
+from confirmed_cases.helper import write_json_to_disk
 
 from datetime import datetime
 from google.cloud import storage
 from googleapiclient.discovery import build
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
-
 
 
 NAME_EXCEPTIONS = {
@@ -288,10 +289,9 @@ def get_provincial_totals(output_dict, rec_df, dead_df):
 
 
 # Uploads the JSON to the bucket
-def write_data_to_bucket(confirmed_out, travel_out, provincial_out):
+def write_data_to_bucket(travel_out, provincial_out):
     bucket = storage.Client().bucket(GCS_BUCKET)
 
-    helper.upload_json(bucket, confirmed_out, UPLOAD_CONFIRMED)
     helper.upload_json(bucket, travel_out, UPLOAD_TRAVEL)
     helper.upload_json(bucket, provincial_out, UPLOAD_PROVINCIAL)
 
@@ -306,8 +306,10 @@ def main():
     confirmed_output = get_confirmed_cases(confirmed)
     travel_data = get_travel_data(confirmed)
     provincial_data = get_provincial_totals(confirmed_output, recovered, dead)
-    print("Outputting data to file...")
-    write_data_to_bucket(confirmed_output, travel_data, provincial_data)
+    print("Writing files to disk...")
+    write_json_to_disk(confirmed_output, UPLOAD_CONFIRMED)
+    print("Uploading files to bucket...")
+    write_data_to_bucket(travel_data, provincial_data)
     print("Done")
 
 
