@@ -44,9 +44,11 @@ run_service = PythonOperator(
 )
 
 upload_to_gcs = FileToGoogleCloudStorageOperator(
+    task_id='upload_to_bucket',
     src=filename,
     dst=filename,
-    bucket=GCS_BUCKET
+    bucket=GCS_BUCKET,
+    dag=confirmed_cases_dag
 )
 
 run_service >> upload_to_gcs
