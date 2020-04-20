@@ -1,0 +1,6 @@
+flask
+google-api-python-client
+google-cloud-storage
+google-cloud-datastore
+grpcio
+google-python-cloud-debugger

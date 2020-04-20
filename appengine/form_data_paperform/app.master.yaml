@@ -1,0 +1,8 @@
+runtime: python37
+service: form-data-paperform
+env_variables:
+  # comma separated list of buckets and paths to upload to
+  GCS_BUCKETS: "flatten-271620.appspot.com,montreal-data,flatten-dataset"
+  GCS_PATHS: ",form-data,form-data"
+  OLD_DATA_BUCKET: "flatten-271620.appspot.com"
+  DS_NAMESPACE: "flatten_production"
