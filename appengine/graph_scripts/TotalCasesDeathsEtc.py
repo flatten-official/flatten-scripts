@@ -1,7 +1,13 @@
 import json
 import requests
 import pandas as pd
+import os
 from datetime import datetime
+from google.cloud import storage
+
+# Set Env Variables
+GCS_BUCKET = os.environ['GCS_BUCKET']
+UPLOAD_CONFIRMED_TS = "confirmed_time_series.json"
 
 PROVINCES = ["YUKON", "PRINCE EDWARD ISLAND", "NEWFOUNDLAND AND LABRADOR", "NEW BRUNSWICK", "BRITISH COLUMBIA",\
             "NOVA SCOTIA", "SASKATCHEWAN", "ALBERTA", "MANITOBA", "QUEBEC", "ONTARIO", "NORTHWEST TERRITORIES",\
@@ -29,6 +35,21 @@ def convert_unix_timestamp(timestamp):
         timestamp: A long representing milliseconds since Jan. 1st, 1970
     """
     return datetime.utcfromtimestamp(timestamp/1000).strftime('%Y-%m-%d')
+
+
+def upload_blob(TotalCases_data):
+    """Uploads a file to the bucket."""
+
+    bucket = storage.Client().bucket(GCS_BUCKET)
+    blob = bucket.blob(UPLOAD_CONFIRMED_TS)
+
+    blob.upload_from_string(json.dumps(TotalCases_data))
+
+    print(
+        "File {} uploaded to {}.".format(
+            TotalCases_data, GCS_BUCKET
+        )
+    )
 
 def main():
     payload = {
@@ -68,13 +89,10 @@ def main():
         if attributes["Province"] not in ["REPATRIATED CDN", "REPATRIATED", "CANADA"]:
             TotalCases_data[attributes["Province"]]["Time Series (Daily)"][date_str] = {"Total Cases": attributes["TotalCases"],"Total Tested": attributes["TotalTested"],"Total Deaths": attributes["TotalDeaths"],"Total Recovered": attributes["TotalRecovered"]}
 
-    # insert max_capacity into the return dict
-    #TotalCases_data = insert_max_ICU_capacity(TotalCases_data)
-
-    print(TotalCases_data)
-
-    with open("TotalCasesDeathsEtc.json", "w") as TotalCases_json:
-        json.dump(TotalCases_data, TotalCases_json, indent=2)
+    # upload to GCS Bucket
+    print("Outputting data to file...")
+    upload_blob(TotalCases_data)
+    print("Done")
 
 if __name__ == "__main__":
     main()
