@@ -308,8 +308,8 @@ def main():
     provincial_data = get_provincial_totals(confirmed_output, recovered, dead)
     print("Writing files to disk...")
     write_json_to_disk(confirmed_output, UPLOAD_CONFIRMED)
-    print("Uploading files to bucket...")
-    write_data_to_bucket(travel_data, provincial_data)
+    write_json_to_disk(travel_data, UPLOAD_TRAVEL)
+    write_json_to_disk(provincial_data, UPLOAD_PROVINCIAL)
     print("Done")
 
 

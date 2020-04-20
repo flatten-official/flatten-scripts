@@ -19,7 +19,9 @@ def enable_cloud_debugger():
 
 enable_cloud_debugger()
 GCS_BUCKET = os.environ.get('GCS_SAVE_BUCKET')
-filename = 'confirmed_data_composer.json'
+confirmed_file = 'confirmed_data_composer.json'
+travel_file = 'travel_data_composer.json'
+provincial_file = 'provincial_data_composer.json'
 
 default_args = {
     'owner': 'Flatten.ca',
@@ -43,12 +45,28 @@ run_service = PythonOperator(
     dag=confirmed_cases_dag
 )
 
-upload_to_gcs = FileToGoogleCloudStorageOperator(
-    task_id='upload_to_bucket',
-    src=filename,
-    dst=filename,
+upload_confirmed = FileToGoogleCloudStorageOperator(
+    task_id='upload_confirmed',
+    src=confirmed_file,
+    dst=confirmed_file,
     bucket=GCS_BUCKET,
     dag=confirmed_cases_dag
 )
 
-run_service >> upload_to_gcs
+upload_travel = FileToGoogleCloudStorageOperator(
+    task_id='upload_travel',
+    src=travel_file,
+    dst=travel_file,
+    bucket=GCS_BUCKET,
+    dag=confirmed_cases_dag
+)
+
+upload_provincial = FileToGoogleCloudStorageOperator(
+    task_id='upload_provincial',
+    src=provincial_file,
+    dst=provincial_file,
+    bucket=GCS_BUCKET,
+    dag=confirmed_cases_dag
+)
+
+run_service >> upload_confirmed >> upload_travel >> upload_provincial
