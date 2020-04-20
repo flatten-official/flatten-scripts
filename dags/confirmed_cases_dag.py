@@ -30,7 +30,7 @@ default_args = {
 
 confirmed_cases_dag = DAG(
     dag_id='confirmed_cases',
-    start_date=datetime(2020, 4, 19),
+    start_date=datetime(2020, 4, 18),
     schedule_interval='5 */4 * * *',
     default_args=default_args,
     catchup=True
