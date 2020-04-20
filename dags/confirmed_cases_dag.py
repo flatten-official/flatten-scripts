@@ -33,13 +33,12 @@ default_args = {
 }
 
 confirmed_cases_dag = DAG(
-    dag_id='run_confirmed_cases',
+    dag_id='confirmed_cases',
     start_date=datetime(2020, 4, 18),
     schedule_interval='5 4,16 * * *',
     default_args=default_args,
     catchup=True
 )
-
 
 echo = BashOperator(
     task_id='Echo',
@@ -49,30 +48,6 @@ echo = BashOperator(
 run_service = PythonOperator(
     task_id='get_confirmed_cases',
     python_callable=main,
-    dag=confirmed_cases_dag
-)
-
-upload_confirmed = FileToGoogleCloudStorageOperator(
-    task_id='upload_confirmed',
-    src=os.path.join(upload_location, confirmed_file),
-    dst=confirmed_file,
-    bucket=GCS_BUCKET,
-    dag=confirmed_cases_dag
-)
-
-upload_travel = FileToGoogleCloudStorageOperator(
-    task_id='upload_travel',
-    src=os.path.join(upload_location, travel_file),
-    dst=travel_file,
-    bucket=GCS_BUCKET,
-    dag=confirmed_cases_dag
-)
-
-upload_provincial = FileToGoogleCloudStorageOperator(
-    task_id='upload_provincial',
-    src=os.path.join(upload_location, provincial_file),
-    dst=provincial_file,
-    bucket=GCS_BUCKET,
     dag=confirmed_cases_dag
 )
 

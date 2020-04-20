@@ -64,9 +64,9 @@ SPREADSHEET_REC = 'Recovered'
 SPREADSHEET_DEATH = 'Mortality'
 
 upload_location = '/home/airflow/gcs/data'
-UPLOAD_CONFIRMED = 'confirmed_data_composer.json'
-UPLOAD_TRAVEL = 'travel_data_composer.json'
-UPLOAD_PROVINCIAL = 'provincial_data_composer.json'
+UPLOAD_CONFIRMED = 'confirmed_data'
+UPLOAD_TRAVEL = 'travel_data.json'
+UPLOAD_PROVINCIAL = 'provincial_data.json'
 
 
 def get_spreadsheet_data():
