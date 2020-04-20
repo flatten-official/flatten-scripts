@@ -65,8 +65,8 @@ SPREADSHEET_DEATH = 'Mortality'
 
 upload_location = '/home/airflow/gcs/data'
 UPLOAD_CONFIRMED = 'confirmed_data_composer.json'
-UPLOAD_TRAVEL = 'travel_data.json'
-UPLOAD_PROVINCIAL = 'provincial_data.json'
+UPLOAD_TRAVEL = 'travel_data_composer.json'
+UPLOAD_PROVINCIAL = 'provincial_data_composer.json'
 
 
 def get_spreadsheet_data():
@@ -289,6 +289,13 @@ def get_provincial_totals(output_dict, rec_df, dead_df):
     return provincial_data
 
 
+def write_data_to_bucket(confirmed_out, travel_out, provincial_out):
+    bucket = storage.Client().bucket(GCS_BUCKET)
+    helper.upload_json(bucket, confirmed_out, UPLOAD_CONFIRMED)
+    helper.upload_json(bucket, travel_out, UPLOAD_TRAVEL)
+    helper.upload_json(bucket, provincial_out, UPLOAD_PROVINCIAL)
+
+
 def main():
     print("Getting data from spreadsheet...")
     confirmed, recovered, dead = get_spreadsheet_data()
@@ -296,10 +303,12 @@ def main():
     confirmed_output = get_confirmed_cases(confirmed)
     travel_data = get_travel_data(confirmed)
     provincial_data = get_provincial_totals(confirmed_output, recovered, dead)
-    print("Writing files to disk...")
-    write_json_to_disk(confirmed_output, os.path.join(upload_location, UPLOAD_CONFIRMED))
-    write_json_to_disk(travel_data, os.path.join(upload_location, UPLOAD_TRAVEL))
-    write_json_to_disk(provincial_data, os.path.join(upload_location, UPLOAD_PROVINCIAL))
+    print("Uploading files to bucket...")
+    write_data_to_bucket(confirmed_output, travel_data, provincial_data)
+    # print("Writing files to disk...")
+    # write_json_to_disk(confirmed_output, os.path.join(upload_location, UPLOAD_CONFIRMED))
+    # write_json_to_disk(travel_data, os.path.join(upload_location, UPLOAD_TRAVEL))
+    # write_json_to_disk(provincial_data, os.path.join(upload_location, UPLOAD_PROVINCIAL))
     print("Done")
 
 
