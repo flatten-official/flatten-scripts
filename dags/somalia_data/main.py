@@ -1,7 +1,7 @@
 import pandas as pd
 import datetime as dt
 import json
-from google.cloud import datastore, storage
+from google.cloud import storage
 import os
 
 COUNTRIES = ['Somalia']
