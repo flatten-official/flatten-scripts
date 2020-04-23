@@ -4,7 +4,18 @@ import json
 from google.cloud import storage
 import os
 
-from gcs.bucket_functions import upload_blob
+def upload_blob(bucket, data_string, destination_blob_name):
+    """Uploads a file to the bucket."""
+
+    blob = bucket.blob(destination_blob_name)
+
+    blob.upload_from_string(data_string)
+
+    print(
+        "File {} uploaded to {}.".format(
+            destination_blob_name, bucket
+        )
+    )
 
 COUNTRIES = ['Somalia']
 UPLOAD_FILE = 'somalia_confirmed.json'
