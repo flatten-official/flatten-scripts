@@ -4,7 +4,7 @@ import io
 import os
 import time
 import csv
-from gsc.bucket_functions import upload_blob
+from gcs.bucket_functions import upload_blob
 
 GCS_BUCKETS = os.environ['GCS_BUCKETS'].split(',')
 GCS_PATHS = os.environ['GCS_PATHS'].split(',')
