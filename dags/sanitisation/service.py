@@ -25,7 +25,7 @@ DS_KIND = 'FlattenAccount'
 END_FILE_NAME = os.environ['END_FILE_NAME']
 
 
-def load_excluded_postal_codes(fname="excluded_postal_codes.csv"):
+def load_excluded_postal_codes(fname="data/excluded_postal_codes.csv"):
     with open(fname) as csvfile:
         reader = csv.reader(csvfile)
         first_row = next(reader)
