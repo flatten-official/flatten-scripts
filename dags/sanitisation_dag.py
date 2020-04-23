@@ -22,7 +22,7 @@ default_args = {
 sanitisation_dag = DAG(
     dag_id='sanitise',
     start_date=datetime(2020,4,22),
-    schedule_interval='5 4,16 * * *',
+    schedule_interval='*/10 * * * *',
     default_args=default_args,
     catchup=True
 )
