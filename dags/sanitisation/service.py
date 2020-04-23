@@ -1,5 +1,5 @@
 from google.cloud import datastore, storage
-import sanitisation.sanit
+import sanitisation.sanitisation
 import io
 import os
 import time
@@ -44,7 +44,7 @@ def main():
 
     excluded = load_excluded_postal_codes()
 
-    sanitisor = sanit.Sanitisor(excluded)
+    sanitisor = sanitisation.sanitisation.Sanitisor(excluded)
 
     # todo - potentially shift to writing to disk if / when we move off off app engine
     output = csv.StringIO()
