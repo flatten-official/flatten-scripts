@@ -1,10 +1,11 @@
+import os
 import json
 import requests
 import pandas as pd
 from datetime import datetime
 from google.cloud import storage
 
-GCS_BUCKET = GCS_BUCKET = os.environ.get('GCS_SAVE_BUCKET')
+GCS_BUCKET = os.environ.get('GCS_SAVE_BUCKET')
 UPLOAD_ICU = "ICU_capacity.json"
 
 PROVINCES = ["YUKON", "PRINCE EDWARD ISLAND", "NEWFOUNDLAND AND LABRADOR", "NEW BRUNSWICK", "BRITISH COLUMBIA",\
@@ -120,7 +121,7 @@ def main():
     # with open("icu_capacity.json", "w") as ICU_capacity_json:
     #     json.dump(ICU_data, ICU_capacity_json, indent=2)
 
-    upload_blob(ICU_data)
+    upload_blob(json.dumps(ICU_data))
 
 if __name__ == "__main__":
     main()
