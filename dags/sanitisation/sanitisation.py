@@ -7,78 +7,58 @@ from pytz import utc
 QUESTIONS = {
     "fever_chills_shakes": {
         "labels": {"1": "q1"},
-        "answer_mapping": { }
     },
     "cough": {
         "labels": {"1": "q2"},
-        "answer_mapping": { }
     },
     "shortness_of_breath": {
         "labels": {"1": "q3"},
-        "answer_mapping": { }
     },
     "over_60": {
         "labels": {"1": "q4"},
-        "answer_mapping": { }
     },
     "any_medical_conditions": {
         "labels": {"1": "q5"},
-        "answer_mapping": { }
     },
     "travel_outside_canada": {
-        "labels": {"1": "q6", "2": "travelOutsideCanada"},
-        "answer_mapping": { }
+        "labels": {"1": "q6", "2": "travelOutsideCanada", "paperform": "travelled"},
     },
     "contact_with_illness": {
-        "labels": {"1": "q7", "2": "contactWithIllness"},
-        "answer_mapping": { }
+        "labels": {"1": "q7", "2": "contactWithIllness", "paperform": "contact_positive_or_travel"},
     },
     "covid_positive": {
-        "labels": {"1": "q8", "2": "testedPositive"},
-        "answer_mapping": { }
+        "labels": {"1": "q8", "2": "testedPositive", "paperform": "covid_test_result"},
     },
     "symptoms" : {
-        "labels": {"2": "symptoms"},
-        "answer_mapping": { }
+        "labels": {"2": "symptoms", "paperform": "symptoms"},
     },
     "conditions" : {
-        "labels": {"2": "conditions"},
-        "answer_mapping": { }
+        "labels": {"2": "conditions", "paperform": "medical_conditions"},
     },
     "ethnicity": {
-        "labels": {"2": "ethnicity"},
-        "answer_mapping": { }
+        "labels": {"2": "ethnicity", "paperform": "ethnicity"},
     },
     "sex": {
-        "labels": {"2": "sex"},
-        "answer_mapping": { }
+        "labels": {"2": "sex", "paperform": "sex"},
     },
     "needs": {
-        "labels": {"2": "needs"},
-        # example for when this gets integrated with paperform
-        "answer_mapping": {
-            "financialSupport": ["Financial support", "Aide financière"],
-            "emotionalSupport": ["Emotional support", "Soutien affectif"],
-            "medication": ["Medication/Pharmacy resources", "Aliments/Ressources nécessaires"],
-            "food": ["Food/Necessary resources", "Médicaments/Ressources de la pharmacie"],
-            "other": ["Other", "Autre"],
-        }
+        "labels": {"2": "needs", "paperform": "greatest_need"},
     },
 }
-
-for prop in QUESTIONS.keys():
-    QUESTIONS[prop]["answer_mapping_reverse"] = {
-        v:k for k, vals in QUESTIONS[prop]["answer_mapping"].items() for v in vals 
-    }
 
 class Sanitisor:
 
     EXTRA_FIELDS = ["id", "country", "date", "fsa", "zipcode", "probable", "vulnerable", "is_most_recent"]
 
-    def __init__(self, excluded_fsa):
+    def __init__(self, excluded_fsa, paperform_keys):
         self.excluded_fsa = excluded_fsa
+        self.paperform_keys = paperform_keys
+        self.paperform_keys_reverse = {}
+        for question in paperform_keys.keys():
+            for prop in paperform_keys[question]:
+                self.paperform_keys_reverse[prop] = question
 
-    @property
+   @property
     def field_names(self):
         return self.EXTRA_FIELDS+list(QUESTIONS.keys())
 
@@ -89,12 +69,7 @@ class Sanitisor:
         latest = True
         ret = []
         for response in reversed(responses):
-            # timestamp is in ms since UNIX origin, so divide by 1000 to get seconds
-            timestamp = response['timestamp']/1000
-            # make a UTC datetime object from the timestamp, convert to a day stamp
-            day = utc.localize(
-                datetime.datetime.utcfromtimestamp(timestamp)
-            ).strftime('%Y-%m-%d')
+            day = get_day(response['timestamp'])
 
             try:
                 fsa = response['postalCode'].upper()
@@ -123,8 +98,8 @@ class Sanitisor:
 
             for question_key in QUESTIONS:
                 try:
-                    response_key = QUESTIONS[question_key]['labels'][schema]
-                    response_standardised = self.map_response(question_key, response[response_key])
+                    response_key = QUESTIONS[question_key]["labels"][schema]
+                    response_standardised = self.map_response(response[response_key])
                     response_sanitised[question_key] = response_standardised
                 except KeyError:
                     # logging.warn(f"Missed {question_key}")
@@ -135,15 +110,52 @@ class Sanitisor:
 
             ret.append(response_sanitised)
         return ret
-    
-    def map_response(self, prop, response):
-        mapping = QUESTIONS[prop]['answer_mapping_reverse']
+
+    def sanitise_paperform(self, paperform_entity):
+        data = paperform_entity["data"]
+        unique_id = uuid.uuid4()
+        day = get_day(paperform_entity["timestamp"])
+
+        if not data["lang"] in ["en", "fr"]:
+            return []
+
+        response_sanitised = {
+            "id": unique_id,
+            "date": day,
+            "fsa": data["fsa"]["value"],
+            "zipcode": "",
+            "country": "ca"
+        }
+
+        schema = "paperform"
+
+        for question_key in QUESTIONS:
+            try:
+                response_key = QUESTIONS[question_key]["labels"][schema]
+                response_standardised = self.map_response(data[response_key], self.paperform_keys_reverse)
+                response_sanitised[question_key] = response_standardised
+            except KeyError:
+                # logging.warn(f"Missed {question_key}")
+                continue
+        self.add_v1_fields(response_sanitised)
+
+        return [response_sanitised]
+
+
+def map_response(self, response, mapping=None):
+        if mapping is None:
+            mapping = {}
+
         if not isinstance(response, list):
             response = [response]
         ret = []
         for ans in response:
             try:
-                ret.append(mapping[ans])
+                try:
+                    ret.append(mapping[ans])
+                except KeyError:
+                    print("KeyError")
+                    ret.append(ans)
             except KeyError:
                 ret.append(ans)
         return ";".join(ret)
@@ -195,3 +207,13 @@ class Sanitisor:
     @staticmethod
     def bool_to_str(truth_value):
         return 'y' if truth_value else 'n'
+
+    @staticmethod
+    def get_day(timestamp):
+        # timestamp is in ms since UNIX origin, so divide by 1000 to get seconds
+        ts_sec = response['timestamp'] / 1000
+        # make a UTC datetime object from the timestamp, convert to a day stamp
+        day = utc.localize(
+            datetime.datetime.utcfromtimestamp(ts_sec)
+        ).strftime('%Y-%m-%d')
+        return day
