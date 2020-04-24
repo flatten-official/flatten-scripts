@@ -48,6 +48,7 @@ QUESTIONS = {
 
 class Sanitisor:
 
+    EXTRA_SANITISATION_MAPPINGS = {"yes": "y", "no": "n"}
     EXTRA_FIELDS = ["id", "country", "date", "fsa", "zipcode", "probable", "vulnerable", "is_most_recent"]
 
     def __init__(self, excluded_fsa, paperform_keys):
@@ -58,7 +59,7 @@ class Sanitisor:
             for prop in paperform_keys[question]:
                 self.paperform_keys_reverse[prop] = question
 
-   @property
+    @property
     def field_names(self):
         return self.EXTRA_FIELDS+list(QUESTIONS.keys())
 
@@ -69,7 +70,7 @@ class Sanitisor:
         latest = True
         ret = []
         for response in reversed(responses):
-            day = get_day(response['timestamp'])
+            day = self.get_day(response['timestamp'])
 
             try:
                 fsa = response['postalCode'].upper()
@@ -114,7 +115,7 @@ class Sanitisor:
     def sanitise_paperform(self, paperform_entity):
         data = paperform_entity["data"]
         unique_id = uuid.uuid4()
-        day = get_day(paperform_entity["timestamp"])
+        day = self.get_day(paperform_entity["timestamp"])
 
         if not data["lang"] in ["en", "fr"]:
             return []
@@ -133,16 +134,19 @@ class Sanitisor:
             try:
                 response_key = QUESTIONS[question_key]["labels"][schema]
                 response_standardised = self.map_response(data[response_key], self.paperform_keys_reverse)
-                response_sanitised[question_key] = response_standardised
+                response_extra = self.map_response(response_standardised, self.EXTRA_SANITISATION_MAPPINGS)
+                response_sanitised[question_key] = response_extra
             except KeyError:
                 # logging.warn(f"Missed {question_key}")
                 continue
         self.add_v1_fields(response_sanitised)
+        probable, vulnerable = self.case_checker(response_sanitised, schema)
+        response_sanitised["probable"] = self.bool_to_str(probable)
+        response_sanitised["vulnerable"] = self.bool_to_str(vulnerable)
 
         return [response_sanitised]
 
-
-def map_response(self, response, mapping=None):
+    def map_response(self, response, mapping=None):
         if mapping is None:
             mapping = {}
 
@@ -211,7 +215,7 @@ def map_response(self, response, mapping=None):
     @staticmethod
     def get_day(timestamp):
         # timestamp is in ms since UNIX origin, so divide by 1000 to get seconds
-        ts_sec = response['timestamp'] / 1000
+        ts_sec = timestamp / 1000
         # make a UTC datetime object from the timestamp, convert to a day stamp
         day = utc.localize(
             datetime.datetime.utcfromtimestamp(ts_sec)
