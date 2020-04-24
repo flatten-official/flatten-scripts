@@ -23,6 +23,7 @@ GCS_BUCKETS = os.environ['GCS_BUCKETS'].split(',')
 GCS_PATHS = os.environ['GCS_PATHS'].split(',')
 DS_NAMESPACE = os.environ['DS_NAMESPACE']
 DS_KIND = 'FlattenAccount'
+DS_KIND_PAPERFORM = 'PaperformSubmission'
 END_FILE_NAME = os.environ['END_FILE_NAME']
 DATA_FOLDER = "/home/airflow/gcs/data"
 
@@ -56,8 +57,10 @@ def main():
     storage_client = storage.Client()
 
     query = datastore_client.query(kind=DS_KIND)
+    query_paperform = datastore_client.query(kind=DS_KIND_PAPERFORM)
 
     excluded = load_excluded_postal_codes()
+    keys = load_keys()
 
     sanitisor = sanitisation.sanitisation.Sanitisor(excluded, keys)
 
@@ -71,9 +74,15 @@ def main():
         for obj in l:
             writer.writerow(obj)
 
+    for entity in query_paperform.fetch():
+        l = sanitisor.sanitise_paperform(entity)
+        for obj in l:
+            writer.writerow(obj)
+
     curr_time_ms = str(int(time.time() * 1000))
 
     for bucket_name, path in zip(GCS_BUCKETS, GCS_PATHS):
         bucket = storage_client.bucket(bucket_name)
         file_name = os.path.join(path, "-".join([curr_time_ms, END_FILE_NAME]))
         upload_blob(bucket, output.getvalue(), file_name)
+

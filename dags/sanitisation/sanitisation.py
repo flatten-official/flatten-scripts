@@ -137,7 +137,7 @@ class Sanitisor:
                 response_extra = self.map_response(response_standardised, self.EXTRA_SANITISATION_MAPPINGS)
                 response_sanitised[question_key] = response_extra
             except KeyError:
-                # logging.warn(f"Missed {question_key}")
+                logging.warn(f"Missed {question_key}")
                 continue
         self.add_v1_fields(response_sanitised)
         probable, vulnerable = self.case_checker(response_sanitised, schema)
