@@ -1,10 +1,22 @@
 from google.cloud import datastore, storage
-import sanitisation
+import sanitisation.sanitisation
 import io
 import os
 import time
 import csv
-from gcs.bucket_functions import upload_blob
+
+def upload_blob(bucket, data_string, destination_blob_name):
+    """Uploads a file to the bucket."""
+
+    blob = bucket.blob(destination_blob_name)
+
+    blob.upload_from_string(data_string)
+
+    print(
+        "File {} uploaded to {}.".format(
+            destination_blob_name, bucket
+        )
+    )
 
 GCS_BUCKETS = os.environ['GCS_BUCKETS'].split(',')
 GCS_PATHS = os.environ['GCS_PATHS'].split(',')
@@ -13,7 +25,7 @@ DS_KIND = 'FlattenAccount'
 END_FILE_NAME = os.environ['END_FILE_NAME']
 
 
-def load_excluded_postal_codes(fname="excluded_postal_codes.csv"):
+def load_excluded_postal_codes(fname="/home/airflow/gcs/data/excluded_postal_codes.csv"):
     with open(fname) as csvfile:
         reader = csv.reader(csvfile)
         first_row = next(reader)
@@ -32,7 +44,7 @@ def main():
 
     excluded = load_excluded_postal_codes()
 
-    sanitisor = sanitisation.Sanitisor(excluded)
+    sanitisor = sanitisation.sanitisation.Sanitisor(excluded)
 
     # todo - potentially shift to writing to disk if / when we move off off app engine
     output = csv.StringIO()
