@@ -1,23 +1,10 @@
 from google.cloud import datastore, storage
-import sanitisation
+import sanitisation.sanitisation
 import io
+import json
 import os
 import time
 import csv
-
-GCS_BUCKETS = os.environ['GCS_BUCKETS'].split(',')
-GCS_PATHS = os.environ['GCS_PATHS'].split(',')
-DS_NAMESPACE = os.environ['DS_NAMESPACE']
-DS_KIND = 'FlattenAccount'
-END_FILE_NAME = os.environ['END_FILE_NAME']
-
-
-def load_excluded_postal_codes(fname="excluded_postal_codes.csv"):
-    with open(fname) as csvfile:
-        reader = csv.reader(csvfile)
-        first_row = next(reader)
-    return first_row
-
 
 def upload_blob(bucket, data_string, destination_blob_name):
     """Uploads a file to the bucket."""
@@ -32,6 +19,34 @@ def upload_blob(bucket, data_string, destination_blob_name):
         )
     )
 
+GCS_BUCKETS = os.environ['GCS_BUCKETS'].split(',')
+GCS_PATHS = os.environ['GCS_PATHS'].split(',')
+DS_NAMESPACE = os.environ['DS_NAMESPACE']
+DS_KIND = 'FlattenAccount'
+DS_KIND_PAPERFORM = 'PaperformSubmission'
+END_FILE_NAME = os.environ['END_FILE_NAME']
+DATA_FOLDER = "/home/airflow/gcs/data"
+
+
+def load_excluded_postal_codes(fname="excluded_postal_codes.csv", join_data_folder=False):
+    if join_data_folder:
+        fname = os.path.join(DATA_FOLDER, fname)
+
+    with open(fname) as csvfile:
+        reader = csv.reader(csvfile)
+        first_row = next(reader)
+    return first_row
+
+
+def load_keys(fname="keys.json", join_data_folder=True):
+    if join_data_folder:
+        fname = os.path.join(DATA_FOLDER, fname)
+
+    with open(fname, 'r') as json_file:
+        keys = json.load(json_file)
+    return keys
+
+
 def main():
     """
     Processes the info in the datastore into
@@ -42,10 +57,12 @@ def main():
     storage_client = storage.Client()
 
     query = datastore_client.query(kind=DS_KIND)
+    query_paperform = datastore_client.query(kind=DS_KIND_PAPERFORM)
 
     excluded = load_excluded_postal_codes()
+    keys = load_keys()
 
-    sanitisor = sanitisation.Sanitisor(excluded)
+    sanitisor = sanitisation.sanitisation.Sanitisor(excluded, keys)
 
     # todo - potentially shift to writing to disk if / when we move off off app engine
     output = csv.StringIO()
@@ -57,9 +74,15 @@ def main():
         for obj in l:
             writer.writerow(obj)
 
+    for entity in query_paperform.fetch():
+        l = sanitisor.sanitise_paperform(entity)
+        for obj in l:
+            writer.writerow(obj)
+
     curr_time_ms = str(int(time.time() * 1000))
 
     for bucket_name, path in zip(GCS_BUCKETS, GCS_PATHS):
         bucket = storage_client.bucket(bucket_name)
         file_name = os.path.join(path, "-".join([curr_time_ms, END_FILE_NAME]))
         upload_blob(bucket, output.getvalue(), file_name)
+
