@@ -100,6 +100,9 @@ class Sanitisor:
                 "country": country
             }
             latest = False
+            probable, vulnerable = self.case_checker(response, schema)
+            response_sanitised["probable"] = self.bool_to_str(probable)
+            response_sanitised["vulnerable"] = self.bool_to_str(vulnerable)
 
             for question_key in QUESTIONS:
                 try:
@@ -110,9 +113,6 @@ class Sanitisor:
                     # logging.warn(f"Missed {question_key}")
                     continue
 
-            probable, vulnerable = self.case_checker(response_sanitised, schema)
-            response_sanitised["probable"] = self.bool_to_str(probable)
-            response_sanitised["vulnerable"] = self.bool_to_str(vulnerable)
 
             if schema == "2":
                 self.add_v1_fields(response_sanitised)
@@ -209,6 +209,22 @@ class Sanitisor:
                 or response_bools['q1'] and (response_bools['q2'] or response_bools['q6'])
                 or response_bools['q6'] and (response_bools['q2'] or response_bools['q3'])
                 or response_bools['q7']
+            )
+        elif schema == "2":
+            potential = (
+                    (response['contactWithIllness'] == 'y')
+                    or ('fever' in response['symptoms']
+                        and ('cough' in response['symptoms']
+                             or 'shortnessOfBreath' in response['symptoms']
+                             or response['travelOutsideCanada'] == 'y'))
+                    or ('cough' in response['symptoms']
+                        and 'shortnessOfBreath' in response['symptoms']
+                        and response['travelOutsideCanada'] == 'y')
+            )
+
+            vulnerable = (
+                    (response['conditions'] != ['other'] and response['conditions'] != [])
+                    or '65-74' in response['age'] or '>75' in response['age']
             )
         else:
             potential = (
