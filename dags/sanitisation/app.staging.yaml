@@ -1,0 +1,7 @@
+runtime: python37
+service: form-data-sanitisation
+env_variables:
+  GCS_BUCKETS: "flatten-staging-dataset,montreal-data-staging"
+  GCS_PATHS: "flatten-form-data-v1,flatten-form-data-v1"
+  DS_NAMESPACE: "flatten_staging"
+  END_FILE_NAME: "flatten-form-data-v1.csv"

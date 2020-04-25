@@ -1,15 +1,18 @@
-from google.cloud import storage
-import pandas as pd
-from googleapiclient.discovery import build
+import os
 import json
+import pytz
+import pandas as pd
+
+import confirmed_cases.helper as helper
+from confirmed_cases.covidOntario import dispatcher
+from confirmed_cases.helper import write_json_to_disk
+
+from datetime import datetime
+from google.cloud import storage
+from googleapiclient.discovery import build
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
-from datetime import datetime
-import os
-from covidOntario import dispatcher
-import pytz
 
-import helper
 
 NAME_EXCEPTIONS = {
     "Kingston Frontenac Lennox & Addington, Ontario": "Kingston, Ontario",
@@ -52,14 +55,15 @@ NAME_EXCEPTIONS = {
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
-SHEETS_API_KEY = os.environ['SHEETS_API_KEY']
-GCS_BUCKET = os.environ['GCS_BUCKET']
+SHEETS_API_KEY = os.environ.get('SHEETS_API_KEY')
+GCS_BUCKET = os.environ.get('GCS_SAVE_BUCKET')
 
 SPREADSHEET_ID = '1D6okqtBS3S2NRC7GFVHzaZ67DuTw7LX49-fqSLwJyeo'
 SPREADSHEET_CASES = 'Cases'
 SPREADSHEET_REC = 'Recovered'
 SPREADSHEET_DEATH = 'Mortality'
 
+upload_location = '/home/airflow/gcs/data'
 UPLOAD_CONFIRMED = 'confirmed_data.json'
 UPLOAD_TRAVEL = 'travel_data.json'
 UPLOAD_PROVINCIAL = 'provincial_data.json'
@@ -285,10 +289,8 @@ def get_provincial_totals(output_dict, rec_df, dead_df):
     return provincial_data
 
 
-# Uploads the JSON to the bucket
 def write_data_to_bucket(confirmed_out, travel_out, provincial_out):
     bucket = storage.Client().bucket(GCS_BUCKET)
-
     helper.upload_json(bucket, confirmed_out, UPLOAD_CONFIRMED)
     helper.upload_json(bucket, travel_out, UPLOAD_TRAVEL)
     helper.upload_json(bucket, provincial_out, UPLOAD_PROVINCIAL)
@@ -296,16 +298,17 @@ def write_data_to_bucket(confirmed_out, travel_out, provincial_out):
 
 def main():
     print("Getting data from spreadsheet...")
-
     confirmed, recovered, dead = get_spreadsheet_data()
-
     print("Geocoding data (this takes a few minutes)...")
-
     confirmed_output = get_confirmed_cases(confirmed)
     travel_data = get_travel_data(confirmed)
     provincial_data = get_provincial_totals(confirmed_output, recovered, dead)
-    print("Outputting data to file...")
+    print("Uploading files to bucket...")
     write_data_to_bucket(confirmed_output, travel_data, provincial_data)
+    # print("Writing files to disk...")
+    # write_json_to_disk(confirmed_output, os.path.join(upload_location, UPLOAD_CONFIRMED))
+    # write_json_to_disk(travel_data, os.path.join(upload_location, UPLOAD_TRAVEL))
+    # write_json_to_disk(provincial_data, os.path.join(upload_location, UPLOAD_PROVINCIAL))
     print("Done")
 
 
