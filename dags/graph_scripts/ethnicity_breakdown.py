@@ -3,12 +3,12 @@ from io import StringIO
 import pandas as pd
 import os
 
-GCS_BUCKET = os.environ['GCS_BUCKET']
+GCS_BUCKET = os.environ.get('GCS_SAVE_BUCKET')
 
 UPLOAD_ETHNICITY = "ethnicity.csv"
 
 def get_ethnicity_insights_df():
-    form_data = pd.read_csv("flatten.csv")
+    form_data = pd.read_csv("gcs/dags/data/flatten.csv")
 
     yesno_mapping = {"n": 0, "y": 1}
     yesno_columns = ["probable", "vulnerable", "is_most_recent", "fever_chills_shakes", "cough", "shortness_of_breath",\

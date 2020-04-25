@@ -6,7 +6,9 @@ from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 from airflow.contrib.operators.file_to_gcs import FileToGoogleCloudStorageOperator
 
-from graph_scripts.icu import main
+import graph_scripts.icu as icu_capacity
+import graph_scripts.gender_breakdown as gender_breakdown
+import graph_scripts.ethnicity_breakdown as ethnicity_breakdown
 
 GCS_BUCKET = os.environ.get('GCS_SAVE_BUCKET')
 upload_location = '/home/airflow/gcs/data'
@@ -32,10 +34,22 @@ echo = BashOperator(
     bash_command='echo "Running Graph scripts"'
 )
 
-run_service = PythonOperator(
-    task_id='run_graph_scripts',
-    python_callable=main,
+icu_service = PythonOperator(
+    task_id='run_icu_script',
+    python_callable=icu_capacity.main,
     dag=graph_scripts_dag
 )
 
-echo >> run_service
+ethnicity_service = PythonOperator(
+    task_id='run_ethnicity_script',
+    python_callable=gender_breakdown.main,
+    dag=graph_scripts_dag
+)
+
+sex_service = PythonOperator(
+    task_id='run_sex_script',
+    python_callable=ethnicity_breakdown.main,
+    dag=graph_scripts_dag
+)
+
+echo >> icu_service >> ethnicity_service >> sex_service
