@@ -1,7 +1,7 @@
 import datetime
 import uuid
 import logging
-import unidecode
+import unicodedata
 
 from pytz import utc
 
@@ -260,4 +260,10 @@ class Sanitisor:
 
     @staticmethod
     def normalise_property(property):
-        return unidecode.unidecode(property).lower()
+
+        text = unicodedata.normalize('NFD', property) \
+            .encode('ascii', 'ignore') \
+            .decode("utf-8")
+
+        return str(text).lower()
+
