@@ -28,7 +28,7 @@ END_FILE_NAME = os.environ['END_FILE_NAME']
 DATA_FOLDER = "/home/airflow/gcs/data"
 
 
-def load_excluded_postal_codes(fname="excluded_postal_codes.csv", join_data_folder=False):
+def load_excluded_postal_codes(fname="excluded_postal_codes.csv", join_data_folder=True):
     if join_data_folder:
         fname = os.path.join(DATA_FOLDER, fname)
 
