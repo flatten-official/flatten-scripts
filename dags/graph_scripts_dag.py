@@ -21,7 +21,7 @@ default_args = {
 
 graph_scripts_dag = DAG(
     dag_id='graph_scripts',
-    start_date=datetime(2020, 4, 18),
+    start_date=datetime(2020, 4, 24),
     schedule_interval='5 4,16 * * *',
     default_args=default_args,
     catchup=True

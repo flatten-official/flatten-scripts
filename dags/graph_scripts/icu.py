@@ -36,7 +36,9 @@ def convert_unix_timestamp(timestamp):
     return datetime.utcfromtimestamp(timestamp/1000).strftime('%Y-%m-%d')
 
 def insert_max_ICU_capacity(ICU_data):
-    data = pd.read_csv("ICU-capacity.csv")
+    # data = pd.read_csv("ICU-capacity.csv")
+
+    data = pd.read_csv("gcs/data/ICU-capacity.csv")
 
     # isolate the relevant columns
     province_to_ICU_bed_mapping = data[["Province", "Intensive Care"]]
