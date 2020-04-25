@@ -38,7 +38,7 @@ def convert_unix_timestamp(timestamp):
 def insert_max_ICU_capacity(ICU_data):
     # data = pd.read_csv("ICU-capacity.csv")
 
-    data = pd.read_csv("gcs/data/ICU-capacity.csv")
+    data = pd.read_csv("gcs/dags/data/ICU-capacity.csv")
 
     # isolate the relevant columns
     province_to_ICU_bed_mapping = data[["Province", "Intensive Care"]]
