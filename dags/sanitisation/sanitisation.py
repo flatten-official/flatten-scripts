@@ -1,6 +1,7 @@
 import datetime
 import uuid
 import logging
+import unidecode
 
 from pytz import utc
 
@@ -48,16 +49,19 @@ QUESTIONS = {
 
 class Sanitisor:
 
-    EXTRA_SANITISATION_MAPPINGS = {"yes": "y", "no": "n"}
+    SANITISATION_MAPPINGS = {"yes": "y", "no": "n", "positive": "y", "negative": "n", "awaiting_results": "n",
+                             "male": "m", "female": "f", "preferNotToRespond": "na"}
     EXTRA_FIELDS = ["id", "country", "date", "fsa", "zipcode", "probable", "vulnerable", "is_most_recent"]
 
     def __init__(self, excluded_fsa, paperform_keys):
         self.excluded_fsa = excluded_fsa
         self.paperform_keys = paperform_keys
-        self.paperform_keys_reverse = {}
-        for question in paperform_keys.keys():
-            for prop in paperform_keys[question]:
-                self.paperform_keys_reverse[prop] = question
+        self.paperform_keys_reverse = {
+            self.normalise_property(prop): question
+            for question, lang in self.paperform_keys.items()
+            for mappings in lang.values()
+            for prop in mappings
+        }
 
     @property
     def field_names(self):
@@ -83,7 +87,6 @@ class Sanitisor:
             if fsa in self.excluded_fsa:
                 continue
             schema = response['schema_ver']
-            probable, vulnerable = self.case_checker(response, schema)
 
             response_sanitised = {
                 "id": unique_id,
@@ -91,8 +94,6 @@ class Sanitisor:
                 "is_most_recent": self.bool_to_str(latest),
                 "fsa": fsa,
                 "zipcode": zipcode,
-                "probable": self.bool_to_str(probable),
-                "vulnerable": self.bool_to_str(vulnerable),
                 "country": country
             }
             latest = False
@@ -106,24 +107,41 @@ class Sanitisor:
                     # logging.warn(f"Missed {question_key}")
                     continue
 
+            probable, vulnerable = self.case_checker(response_sanitised, schema)
+            response_sanitised["probable"] = self.bool_to_str(probable)
+            response_sanitised["vulnerable"] = self.bool_to_str(vulnerable)
+
             if schema == "2":
                 self.add_v1_fields(response_sanitised)
 
             ret.append(response_sanitised)
         return ret
 
+    @staticmethod
+    def map_paperform_value(value):
+        # Deal with the quirks of the submission responses
+        v = value["value"]
+        if isinstance(v, str) or (isinstance(v, list) and len(v) > 1
+            and not v == [None]):
+            return v
+        return ""
+
+
     def sanitise_paperform(self, paperform_entity):
-        data = paperform_entity["data"]
+        data = {
+        k:self.map_paperform_value(v) for k, v in paperform_entity["data"].items()
+        }
         unique_id = uuid.uuid4()
         day = self.get_day(paperform_entity["timestamp"])
 
-        if not data["lang"] in ["en", "fr"]:
+        lang = data["lang"]
+        if not lang in ["en", "fr"]:
             return []
 
         response_sanitised = {
             "id": unique_id,
             "date": day,
-            "fsa": data["fsa"]["value"],
+            "fsa": data["fsa"],
             "zipcode": "",
             "country": "ca"
         }
@@ -133,8 +151,8 @@ class Sanitisor:
         for question_key in QUESTIONS:
             try:
                 response_key = QUESTIONS[question_key]["labels"][schema]
-                response_standardised = self.map_response(data[response_key], self.paperform_keys_reverse)
-                response_extra = self.map_response(response_standardised, self.EXTRA_SANITISATION_MAPPINGS)
+                response_standardised = self.map_response(data[response_key], self.paperform_keys_reverse, normalise=True)
+                response_extra = self.map_response(response_standardised, self.SANITISATION_MAPPINGS)
                 response_sanitised[question_key] = response_extra
             except KeyError:
                 logging.warn(f"Missed {question_key}")
@@ -146,7 +164,7 @@ class Sanitisor:
 
         return [response_sanitised]
 
-    def map_response(self, response, mapping=None):
+    def map_response(self, response, mapping=None, normalise=False):
         if mapping is None:
             mapping = {}
 
@@ -154,12 +172,10 @@ class Sanitisor:
             response = [response]
         ret = []
         for ans in response:
+            if normalise:
+                ans = self.normalise_property(ans)
             try:
-                try:
-                    ret.append(mapping[ans])
-                except KeyError:
-                    print("KeyError")
-                    ret.append(ans)
+                ret.append(mapping[ans])
             except KeyError:
                 ret.append(ans)
         return ";".join(ret)
@@ -182,7 +198,7 @@ class Sanitisor:
                     response_bools[k] = response[k] == 'y'
                 except:
                     response_bools[k] = ''
-            vulnerable =  response_bools['q4'] or response_bools['q5']
+            vulnerable = response_bools['q4'] or response_bools['q5']
 
             potential = (
                 response_bools['q3']
@@ -192,22 +208,22 @@ class Sanitisor:
             )
         else:
             potential = (
-                (response['contactWithIllness'] == 'y') 
-                            or ('fever' in response['symptoms']
-                                and ('cough' in response['symptoms']
-                                     or 'shortnessOfBreath' in response['symptoms']
-                                     or response['travelOutsideCanada'] == 'y')) 
-                            or ('cough' in response['symptoms']
-                                and 'shortnessOfBreath' in response['symptoms']
-                                and response['travelOutsideCanada'] == 'y')
+                    (response['contact_with_illness'] == 'y')
+                    or ('fever' in response['symptoms']
+                        and ('cough' in response['symptoms']
+                             or 'shortness_of_breath' in response['symptoms']
+                             or response['travel_outside_canada'] == 'y'))
+                    or ('cough' in response['symptoms']
+                        and 'shortness_of_breath' in response['symptoms']
+                        and response['travel_outside_canada'] == 'y')
             )
 
             vulnerable = (
-                (response['conditions'] != ['other'] and response['conditions'] != [])
-                or '65-74' in response['age'] or '>75' in response['age']
+                    (response['conditions'] != ['other'] and response['conditions'] != [])
+                    or '65-74' in response['age'] or '>75' in response['age']
             )
         return potential, vulnerable
-    
+
     @staticmethod
     def bool_to_str(truth_value):
         return 'y' if truth_value else 'n'
@@ -221,3 +237,7 @@ class Sanitisor:
             datetime.datetime.utcfromtimestamp(ts_sec)
         ).strftime('%Y-%m-%d')
         return day
+
+    @staticmethod
+    def normalise_property(property):
+        return unidecode.unidecode(property).lower()
