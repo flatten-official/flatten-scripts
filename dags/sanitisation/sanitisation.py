@@ -45,6 +45,9 @@ QUESTIONS = {
     "needs": {
         "labels": {"2": "needs", "paperform": "greatest_need"},
     },
+    "age": {
+        "labels": {"2": "age", "paperform": "age"},
+    },
 }
 
 class Sanitisor:
@@ -143,7 +146,8 @@ class Sanitisor:
             "date": day,
             "fsa": data["fsa"],
             "zipcode": "",
-            "country": "ca"
+            "country": "ca",
+            "is_most_recent": "y"
         }
 
         schema = "paperform"
