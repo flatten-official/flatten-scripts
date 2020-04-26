@@ -2,6 +2,7 @@ import datetime
 import uuid
 import logging
 import unicodedata
+from utils.time import get_string_date
 
 from pytz import utc
 
@@ -77,7 +78,7 @@ class Sanitisor:
         latest = True
         ret = []
         for response in reversed(responses):
-            day = self.get_day(response['timestamp'])
+            day = get_string_date(response['timestamp'])
 
             try:
                 fsa = response['postalCode'].upper()
@@ -247,16 +248,6 @@ class Sanitisor:
     @staticmethod
     def bool_to_str(truth_value):
         return 'y' if truth_value else 'n'
-
-    @staticmethod
-    def get_day(timestamp):
-        # timestamp is in ms since UNIX origin, so divide by 1000 to get seconds
-        ts_sec = timestamp / 1000
-        # make a UTC datetime object from the timestamp, convert to a day stamp
-        day = utc.localize(
-            datetime.datetime.utcfromtimestamp(ts_sec)
-        ).strftime('%Y-%m-%d')
-        return day
 
     @staticmethod
     def normalise_property(property):
