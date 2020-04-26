@@ -15,7 +15,6 @@ def load_config():
     if os.path.exists(COMPOSER_DAGS_FOLDER):
         path = os.path.join(COMPOSER_DAGS_FOLDER, "dags", path)
 
-    print(path)
     with open(path, "r") as f:
         config_data = yaml.load(f, Loader=yaml.FullLoader)
 
