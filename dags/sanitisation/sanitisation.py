@@ -136,7 +136,7 @@ class Sanitisor:
         k:self.map_paperform_value(v) for k, v in paperform_entity["data"].items()
         }
         unique_id = uuid.uuid4()
-        day = self.get_day(paperform_entity["timestamp"])
+        day = get_string_date(paperform_entity["timestamp"])
 
         lang = data["lang"]
         if not lang in ["en", "fr"]:

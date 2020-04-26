@@ -13,10 +13,14 @@ def load_config():
     """
     path = CONFIG_FILE
     if os.path.exists(COMPOSER_DAGS_FOLDER):
-        path = os.path.join(COMPOSER_DAGS_FOLDER, "dags", path)
+        path = os.path.join(COMPOSER_DAGS_FOLDER, path)
 
     with open(path, "r") as f:
-        config_data = yaml.load(f, Loader=yaml.FullLoader)
+        try:
+            config_data = yaml.full_load(f)
+        except AttributeError:
+            # GCP has an older version of pyyaml by default; full_load does not exist.
+            config_data = yaml.load(f)
 
     return config_data
 

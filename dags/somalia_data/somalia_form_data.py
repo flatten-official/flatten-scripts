@@ -21,7 +21,6 @@ def case_checker(individual):
 def process_response(response, response_keys):
     individuals = {}
     potential, vulnerable, reports = 0, 0, 0
-    print(response_keys)
     try:
         deaths = 1 if response_keys[response["type_of_report"]["value"]] == "death" else 0
     except KeyError:
@@ -54,13 +53,9 @@ def add_to_dict(existing, new):
 def run_form_data_scraping():
 
     vars = config.load_name_config("somalia")
-    print(vars)
 
     datastore_client = datastore.Client(namespace=vars["ds_namespace"])
     query = datastore_client.query(kind=vars["ds_kind"])
-
-
-    # todo - do join data folder, or detect automatically
 
     keys = load_keys()
     keys_reversed = {
