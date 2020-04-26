@@ -41,3 +41,10 @@ for testing. Ask Arthur or Ivan to upload them to the master bucket for you befo
 Each dag is associated with a `<NAME>_dag.py` folder in this directory. See current dags for examples. To make a new dag,
 copy current examples here. You should put the associated code in a package in this folder of the same name as the dag.
 This package must contain an `__init__.py` to be recognised as such.
+
+
+## Configuration
+
+Currently we are aiming to move most of our configuration into the `config.yaml` file in this directory.
+You can use the helper functions in `utils/config.py` to help you with loading this cofiguration.
+Please group configurations in this file by name to not pollute the root configuration namespace.
