@@ -1,0 +1,11 @@
+project_id_master: flatten-271620
+project_id_staging: flatten-staging-271921
+somalia:
+  upload_file: somalia_data.json
+  ds_kind: PaperformSubmission-so
+  master:
+    bucket: flatten-dataset
+    ds_namespace: flatten_production
+  staging:
+    bucket: flatten-staging-dataset
+    ds_namespace: flatten_staging

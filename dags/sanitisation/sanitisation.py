@@ -2,6 +2,7 @@ import datetime
 import uuid
 import logging
 import unicodedata
+from utils.time import get_string_date
 
 from pytz import utc
 
@@ -77,7 +78,7 @@ class Sanitisor:
         latest = True
         ret = []
         for response in reversed(responses):
-            day = self.get_day(response['timestamp'])
+            day = get_string_date(response['timestamp'])
 
             try:
                 fsa = response['postalCode'].upper()
@@ -135,7 +136,7 @@ class Sanitisor:
         k:self.map_paperform_value(v) for k, v in paperform_entity["data"].items()
         }
         unique_id = uuid.uuid4()
-        day = self.get_day(paperform_entity["timestamp"])
+        day = get_string_date(paperform_entity["timestamp"])
 
         lang = data["lang"]
         if not lang in ["en", "fr"]:
@@ -159,7 +160,7 @@ class Sanitisor:
                 response_extra = self.map_response(response_standardised, self.SANITISATION_MAPPINGS)
                 response_sanitised[question_key] = response_extra
             except KeyError:
-                logging.warn(f"Missed {question_key}")
+                # logging.warn(f"Missed {question_key}")
                 continue
         self.add_v1_fields(response_sanitised)
         probable, vulnerable = self.case_checker(response_sanitised, schema)
@@ -247,16 +248,6 @@ class Sanitisor:
     @staticmethod
     def bool_to_str(truth_value):
         return 'y' if truth_value else 'n'
-
-    @staticmethod
-    def get_day(timestamp):
-        # timestamp is in ms since UNIX origin, so divide by 1000 to get seconds
-        ts_sec = timestamp / 1000
-        # make a UTC datetime object from the timestamp, convert to a day stamp
-        day = utc.localize(
-            datetime.datetime.utcfromtimestamp(ts_sec)
-        ).strftime('%Y-%m-%d')
-        return day
 
     @staticmethod
     def normalise_property(property):
