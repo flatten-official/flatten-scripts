@@ -62,7 +62,7 @@ def run_form_data_scraping():
 
     # todo - do join data folder, or detect automatically
 
-    keys = load_keys(join_data_folder=False)
+    keys = load_keys()
     keys_reversed = {
         Sanitisor.normalise_property(prop): question
         for question, lang in keys.items()
