@@ -25,6 +25,9 @@ When merging to master, note to Arthur or Ivan that the requirements need to be 
 
 Put an `if __name__` block in the file. We currently have not fully set up local airflow testing.
 
+For many of these dags you will needs the keys file from our `flatten_keys` repository. Download this to
+this folders (`dags/`) and it will be automatically picked up.
+
 
 ## Data Files
 
