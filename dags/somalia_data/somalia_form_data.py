@@ -20,11 +20,12 @@ def case_checker(individual):
 
 def process_response(response, response_keys):
     individuals = {}
-    potential, vulnerable, reports = 0, 0, 0
+    potential, vulnerable, both, reports = 0, 0, 0, 0
     try:
         deaths = 1 if response_keys[response["type_of_report"]["value"]] == "death" else 0
     except KeyError:
         deaths = 0
+    reports = deaths
     for key in INDIVIDUAL_KEYS:
         individual_response = [Sanitisor.normalise_property(v) for v in response[key]["value"]]
 
@@ -35,12 +36,14 @@ def process_response(response, response_keys):
         potential, vulnerable = case_checker(response_mapped)
         potential += 1 if potential else 0
         vulnerable += 1 if vulnerable else 0
+        both += 1 if potential and vulnerable else 0
         reports += 1
         individuals[key] = response_mapped
     aggregated_data = {
         "deaths": deaths,
-        "potential": potential,
+        "pot": potential,
         "risk": vulnerable,
+        "both": both,
         "number_reports": reports
     }
     return individuals, aggregated_data
