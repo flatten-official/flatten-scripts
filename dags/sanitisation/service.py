@@ -48,10 +48,10 @@ def main():
     writer = csv.DictWriter(output, fieldnames=sanitisor.field_names)
     writer.writeheader()
     
-    # for entity in query.fetch():
-    #     l = sanitisor.sanitise_account(entity)
-    #     for obj in l:
-    #         writer.writerow(obj)
+    for entity in query.fetch():
+        l = sanitisor.sanitise_account(entity)
+        for obj in l:
+            writer.writerow(obj)
     for entity in query_paperform.fetch():
         print("nize")
         l = sanitisor.sanitise_paperform(entity)
