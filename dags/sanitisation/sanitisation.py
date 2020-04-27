@@ -28,6 +28,15 @@ QUESTIONS = {
     "contact_with_illness": {
         "labels": {"1": "q7", "2": "contactWithIllness", "paperform": "contact_positive_or_travel"},
     },
+    "contact_in_household": {
+        "labels": {"paperform": "contact_within_household"}
+    },
+    "tested": {
+        "labels": {"paperform": "covid_tested"}
+    },
+    "covid_results_date": {
+        "labels": {"paperform": "covid_results_date"}
+    },
     "covid_positive": {
         "labels": {"1": "q8", "2": "testedPositive", "paperform": "covid_test_result"},
     },
@@ -49,6 +58,27 @@ QUESTIONS = {
     "age": {
         "labels": {"2": "age", "paperform": "age"},
     },
+    "mental_health_impact": {
+        "labels": {"paperform": "mental_health_impact"}
+    },
+    "people_in_household": {
+        "labels": {"paperform": "people_in_household"}
+    },
+    "travel_work_school": {
+        "labels": {"paperform": "travel_work_school"}
+    },
+    "self_isolating": {
+        "labels": {"paperform": "self_isolating"}
+    },
+    "media_channels": {
+        "labels": {"paperform": "media_channels"}
+    },
+    "financial_obligations_impact": {
+        "labels": {"paperform": "financial_obligations_impact"}
+    },
+    "tobacco_usage": {
+        "labels": {"paperform": "tobacco_usage"}
+    }
 }
 
 class Sanitisor:
@@ -145,7 +175,7 @@ class Sanitisor:
         response_sanitised = {
             "id": unique_id,
             "date": day,
-            "fsa": data["fsa"],
+            "fsa": data["fsa"].upper(),
             "zipcode": "",
             "country": "ca",
             "is_most_recent": "y"

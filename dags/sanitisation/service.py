@@ -43,26 +43,24 @@ def main():
     keys = load_keys()
 
     sanitisor = sanitisation.sanitisation.Sanitisor(excluded, keys)
-
     # todo - potentially shift to writing to disk if / when we move off off app engine
     output = csv.StringIO()
     writer = csv.DictWriter(output, fieldnames=sanitisor.field_names)
     writer.writeheader()
     
-    for entity in query.fetch():
-        l = sanitisor.sanitise_account(entity)
-        for obj in l:
-            writer.writerow(obj)
-
+    # for entity in query.fetch():
+    #     l = sanitisor.sanitise_account(entity)
+    #     for obj in l:
+    #         writer.writerow(obj)
     for entity in query_paperform.fetch():
+        print("nize")
         l = sanitisor.sanitise_paperform(entity)
         for obj in l:
             writer.writerow(obj)
-
+        print("entity")
     curr_time_ms = str(int(time.time() * 1000))
 
     for bucket_name, path in zip(GCS_BUCKETS, GCS_PATHS):
         bucket = storage_client.bucket(bucket_name)
         file_name = os.path.join(path, "-".join([curr_time_ms, END_FILE_NAME]))
         upload_blob(bucket, output.getvalue(), file_name)
-
