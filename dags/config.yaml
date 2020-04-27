@@ -9,3 +9,14 @@ somalia:
   staging:
     bucket: flatten-staging-dataset
     ds_namespace: flatten_staging
+form_data:
+  master:
+    GCS_BUCKETS: flatten-271620.appspot.com,montreal-data,flatten-dataset"
+    GCS_PATHS: ",form-data,form-data"
+    CSV_BUCKET: flatten-dataset
+    PREFIX: flatten-form-data-v1
+  staging:
+    GCS_BUCKETS: flatten-staging-271921.appspot.com,montreal-data-staging,flatten-staging-dataset
+    GCS_PATHS: ",form-data,form-data"
+    CSV_BUCKET: flatten-staging-dataset
+    PREFIX: flatten-form-data-v1
