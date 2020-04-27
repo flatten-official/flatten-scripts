@@ -28,14 +28,6 @@ sanitisation_dag = DAG(
     catchup=True
 )
 
-form_data_dag = DAG(
-    dag_id='form_data',
-    start_date=datetime(2020,4,22),
-    schedule_interval='*/30 * * * *',
-    default_args=default_args,
-    catchup=True
-)
-
 echo = BashOperator(
     task_id='Echo',
     bash_command='echo "Running Sanitisation Script"'
@@ -54,8 +46,7 @@ sanitise = PythonOperator(
 form = PythonOperator(
     task_id='form_data',
     python_callable=main_form,
-    dag=form_data_dag
+    dag=sanitisation_dag
 )
 
-echo >> sanitise
-echo_form >> form
+echo >> sanitise >> form
