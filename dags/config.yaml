@@ -27,3 +27,12 @@ image_card:
   staging:
     data_download_bucket: flatten-img-data
     data_upload_bucket: flatten-img-staging
+svg_data:
+  master:
+    CSV_BUCKET: flatten-dataset
+    PREFIX: flatten-form-data-v1
+    UPLOAD_BUCKET: flatten-271620.appspot.com
+  staging:
+    CSV_BUCKET: flatten-staging-dataset
+    PREFIX: flatten-form-data-v1
+    UPLOAD_BUCKET: flatten-staging-271921.appspot.com

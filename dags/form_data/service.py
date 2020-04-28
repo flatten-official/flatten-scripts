@@ -3,7 +3,6 @@ import pandas as pd
 from google.cloud import datastore, storage
 import json
 import os
-from form_data.case_checker import case_checker
 from form_data.geo_utils import convert_zip_to_county
 import datetime as dt
 

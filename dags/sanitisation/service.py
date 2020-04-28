@@ -43,12 +43,14 @@ def main():
     keys = load_keys()
 
     sanitisor = sanitisation.sanitisation.Sanitisor(excluded, keys)
-
     # todo - potentially shift to writing to disk if / when we move off off app engine
     output = csv.StringIO()
+    output_paperform = csv.StringIO()
     writer = csv.DictWriter(output, fieldnames=sanitisor.field_names)
+    writer_paperform = csv.DictWriter(output_paperform, fieldnames=sanitisor.field_names)
     writer.writeheader()
-    
+    writer_paperform.writeheader()
+
     for entity in query.fetch():
         l = sanitisor.sanitise_account(entity)
         for obj in l:
@@ -58,11 +60,13 @@ def main():
         l = sanitisor.sanitise_paperform(entity)
         for obj in l:
             writer.writerow(obj)
+            writer_paperform.writerow(obj)
 
     curr_time_ms = str(int(time.time() * 1000))
-
+    
     for bucket_name, path in zip(GCS_BUCKETS, GCS_PATHS):
         bucket = storage_client.bucket(bucket_name)
         file_name = os.path.join(path, "-".join([curr_time_ms, END_FILE_NAME]))
+        file_name_paperform = os.path.join('paperform-' + path, "-".join([curr_time_ms, END_FILE_NAME]))
         upload_blob(bucket, output.getvalue(), file_name)
-
+        upload_blob(bucket, output_paperform.getvalue(), file_name_paperform)

@@ -8,6 +8,7 @@ from airflow.contrib.operators.file_to_gcs import FileToGoogleCloudStorageOperat
 
 from sanitisation.service import main
 from form_data.service import main as main_form
+from svg_data.main import main as main_svg
 
 from gcs.debugger import enable_cloud_debugger
 
@@ -49,4 +50,10 @@ form = PythonOperator(
     dag=sanitisation_dag
 )
 
-echo >> sanitise >> form
+svg = PythonOperator(
+    task_id='svg_data',
+    python_callable=main_svg,
+    dag=sanitisation_dag
+)
+
+echo >> sanitise >> form >> svg
