@@ -40,7 +40,7 @@ def main():
             self_iso = df_self_iso.value_counts()['y'] / len(df_self_iso) * 100
         except:
             self_iso = 'na'
-        svg_data['postcode'][fsa] = {'pot': pot, 'risk': risk, 'both': both, 'greatest_need': greatest_need, 'self_iso': self_iso}
+        svg_data['postcode'][fsa] = {'total': total, 'pot': pot, 'risk': risk, 'both': both, 'greatest_need': greatest_need, 'self_iso': self_iso}
 
     for fsa in df_usa.zipcode.unique():
         df_fsa = df_usa[df_usa['zipcode'] == fsa]
@@ -56,7 +56,7 @@ def main():
             self_iso = df_self_iso.value_counts()['y'] / len(df_self_iso) * 100
         except:
             self_iso = 'na'
-        svg_data['postcode'][fsa] = {'pot': pot, 'risk': risk, 'both': both, 'greatest_need': greatest_need, 'self_iso': self_iso}
+        svg_data['postcode'][fsa] = {'total': total, 'pot': pot, 'risk': risk, 'both': both, 'greatest_need': greatest_need, 'self_iso': self_iso}
         
     json_str = json.dumps(svg_data)
 
