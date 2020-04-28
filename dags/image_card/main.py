@@ -16,9 +16,9 @@ def make_image_card(FSA,potential,vulnerable,high_risk,total,need,self_iso):
 
   d.append(draw.Text("My neighbourhood in "+region,20,300,450,center=True,fill="#000000"))
 
-  d.append(draw.Rectangle(25,200,166.66667,200,fill = "#dddddd"))
-  d.append(draw.Rectangle(216.6667,200,166.66667,200,fill = "#dddddd"))
-  d.append(draw.Rectangle(408.3333,200,166.66667,200,fill = "#dddddd"))
+  d.append(draw.Rectangle(25,200,166.66667,200,rx = 10,ry=10, fill = "#dddddd"))
+  d.append(draw.Rectangle(216.6667,200,166.66667,200,rx = 10,ry=10,fill = "#dddddd"))
+  d.append(draw.Rectangle(408.3333,200,166.66667,200,rx = 10,ry=10,fill = "#dddddd"))
 
   d.append(draw.Text("Potential Cases",12,107,375,center=True,fill="#000000",font_weight="bold"))
   d.append(draw.Text("Reported",12,107,360,center=True,fill="#000000",font_weight="bold"))
@@ -74,6 +74,6 @@ if __name__ == "__main__":
   vulnerable = 69
   high_risk = 69
   total = 100
-  need = "food"
+  need = "financialSupport"
   self_iso = 69
   make_image_card(FSA,potential,vulnerable,high_risk,total,need,self_iso)
