@@ -6,7 +6,6 @@ potential = 69
 vulnerable = 69
 high_risk = 69
 total = 100
-need = "need"
 need = "food"
 self_iso = 69
 
@@ -41,11 +40,13 @@ d.append(draw.Line(25, 175, 575, 175,stroke="#dddddd", stroke_width=2, fill='non
 d.append(draw.Text("Greatest Need In Your Community",12,150,145,center=True,fill="#000000",font_weight="bold"))
 if need == "financialSupport":
   d.append(draw.Text("Financial",25,100,85,center=True,fill="#000000",font_weight="bold"))
+  d.append(draw.Text("Support",25,100,55,center=True,fill="#000000",font_weight="bold"))
 
   d.append(draw.Image(180,30,80,80,path="museum.png"))
 elif need == "emotionalSupport":
   d.append(draw.Text("Emotional",25,100,85,center=True,fill="#000000",font_weight="bold"))
   d.append(draw.Text("Support",25,100,55,center=True,fill="#000000",font_weight="bold"))
+  d.append(draw.Image(180,40,60,60,path="heart.png"))
 elif need == "medication":
   d.append(draw.Text("Medication",25,110,75,center=True,fill="#000000",font_weight="bold"))
   d.append(draw.Image(190,30,80,80,path="drug.png"))
