@@ -254,7 +254,7 @@ class Sanitisor:
             )
 
             vulnerable = (
-                    (response['conditions'] != ['other'] and response['conditions'] != [])
+                    (response['conditions'] != 'other' and response['conditions'] != "")
                     or '65-74' in response['age'] or '>75' in response['age']
             )
         else:
@@ -268,9 +268,8 @@ class Sanitisor:
                         and 'shortness_of_breath' in response['symptoms']
                         and response['travel_outside_canada'] == 'y')
             )
-
             vulnerable = (
-                    (response['conditions'] != ['other'] and response['conditions'] != [])
+                    (response['conditions'] != 'other' and response['conditions'] != "" and response['conditions'] != 'noneOfTheAbove;other')
                     or '65-74' in response['age'] or '>75' in response['age']
             )
         return potential, vulnerable
