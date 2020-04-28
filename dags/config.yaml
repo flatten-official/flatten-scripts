@@ -20,3 +20,12 @@ form_data:
     GCS_PATHS: ",form-data,form-data"
     CSV_BUCKET: flatten-staging-dataset
     PREFIX: flatten-form-data-v1
+svg_data:
+  master:
+    CSV_BUCKET: flatten-dataset
+    PREFIX: flatten-form-data-v1
+    UPLOAD_BUCKET: flatten-271620.appspot.com
+  staging:
+    CSV_BUCKET: flatten-staging-dataset
+    PREFIX: flatten-form-data-v1
+    UPLOAD_BUCKET: flatten-staging-271921.appspot.com
