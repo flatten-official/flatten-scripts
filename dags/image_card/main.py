@@ -7,6 +7,7 @@ vulnerable = 69
 high_risk = 69
 total = 100
 need = "need"
+need = "food"
 self_iso = 69
 
 d = draw.Drawing(600,500,origin = (0,0))
@@ -39,27 +40,29 @@ d.append(draw.Line(25, 175, 575, 175,stroke="#dddddd", stroke_width=2, fill='non
 
 d.append(draw.Text("Greatest Need In Your Community",12,150,145,center=True,fill="#000000",font_weight="bold"))
 if need == "financialSupport":
-  d.append(draw.Text("Financial",25,110,85,center=True,fill="#000000",font_weight="bold"))
-  d.append(draw.Text("Support",25,110,55,center=True,fill="#000000",font_weight="bold"))
+  d.append(draw.Text("Financial",25,100,85,center=True,fill="#000000",font_weight="bold"))
+
+  d.append(draw.Image(180,30,80,80,path="museum.png"))
 elif need == "emotionalSupport":
-  d.append(draw.Text("Emotional",25,110,85,center=True,fill="#000000",font_weight="bold"))
-  d.append(draw.Text("Support",25,110,55,center=True,fill="#000000",font_weight="bold"))
+  d.append(draw.Text("Emotional",25,100,85,center=True,fill="#000000",font_weight="bold"))
+  d.append(draw.Text("Support",25,100,55,center=True,fill="#000000",font_weight="bold"))
 elif need == "medication":
   d.append(draw.Text("Medication",25,110,75,center=True,fill="#000000",font_weight="bold"))
+  d.append(draw.Image(190,30,80,80,path="drug.png"))
 elif need == "food":
   d.append(draw.Text("Food/",25,110,105,center=True,fill="#000000",font_weight="bold"))
   d.append(draw.Text("Necessary",25,110,75,center=True,fill="#000000",font_weight="bold"))
   d.append(draw.Text("Resources",25,110,45,center=True,fill="#000000",font_weight="bold"))
+  d.append(draw.Image(190,40,60,60,path="food.png"))
 else:
   d.append(draw.Text("Need",25,110,75,center=True,fill="#000000",font_weight="bold"))
   
 
 d.append(draw.Text("Individuals Self Isolating",12,450,145,center=True,fill="#000000",font_weight="bold"))
-d.append(draw.Text(str(potential*100//total)+"%",50,425,75,center=True,fill="#000000"))
-
-
+d.append(draw.Text(str(self_iso*100//total)+"%",50,405,75,center=True,fill="#000000"))
+d.append(draw.Image(475,30,80,80,path="home.png"))
 
 d.setPixelScale(2)  # Set number of pixels per geometry unit
 #d.setRenderSize(400,200)  # Alternative to setPixelScale
-d.saveSvg('fsa_card.svg')
+#d.saveSvg('fsa_card.svg')
 d.savePng('fsa_card.png')
