@@ -14,6 +14,15 @@ def upload_blob(bucket, data_string, destination_blob_name):
         )
     )
 
+def download_blob(bucket_name, source_blob_name):
+    """Downloads a blob from the bucket as a string"""
+    storage_client = storage.Client()
+
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(source_blob_name)
+    s = blob.download_as_string()
+    return s
+
 def list_blobs(bucket_name):
     """Lists all the blobs in the bucket."""
     # bucket_name = "your-bucket-name"

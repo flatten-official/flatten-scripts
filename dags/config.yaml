@@ -20,3 +20,10 @@ form_data:
     GCS_PATHS: ",form-data,form-data"
     CSV_BUCKET: flatten-staging-dataset
     PREFIX: flatten-form-data-v1
+image_card:
+  upload_file_ext: _fsa_img.svg
+  upload_path: svg/
+  download_file: fsa_img.json
+  staging:
+    data_download_bucket: flatten-img-data
+    data_upload_bucket: flatten-img-staging

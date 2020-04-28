@@ -1,3 +1,6 @@
+import os
+from gcs import bucket_functions
+from utils.config import load_name_config
 import drawSvg as draw
 import json
 
@@ -8,7 +11,6 @@ def get_fsa_to_name():
     return data
 
 
-# rx=20 ry=20
 def make_image_card(FSA, potential, vulnerable, high_risk, total, need, self_iso):
     translations = get_fsa_to_name()
     region = translations[FSA]
@@ -66,16 +68,30 @@ def make_image_card(FSA, potential, vulnerable, high_risk, total, need, self_iso
     d.append(draw.Image(475, 30, 80, 80, path="home.png"))
 
     d.setPixelScale(2)  # Set number of pixels per geometry unit
-    # d.setRenderSize(400,200)  # Alternative to setPixelScale
-    # d.saveSvg('fsa_card.svg')
-    d.savePng('fsa_card.png')
+
+    return d.asSvg()
+
+
+def run_service():
+    config = load_name_config("image_card")
+
+    data = bucket_functions.download_blob(config['data_download_bucket'], config['fownload_file'])
+
+    for fsa, fsa_data in data.items():
+        svgText = make_image_card(
+            fsa,
+            fsa_data['pot'],
+            fsa_data['risk'],
+            fsa_data['both'],
+            fsa_data['total'],
+            fsa_data['greatst_need'],
+            fsa_data['self_iso']
+        )
+        bucket_functions.upload_blob(
+            config['data_upload_bucket'],
+            svgText,
+            os.path.join(config['upload_path'], fsa+config['upload_file_ext'])
+        )
 
 if __name__ == "__main__":
-    FSA = "K1R"
-    potential = 69
-    vulnerable = 69
-    high_risk = 69
-    total = 100
-    need = "food"
-    self_iso = 69
-    make_image_card(FSA, potential, vulnerable, high_risk, total, need, self_iso)
+    run_service()
