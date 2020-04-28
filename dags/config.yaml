@@ -1,0 +1,31 @@
+project_id_master: flatten-271620
+project_id_staging: flatten-staging-271921
+somalia:
+  upload_file: somalia_data.json
+  ds_kind: PaperformSubmission-so
+  master:
+    bucket: flatten-dataset
+    ds_namespace: flatten_production
+  staging:
+    bucket: flatten-staging-dataset
+    ds_namespace: flatten_staging
+form_data:
+  master:
+    GCS_BUCKETS: flatten-271620.appspot.com,montreal-data,flatten-dataset"
+    GCS_PATHS: ",form-data,form-data"
+    CSV_BUCKET: flatten-dataset
+    PREFIX: flatten-form-data-v1
+  staging:
+    GCS_BUCKETS: flatten-staging-271921.appspot.com,montreal-data-staging,flatten-staging-dataset
+    GCS_PATHS: ",form-data,form-data"
+    CSV_BUCKET: flatten-staging-dataset
+    PREFIX: flatten-form-data-v1
+svg_data:
+  master:
+    CSV_BUCKET: flatten-dataset
+    PREFIX: flatten-form-data-v1
+    UPLOAD_BUCKET: flatten-271620.appspot.com
+  staging:
+    CSV_BUCKET: flatten-staging-dataset
+    PREFIX: flatten-form-data-v1
+    UPLOAD_BUCKET: flatten-staging-271921.appspot.com

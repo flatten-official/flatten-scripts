@@ -2,6 +2,7 @@ import datetime
 import uuid
 import logging
 import unicodedata
+from utils.time import get_string_date
 
 from pytz import utc
 
@@ -27,6 +28,15 @@ QUESTIONS = {
     "contact_with_illness": {
         "labels": {"1": "q7", "2": "contactWithIllness", "paperform": "contact_positive_or_travel"},
     },
+    "contact_in_household": {
+        "labels": {"paperform": "contact_within_household"}
+    },
+    "tested": {
+        "labels": {"paperform": "covid_tested"}
+    },
+    "covid_results_date": {
+        "labels": {"paperform": "covid_results_date"}
+    },
     "covid_positive": {
         "labels": {"1": "q8", "2": "testedPositive", "paperform": "covid_test_result"},
     },
@@ -48,6 +58,27 @@ QUESTIONS = {
     "age": {
         "labels": {"2": "age", "paperform": "age"},
     },
+    "mental_health_impact": {
+        "labels": {"paperform": "mental_health_impact"}
+    },
+    "people_in_household": {
+        "labels": {"paperform": "people_in_household"}
+    },
+    "travel_work_school": {
+        "labels": {"paperform": "travel_work_school"}
+    },
+    "self_isolating": {
+        "labels": {"paperform": "self_isolating"}
+    },
+    "media_channels": {
+        "labels": {"paperform": "media_channels"}
+    },
+    "financial_obligations_impact": {
+        "labels": {"paperform": "financial_obligations_impact"}
+    },
+    "tobacco_usage": {
+        "labels": {"paperform": "tobacco_usage"}
+    }
 }
 
 class Sanitisor:
@@ -77,7 +108,7 @@ class Sanitisor:
         latest = True
         ret = []
         for response in reversed(responses):
-            day = self.get_day(response['timestamp'])
+            day = get_string_date(response['timestamp'])
 
             try:
                 fsa = response['postalCode'].upper()
@@ -135,7 +166,7 @@ class Sanitisor:
         k:self.map_paperform_value(v) for k, v in paperform_entity["data"].items()
         }
         unique_id = uuid.uuid4()
-        day = self.get_day(paperform_entity["timestamp"])
+        day = get_string_date(paperform_entity["timestamp"])
 
         lang = data["lang"]
         if not lang in ["en", "fr"]:
@@ -144,7 +175,7 @@ class Sanitisor:
         response_sanitised = {
             "id": unique_id,
             "date": day,
-            "fsa": data["fsa"],
+            "fsa": data["fsa"].upper(),
             "zipcode": "",
             "country": "ca",
             "is_most_recent": "y"
@@ -159,7 +190,7 @@ class Sanitisor:
                 response_extra = self.map_response(response_standardised, self.SANITISATION_MAPPINGS)
                 response_sanitised[question_key] = response_extra
             except KeyError:
-                logging.warn(f"Missed {question_key}")
+                # logging.warn(f"Missed {question_key}")
                 continue
         self.add_v1_fields(response_sanitised)
         probable, vulnerable = self.case_checker(response_sanitised, schema)
@@ -223,7 +254,7 @@ class Sanitisor:
             )
 
             vulnerable = (
-                    (response['conditions'] != ['other'] and response['conditions'] != [])
+                    (response['conditions'] != 'other' and response['conditions'] != "")
                     or '65-74' in response['age'] or '>75' in response['age']
             )
         else:
@@ -237,9 +268,8 @@ class Sanitisor:
                         and 'shortness_of_breath' in response['symptoms']
                         and response['travel_outside_canada'] == 'y')
             )
-
             vulnerable = (
-                    (response['conditions'] != ['other'] and response['conditions'] != [])
+                    (response['conditions'] != 'other' and response['conditions'] != "" and response['conditions'] != 'noneOfTheAbove;other')
                     or '65-74' in response['age'] or '>75' in response['age']
             )
         return potential, vulnerable
@@ -247,16 +277,6 @@ class Sanitisor:
     @staticmethod
     def bool_to_str(truth_value):
         return 'y' if truth_value else 'n'
-
-    @staticmethod
-    def get_day(timestamp):
-        # timestamp is in ms since UNIX origin, so divide by 1000 to get seconds
-        ts_sec = timestamp / 1000
-        # make a UTC datetime object from the timestamp, convert to a day stamp
-        day = utc.localize(
-            datetime.datetime.utcfromtimestamp(ts_sec)
-        ).strftime('%Y-%m-%d')
-        return day
 
     @staticmethod
     def normalise_property(property):

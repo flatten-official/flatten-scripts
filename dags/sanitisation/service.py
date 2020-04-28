@@ -5,6 +5,7 @@ import json
 import os
 import time
 import csv
+from utils.file_utils import load_excluded_postal_codes, load_keys
 
 def upload_blob(bucket, data_string, destination_blob_name):
     """Uploads a file to the bucket."""
@@ -25,27 +26,6 @@ DS_NAMESPACE = os.environ['DS_NAMESPACE']
 DS_KIND = 'FlattenAccount'
 DS_KIND_PAPERFORM = 'PaperformSubmission'
 END_FILE_NAME = os.environ['END_FILE_NAME']
-DATA_FOLDER = "/home/airflow/gcs/data"
-
-
-def load_excluded_postal_codes(fname="excluded_postal_codes.csv", join_data_folder=True):
-    if join_data_folder:
-        fname = os.path.join(DATA_FOLDER, fname)
-
-    with open(fname) as csvfile:
-        reader = csv.reader(csvfile)
-        first_row = next(reader)
-    return first_row
-
-
-def load_keys(fname="keys.json", join_data_folder=True):
-    if join_data_folder:
-        fname = os.path.join(DATA_FOLDER, fname)
-
-    with open(fname, 'r') as json_file:
-        keys = json.load(json_file)
-    return keys
-
 
 def main():
     """
@@ -63,7 +43,6 @@ def main():
     keys = load_keys()
 
     sanitisor = sanitisation.sanitisation.Sanitisor(excluded, keys)
-
     # todo - potentially shift to writing to disk if / when we move off off app engine
     output = csv.StringIO()
     writer = csv.DictWriter(output, fieldnames=sanitisor.field_names)
@@ -80,9 +59,8 @@ def main():
             writer.writerow(obj)
 
     curr_time_ms = str(int(time.time() * 1000))
-
+    
     for bucket_name, path in zip(GCS_BUCKETS, GCS_PATHS):
         bucket = storage_client.bucket(bucket_name)
         file_name = os.path.join(path, "-".join([curr_time_ms, END_FILE_NAME]))
         upload_blob(bucket, output.getvalue(), file_name)
-
