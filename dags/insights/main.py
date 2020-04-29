@@ -1,5 +1,4 @@
 import os
-import xml
 
 from gcs import bucket_functions
 
@@ -146,11 +145,11 @@ def run_service():
             fsa_data['pot'],
             fsa_data['risk'],
             fsa_data['both'],
-            25, #fsa_data['potential_total'],
-            25, #fsa_data['vulnerable_total'],
-            25, #fsa_data['high_risk_total'],
-            25, #fsa_data['need_total'],
-            25, #fsa_data['self_iso_total'],
+            fsa_data['potential_total'],
+            fsa_data['vulnerable_total'],
+            fsa_data['high_risk_total'],
+            fsa_data['need_total'],
+            fsa_data['self_iso_total'],
             fsa_data['greatest_need'],
             fsa_data['self_iso']
         )
