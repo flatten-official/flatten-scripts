@@ -36,7 +36,7 @@ class Style(draw.DrawingBasicElement):
         outputFile.write(self.styleContent)
 
 
-def make_image_card(FSA, potential, vulnerable, high_risk, potential_total, vulnerable_total,high_risk_total, need_total, self_iso_total, need, self_iso):
+def make_image_card(FSA, potential, vulnerable, high_risk, basic_total, need, need_total, self_iso, self_iso_total):
     translations = get_fsa_to_name()
     try:
         region = translations[FSA]
@@ -64,15 +64,15 @@ def make_image_card(FSA, potential, vulnerable, high_risk, potential_total, vuln
     d.append(draw.Text("CASES REPORTED", 10, 493, 460, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
 
     d.append(
-        draw.Text(str(int(potential * 100 / potential_total)) + "%", 50, 107, 400, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
+        draw.Text(str(int(potential * 100 / basic_total)) + "%", 50, 107, 400, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
     d.append(
-        draw.Text(str(int(vulnerable * 100 / vulnerable_total)) + "%", 50, 300, 400, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
+        draw.Text(str(int(vulnerable * 100 / basic_total)) + "%", 50, 300, 400, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
     d.append(
-        draw.Text(str(int(high_risk * 100 / high_risk_total)) + "%", 50, 493, 400, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
+        draw.Text(str(int(high_risk * 100 / basic_total)) + "%", 50, 493, 400, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
 
-    d.append(draw.Text("Total Reports: " + str(potential_total), 10, 107, 330, center=True, fill="#000000", font_family="DM Sans"))
-    d.append(draw.Text("Total Reports: " + str(vulnerable_total), 10, 300, 330, center=True, fill="#000000", font_family="DM Sans"))
-    d.append(draw.Text("Total Reports: " + str(high_risk_total), 10, 493, 330, center=True, fill="#000000", font_family="DM Sans"))
+    d.append(draw.Text("Total Reports: " + str(basic_total), 10, 107, 330, center=True, fill="#000000", font_family="DM Sans"))
+    d.append(draw.Text("Total Reports: " + str(basic_total), 10, 300, 330, center=True, fill="#000000", font_family="DM Sans"))
+    d.append(draw.Text("Total Reports: " + str(basic_total), 10, 493, 330, center=True, fill="#000000", font_family="DM Sans"))
 
     d.append(draw.Line(25, 275, 575, 275, stroke="#F5F3F2", stroke_width=2, fill='none'))
 
@@ -145,13 +145,11 @@ def run_service():
             fsa_data['pot'],
             fsa_data['risk'],
             fsa_data['both'],
-            fsa_data['potential_total'],
-            fsa_data['vulnerable_total'],
-            fsa_data['high_risk_total'],
-            fsa_data['need_total'],
-            fsa_data['self_iso_total'],
+            fsa_data['basic_total'],
             fsa_data['greatest_need'],
-            fsa_data['self_iso']
+            fsa_data['need_total'],
+            fsa_data['self_iso'],
+            fsa_data['self_iso_total'],
         )
         if svgText is not None:
             bucket_functions.upload_blob(

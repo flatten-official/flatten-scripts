@@ -1,9 +1,7 @@
 import pandas as pd
 import gcs.bucket_functions as bf
-import pandas as pd
 from google.cloud import datastore, storage
 import json
-import os
 import datetime as dt
 
 def get_pot_risk(df):
@@ -26,19 +24,35 @@ def main():
 
     for fsa in df_can.fsa.unique():
         df_fsa = df_can[df_can['fsa'] == fsa]
-        total = len(df_fsa)
+        count = len(df_fsa)
         pot, risk, both = get_pot_risk(df_fsa)
-        pot, risk, both = pot/total * 100, risk/total * 100, both/total * 100
+
         try:
-            greatest_need = df_fsa['needs'].dropna().mode()[0]
+            needs = df_fsa['needs'].dropna()
+            greatest_need = needs.mode()[0]
+            greatest_need_count = len(needs)
         except:
             greatest_need = None
+            greatest_need_count = 0
+
         try:
             df_self_iso = df_fsa['self_isolating'].dropna()
-            self_iso = df_self_iso.value_counts()['y'] / len(df_self_iso) * 100
+            self_iso = int(df_self_iso.value_counts()['y'])
+            self_iso_count = len(df_self_iso)
         except:
             self_iso = None
-        data['postcode'][fsa] = {'total': total, 'pot': pot, 'risk': risk, 'both': both, 'greatest_need': greatest_need, 'self_iso': self_iso}
+            self_iso_count = 0
+
+        data['postcode'][fsa] = {
+            'basic_total': count,
+            'pot': pot,
+            'risk': risk,
+            'both': both,
+            'greatest_need': greatest_need,
+            'greatest_need_total': greatest_need_count,
+            'self_iso': self_iso,
+            'self_iso_total': self_iso_count
+        }
 
     for fsa in df_usa.zipcode.unique():
         df_fsa = df_usa[df_usa['zipcode'] == fsa]
