@@ -2,12 +2,12 @@ from google.cloud import datastore, storage
 import json
 import pandas as pd
 
-def upload_blob(bucket, data_string, destination_blob_name, metadata):
+def upload_blob(bucket, data_string, destination_blob_name, content_type='text/plain'):
     """Uploads a file to the bucket."""
 
     blob = bucket.blob(destination_blob_name)
 
-    blob.upload_from_string(data_string)
+    blob.upload_from_string(data_string, content_type=content_type)
 
     print(
         "File {} uploaded to {}.".format(
