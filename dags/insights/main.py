@@ -123,7 +123,6 @@ def make_image_card(FSA, potential, vulnerable, high_risk, basic_total, need, ne
 
     d.setPixelScale(2)  # Set number of pixels per geometry unit
 
-    d.saveSvg('hll.svg')
     return d.asSvg()
 
 
