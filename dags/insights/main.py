@@ -134,7 +134,8 @@ def run_service():
             bucket_functions.upload_blob(
                 bucket,
                 svgText,
-                os.path.join(config['upload_path'], fsa + config['upload_file_ext'])
+                os.path.join(config['upload_path'], fsa + config['upload_file_ext']),
+                content_type='image/svg+xml'
             )
 
 
