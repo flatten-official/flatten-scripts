@@ -51,7 +51,7 @@ form = PythonOperator(
 )
 
 svg = PythonOperator(
-    task_id='svg_data',
+    task_id='insights_data',
     python_callable=main_svg,
     dag=sanitisation_dag
 )

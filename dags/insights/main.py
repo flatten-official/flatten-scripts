@@ -1,19 +1,34 @@
 import os
+
 from gcs import bucket_functions
+
 from utils.config import load_name_config
+from utils.file_utils import COMPOSER_DATA_FOLDER
+
+from google.cloud import storage
+
 import drawSvg as draw
 import json
 
 
 def get_fsa_to_name():
-    with open('fsa_name.json') as f:
+    with open(os.path.join(get_image_card_path(),'fsa_name.json')) as f:
         data = json.load(f)
     return data
 
+def get_image_card_path():
+    if os.path.exists(COMPOSER_DATA_FOLDER):
+        return os.path.join(COMPOSER_DATA_FOLDER, 'insights')
+    return 'insights'
 
 def make_image_card(FSA, potential, vulnerable, high_risk, total, need, self_iso):
     translations = get_fsa_to_name()
-    region = translations[FSA]
+    try:
+        region = translations[FSA]
+    except KeyError:
+        return None
+
+    image_card_path = get_image_card_path()
 
     d = draw.Drawing(600, 600, origin=(0, 0))
     d.append(draw.Rectangle(0, 0, 600, 600, fill='#FFFFFF'))
@@ -49,56 +64,78 @@ def make_image_card(FSA, potential, vulnerable, high_risk, total, need, self_iso
     if need == "financialSupport":
         d.append(draw.Text("Financial", 20, 100, 200, center=True, fill="#000000", font_weight="bold"))
         d.append(draw.Text("Support", 20, 100, 170, center=True, fill="#000000", font_weight="bold"))
-        d.append(draw.Image(175, 150, 70, 70, path="Money Icon.png"))
+        d.append(draw.Image(175, 150, 70, 70,
+                            path=os.path.join(image_card_path, "Money Icon.png"),
+                            embed=True))
     elif need == "emotionalSupport":
         d.append(draw.Text("Emotional", 20, 100, 200, center=True, fill="#000000", font_weight="bold"))
         d.append(draw.Text("Support", 20, 100, 170, center=True, fill="#000000", font_weight="bold"))
-        d.append(draw.Image(180, 150, 70, 70, path="Heart Icon.png"))
+        d.append(draw.Image(180, 150, 70, 70,
+                            path=os.path.join(image_card_path, "Heart Icon.png"),
+                            embed=True))
     elif need == "medication":
         d.append(draw.Text("Medication", 20, 100, 185, center=True, fill="#000000", font_weight="bold"))
-        d.append(draw.Image(190, 150, 70, 70, path="Health Icon.png"))
+        d.append(draw.Image(190, 150, 70, 70,
+                            path=os.path.join(image_card_path, "Health Icon.png")))
     elif need == "food":
         d.append(draw.Text("Food/", 20, 100, 215, center=True, fill="#000000", font_weight="bold"))
         d.append(draw.Text("Necessary", 20, 100, 185, center=True, fill="#000000", font_weight="bold"))
         d.append(draw.Text("Resources", 20, 100, 155, center=True, fill="#000000", font_weight="bold"))
-        d.append(draw.Image(190, 150, 70, 70, path="Food Icon.png"))
+        d.append(draw.Image(190, 150, 70, 70,
+                            path=os.path.join(image_card_path, "Food Icon.png"),
+                            embed=True))
     else:
-        d.append(draw.Text(need, 20, 100, 185, center=True, fill="#000000", font_weight="bold"))
+        print(f"need: {need}")
+        # d.append(draw.Text(need, 20, 100, 185, center=True, fill="#000000", font_weight="bold"))
 
-    d.append(draw.Text("INDIVIDUALS IN SELF ISOLATION", 10, 450, 245, center=True, fill="#000000", font_weight="bold"))
-    d.append(
-        draw.Text(str(self_iso * 100 // total) + "%", 40, 410, 190, center=True, fill="#000000", font_weight="bold"))
-    d.append(draw.Image(470, 150, 70, 70, path="House Icon.png"))
+    if self_iso is not None:
+        d.append(draw.Text("INDIVIDUALS IN SELF ISOLATION", 10, 450, 245, center=True, fill="#000000", font_weight="bold"))
+        d.append(
+            draw.Text(str(self_iso * 100 // total) + "%", 40, 410, 190, center=True, fill="#000000", font_weight="bold"))
+        d.append(draw.Image(470, 150, 70, 70,
+                            path=os.path.join(image_card_path, "House Icon.png"),
+                            embed=True))
 
     d.append(draw.Line(25, 125, 575, 125, stroke="#F5F3F2", stroke_width=2, fill='none'))
-    d.append(draw.Image(100, 0, 400, 70, path="flatten.png"))
+    d.append(draw.Image(100, 0, 400, 70,
+                        path=os.path.join(image_card_path, "flatten.png"),
+                        embed=True))
     d.append(draw.Text("Produced by", 20, 300, 100, center=True, fill="#000000"))
 
     d.setPixelScale(2)  # Set number of pixels per geometry unit
 
+    d.saveSvg('hll.svg')
     return d.asSvg()
 
 
 def run_service():
-    config = load_name_config("image_card")
+    config = load_name_config("insights_card")
+    data_config = load_name_config("insights_data")
 
-    data = bucket_functions.download_blob(config['data_download_bucket'], config['fownload_file'])
+    data = bucket_functions.get_json(
+        data_config['UPLOAD_BUCKET'],
+        data_config['UPLOAD_FILE']
+    )
 
-    for fsa, fsa_data in data.items():
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(config['image_bucket'])
+
+    for fsa, fsa_data in data['postcode'].items():
         svgText = make_image_card(
             fsa,
             fsa_data['pot'],
             fsa_data['risk'],
             fsa_data['both'],
             fsa_data['total'],
-            fsa_data['greatst_need'],
+            fsa_data['greatest_need'],
             fsa_data['self_iso']
         )
-        bucket_functions.upload_blob(
-            config['data_upload_bucket'],
-            svgText,
-            os.path.join(config['upload_path'], fsa + config['upload_file_ext'])
-        )
+        if svgText is not None:
+            bucket_functions.upload_blob(
+                bucket,
+                svgText,
+                os.path.join(config['upload_path'], fsa + config['upload_file_ext'])
+            )
 
 
 if __name__ == "__main__":

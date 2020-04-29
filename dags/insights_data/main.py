@@ -6,8 +6,6 @@ import json
 import os
 import datetime as dt
 
-UPLOAD_FILE = 'svg_data.json'
-
 def get_pot_risk(df):
     pot = len(df[(df['probable'] == 'y') & (df['vulnerable'] == 'n')])
     risk = len(df[(df['vulnerable'] == 'y') & (df['probable'] == 'n')])
@@ -16,12 +14,12 @@ def get_pot_risk(df):
 
 def main():
     from utils import config
-    vars = config.load_name_config("svg_data")
+    vars = config.load_name_config("insights_data")
     df = bf.get_csv(bucket_name=vars['CSV_BUCKET'],prefix=vars['PREFIX'])
     df.sort_values(by='date', inplace=True)
     # Removes duplicate entries, keeping the most recent
     df.drop_duplicates(subset='id', keep="last", inplace=True)
-    svg_data = {"timestamp": int(dt.datetime.now().timestamp()), "postcode": {}}
+    data = {"timestamp": int(dt.datetime.now().timestamp()), "postcode": {}}
     # Splits into Canada and US dataframes
     df_can = df[df['country'] == 'ca']
     df_usa = df[df['country'] == 'us']
@@ -34,13 +32,13 @@ def main():
         try:
             greatest_need = df_fsa['needs'].dropna().mode()[0]
         except:
-            greatest_need = 'na'
+            greatest_need = None
         try:
             df_self_iso = df_fsa['self_isolating'].dropna()
             self_iso = df_self_iso.value_counts()['y'] / len(df_self_iso) * 100
         except:
-            self_iso = 'na'
-        svg_data['postcode'][fsa] = {'total': total, 'pot': pot, 'risk': risk, 'both': both, 'greatest_need': greatest_need, 'self_iso': self_iso}
+            self_iso = None
+        data['postcode'][fsa] = {'total': total, 'pot': pot, 'risk': risk, 'both': both, 'greatest_need': greatest_need, 'self_iso': self_iso}
 
     for fsa in df_usa.zipcode.unique():
         df_fsa = df_usa[df_usa['zipcode'] == fsa]
@@ -50,16 +48,16 @@ def main():
         try:
             greatest_need = df_fsa['needs'].dropna().mode()[0]
         except:
-            greatest_need = 'na'
+            greatest_need = None
         try:
             df_self_iso = df_fsa['self_isolating'].dropna()
             self_iso = df_self_iso.value_counts()['y'] / len(df_self_iso) * 100
         except:
-            self_iso = 'na'
-        svg_data['postcode'][fsa] = {'total': total, 'pot': pot, 'risk': risk, 'both': both, 'greatest_need': greatest_need, 'self_iso': self_iso}
+            self_iso = None
+        data['postcode'][fsa] = {'total': total, 'pot': pot, 'risk': risk, 'both': both, 'greatest_need': greatest_need, 'self_iso': self_iso}
         
-    json_str = json.dumps(svg_data)
+    json_str = json.dumps(data)
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(vars["UPLOAD_BUCKET"])
-    bf.upload_blob(bucket, json_str, UPLOAD_FILE)
+    bf.upload_blob(bucket, json_str, vars["UPLOAD_FILE"])

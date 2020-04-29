@@ -1,7 +1,8 @@
 from google.cloud import datastore, storage
+import json
 import pandas as pd
 
-def upload_blob(bucket, data_string, destination_blob_name):
+def upload_blob(bucket, data_string, destination_blob_name, metadata):
     """Uploads a file to the bucket."""
 
     blob = bucket.blob(destination_blob_name)
@@ -45,3 +46,8 @@ def get_csv(bucket_name,prefix):
     csv_path = max(list_blobs_prefix(bucket_name,prefix))
     df = pd.read_csv('gs://'+bucket_name+'/'+csv_path)
     return df
+
+def get_json(bucket_name, prefix):
+    data = download_blob(bucket_name, prefix).decode("utf-8")
+    return json.loads(data)
+
