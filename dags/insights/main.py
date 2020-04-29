@@ -21,7 +21,7 @@ def get_image_card_path():
         return os.path.join(COMPOSER_DATA_FOLDER, 'insights')
     return 'insights'
 
-def make_image_card(FSA, potential, vulnerable, high_risk, total, need, self_iso):
+def make_image_card(FSA, potential, vulnerable, high_risk, potential_total, vulnerable_total,high_risk_total,self_iso_total,need, self_iso):
     translations = get_fsa_to_name()
     try:
         region = translations[FSA]
@@ -47,15 +47,15 @@ def make_image_card(FSA, potential, vulnerable, high_risk, total, need, self_iso
     d.append(draw.Text("CASES REPORTED", 10, 493, 460, center=True, fill="#000000", font_weight="bold"))
 
     d.append(
-        draw.Text(str(potential * 100 // total) + "%", 50, 107, 400, center=True, fill="#000000", font_weight="bold"))
+        draw.Text(str(int(potential * 100 / potential_total)) + "%", 50, 107, 400, center=True, fill="#000000", font_weight="bold"))
     d.append(
-        draw.Text(str(vulnerable * 100 // total) + "%", 50, 300, 400, center=True, fill="#000000", font_weight="bold"))
+        draw.Text(str(int(vulnerable * 100 / vulnerable_total)) + "%", 50, 300, 400, center=True, fill="#000000", font_weight="bold"))
     d.append(
-        draw.Text(str(high_risk * 100 // total) + "%", 50, 493, 400, center=True, fill="#000000", font_weight="bold"))
+        draw.Text(str(int(high_risk * 100 / high_risk_total)) + "%", 50, 493, 400, center=True, fill="#000000", font_weight="bold"))
 
-    d.append(draw.Text("Total Reports: " + str(total), 10, 107, 330, center=True, fill="#000000"))
-    d.append(draw.Text("Total Reports: " + str(total), 10, 300, 330, center=True, fill="#000000"))
-    d.append(draw.Text("Total Reports: " + str(total), 10, 493, 330, center=True, fill="#000000"))
+    d.append(draw.Text("Total Reports: " + str(potential_total), 10, 107, 330, center=True, fill="#000000"))
+    d.append(draw.Text("Total Reports: " + str(vulnerable_total), 10, 300, 330, center=True, fill="#000000"))
+    d.append(draw.Text("Total Reports: " + str(high_risk_total), 10, 493, 330, center=True, fill="#000000"))
 
     d.append(draw.Line(25, 275, 575, 275, stroke="#F5F3F2", stroke_width=2, fill='none'))
 
@@ -85,16 +85,20 @@ def make_image_card(FSA, potential, vulnerable, high_risk, total, need, self_iso
                             path=os.path.join(image_card_path, "Food Icon.png"),
                             embed=True))
     else:
-        print(f"need: {need}")
-        # d.append(draw.Text(need, 20, 100, 185, center=True, fill="#000000", font_weight="bold"))
+        #print(f"need: {need}")
+        d.append(draw.Text(need, 20, 100, 185, center=True, fill="#000000", font_weight="bold"))
 
-    if self_iso is not None:
-        d.append(draw.Text("INDIVIDUALS IN SELF ISOLATION", 10, 450, 245, center=True, fill="#000000", font_weight="bold"))
+    
+    d.append(draw.Text("INDIVIDUALS IN SELF ISOLATION", 10, 450, 245, center=True, fill="#000000", font_weight="bold"))
+    if self_iso is not None and self_iso_total>=25:
         d.append(
-            draw.Text(str(self_iso * 100 // total) + "%", 40, 410, 190, center=True, fill="#000000", font_weight="bold"))
+            draw.Text(str(int(self_iso * 100 / self_iso_total)) + "%", 40, 410, 190, center=True, fill="#000000", font_weight="bold"))
         d.append(draw.Image(470, 150, 70, 70,
                             path=os.path.join(image_card_path, "House Icon.png"),
                             embed=True))
+    else:
+        d.append(draw.Text("Not Enough",20,450,200,center=True,fill="#000000",font_weight="bold"))
+        d.append(draw.Text("Responses Yet!",20,450,170,center=True,fill="#000000",font_weight="bold"))
 
     d.append(draw.Line(25, 125, 575, 125, stroke="#F5F3F2", stroke_width=2, fill='none'))
     d.append(draw.Image(100, 0, 400, 70,
@@ -126,7 +130,10 @@ def run_service():
             fsa_data['pot'],
             fsa_data['risk'],
             fsa_data['both'],
-            fsa_data['total'],
+            fsa_data['potential_total'],#assu
+            fsa_data['vulnerable_total'],
+            fsa_data['high_risk_total'],
+            fsa_data['self_iso_total'],
             fsa_data['greatest_need'],
             fsa_data['self_iso']
         )
