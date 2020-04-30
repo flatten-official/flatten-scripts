@@ -36,3 +36,10 @@ def get_csv(bucket_name,prefix):
     csv_path = max(list_blobs_prefix(bucket_name,prefix))
     df = pd.read_csv('gs://'+bucket_name+'/'+csv_path)
     return df
+
+def download_blob(bucket, source_blob_name):
+    """Downloads a file from the bucket from a string."""
+
+    blob = bucket.get_blob(source_blob_name)
+
+    return blob.download_as_string()
