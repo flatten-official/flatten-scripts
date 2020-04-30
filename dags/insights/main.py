@@ -4,11 +4,14 @@ from gcs import bucket_functions
 
 from utils.config import load_name_config
 from utils.file_utils import COMPOSER_DATA_FOLDER
+from utils.secret_manager import access_secret
 
 from google.cloud import storage
 
 import drawSvg as draw
 import json
+import hashlib
+import base64
 
 DISPLAY_INSIGHTS_THRESH = 25
 
@@ -126,7 +129,6 @@ def make_image_card(FSA, potential, vulnerable, high_risk, basic_total, need, ne
 
     d.setPixelScale(2)  # Set number of pixels per geometry unit
 
-    d.saveSvg('hll.svg')
     return d.asSvg()
 
 
@@ -142,6 +144,8 @@ def run_service():
     storage_client = storage.Client()
     bucket = storage_client.bucket(config['image_bucket'])
 
+    image_hash_secret = access_secret(config['image_hash_secret'])
+
     for fsa, fsa_data in data['postcode'].items():
         svgText = make_image_card(
             fsa,
@@ -150,15 +154,27 @@ def run_service():
             fsa_data['both'],
             fsa_data['basic_total'],
             fsa_data['greatest_need'],
-            fsa_data['need_total'],
+            fsa_data['greatest_need_total'],
             fsa_data['self_iso'],
             fsa_data['self_iso_total'],
         )
+
+        # file name is the base 64 e
+        fsa_hashed = base64.standard_b64encode(
+            hashlib.pbkdf2_hmac(
+                config['image_hash_algorithm'],
+                fsa.encode(),
+                image_hash_secret,
+                int(config['image_hash_iterations'])
+            )
+        ).decode()
+        print(fsa_hashed)
+
         if svgText is not None:
             bucket_functions.upload_blob(
                 bucket,
                 svgText,
-                os.path.join(config['upload_path'], fsa + config['upload_file_ext']),
+                os.path.join(config['upload_path'], fsa_hashed + config['upload_file_ext']),
                 content_type='image/svg+xml'
             )
 
