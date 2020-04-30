@@ -37,6 +37,13 @@ class Style(draw.DrawingBasicElement):
 
 
 def make_image_card(FSA, potential, vulnerable, high_risk, basic_total, need, need_total, self_iso, self_iso_total):
+    display = True
+    factor = 0
+    
+    if (need == None or need_total < DISPLAY_INSIGHTS_THRESH) and (self_iso == None or self_iso_total < DISPLAY_INSIGHTS_THRESH):
+        display = False
+        factor = 110
+
     translations = get_fsa_to_name()
     try:
         region = translations[FSA]
@@ -45,81 +52,77 @@ def make_image_card(FSA, potential, vulnerable, high_risk, basic_total, need, ne
 
     image_card_path = get_image_card_path()
 
-    d = draw.Drawing(600, 600, origin=(0, 0))
+    d = draw.Drawing(600, 575-factor, origin=(0, 0))
     d.append(Style("@import url('https://fonts.googleapis.com/css?family=DM+Sans:400,400i,700,700i');"))
     d.append(Style("<![CDATA[svg text{stroke:none}]]>"))
-    d.append(draw.Rectangle(0, 0, 600, 600, fill='#FFFFFF'))
+    d.append(draw.Rectangle(0, 0, 600, 575-factor, fill='#FFFFFF'))
 
-    d.append(draw.Text("My neighbourhood in " + region, 20, 300, 550, center=True, fill="#000000", font_family="DM Sans"))
+    d.append(draw.Text("My neighbourhood in " + region, 25, 300, 525-factor, center=True, fill="#000000", font_family="DM Sans"))
 
-    d.append(draw.Rectangle(25, 300, 166.66667, 200, rx=10, ry=10, fill="#F5F3F2"))
-    d.append(draw.Rectangle(216.6667, 300, 166.66667, 200, rx=10, ry=10, fill="#F5F3F2"))
-    d.append(draw.Rectangle(408.3333, 300, 166.66667, 200, rx=10, ry=10, fill="#F5F3F2"))
+    d.append(draw.Image(25, 275-factor, 166.66667, 200,path=os.path.join(image_card_path, "left.png"), embed=True,opacity=0.38))
+    d.append(draw.Image(216.6667, 275-factor, 166.66667, 200,path=os.path.join(image_card_path, "middle.png"), embed=True,opacity=0.38))
+    d.append(draw.Image(408.33333, 275-factor, 166.66667, 200,path=os.path.join(image_card_path, "right.png"), embed=True,opacity=0.38))
 
-    d.append(draw.Text("POTENTIAL CASES", 10, 107, 475, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
-    d.append(draw.Text("REPORTED", 10, 107, 460, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
-    d.append(draw.Text("VULNERABLE INDIVIDUALS", 10, 300, 475, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
-    d.append(draw.Text("REPORTED", 10, 300, 460, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
-    d.append(draw.Text("HIGH RISK POTENTIAL", 10, 493, 475, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
-    d.append(draw.Text("CASES REPORTED", 10, 493, 460, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
+    d.append(draw.Text("POTENTIAL", 18, 107, 450-factor, center=True, fill="#4285F4", font_weight="bold", font_family="DM Sans"))
+    d.append(draw.Text("CASES", 18, 107, 425-factor, center=True, fill="#4285F4", font_weight="bold", font_family="DM Sans"))
+    d.append(draw.Text("VULNERABLE", 18, 300, 450-factor, center=True, fill="#4285F4", font_weight="bold", font_family="DM Sans"))
+    d.append(draw.Text("INDIVIDUALS", 18, 300, 425-factor, center=True, fill="#4285F4", font_weight="bold", font_family="DM Sans"))
+    d.append(draw.Text("HIGH RISK", 18, 493, 450-factor, center=True, fill="#4285F4", font_weight="bold", font_family="DM Sans"))
+    d.append(draw.Text("POTENTIAL CASES", 18, 493, 425-factor, center=True, fill="#4285F4", font_weight="bold", font_family="DM Sans"))
 
     d.append(
-        draw.Text(str(int(potential * 100 / basic_total)) + "%", 50, 107, 400, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
+        draw.Text(str(int(potential * 100 / basic_total)) + "%", 50, 107, 375-factor, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
     d.append(
-        draw.Text(str(int(vulnerable * 100 / basic_total)) + "%", 50, 300, 400, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
+        draw.Text(str(int(vulnerable * 100 / basic_total)) + "%", 50, 300, 375-factor, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
     d.append(
-        draw.Text(str(int(high_risk * 100 / basic_total)) + "%", 50, 493, 400, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
+        draw.Text(str(int(high_risk * 100 / basic_total)) + "%", 50, 493, 375-factor, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
 
-    d.append(draw.Text("Total Reports: " + str(basic_total), 10, 107, 330, center=True, fill="#000000", font_family="DM Sans"))
-    d.append(draw.Text("Total Reports: " + str(basic_total), 10, 300, 330, center=True, fill="#000000", font_family="DM Sans"))
-    d.append(draw.Text("Total Reports: " + str(basic_total), 10, 493, 330, center=True, fill="#000000", font_family="DM Sans"))
+    d.append(draw.Text("Total Reports: " + str(basic_total), 10, 107, 305-factor, center=True, fill="#000000", font_family="DM Sans"))
+    d.append(draw.Text("Total Reports: " + str(basic_total), 10, 300, 305-factor, center=True, fill="#000000", font_family="DM Sans"))
+    d.append(draw.Text("Total Reports: " + str(basic_total), 10, 493, 305-factor, center=True, fill="#000000", font_family="DM Sans"))
 
-    d.append(draw.Line(25, 275, 575, 275, stroke="#F5F3F2", stroke_width=2, fill='none'))
+    if display == True:
+        d.append(draw.Image(25, 123, 265, 130,path=os.path.join(image_card_path, "bot_left.png"), embed=True,opacity=0.38))
+        d.append(draw.Text("GREATEST NEED", 15, 155, 240, center=True, fill="#4285F4", font_weight="bold", font_family="DM Sans"))
 
-    if need is not None and need_total >= DISPLAY_INSIGHTS_THRESH:
-        d.append(
-            draw.Text("GREATEST NEED IN YOUR COMMUNITY", 10, 150, 245, center=True, fill="#000000", font_weight="bold"))
-
-        if need == "financialSupport":
-            d.append(draw.Text("Financial", 20, 100, 200, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
-            d.append(draw.Text("Support", 20, 100, 170, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
-            d.append(draw.Image(175, 150, 70, 70,
-                                path=os.path.join(image_card_path, "Money Icon.png"),
+        if need is not None and need_total >= DISPLAY_INSIGHTS_THRESH:
+            if need == "financialSupport":
+                d.append(draw.Text("Financial", 20, 125, 200, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
+                d.append(draw.Text("Support", 20, 125, 170, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
+                d.append(draw.Image(175, 150, 70, 70,path=os.path.join(image_card_path, "Money Icon.png"), embed=True))
+            elif need == "emotionalSupport":
+                d.append(draw.Text("Emotional", 20, 125, 200, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
+                d.append(draw.Text("Support", 20, 125, 170, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
+                d.append(draw.Image(180, 150, 70, 70,path=os.path.join(image_card_path, "Heart Icon.png"),embed=True))
+            elif need == "medication":
+                d.append(draw.Text("Medication", 20, 125, 185, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
+                d.append(draw.Image(190, 150, 70, 70,path=os.path.join(image_card_path, "Health Icon.png")))
+            elif need == "food":
+                d.append(draw.Text("Food/", 20, 125, 210, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
+                d.append(draw.Text("Necessary", 20, 125, 185, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
+                d.append(draw.Text("Resources", 20, 125, 160, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
+                d.append(draw.Image(190, 150, 70, 70,path=os.path.join(image_card_path, "Food Icon.png", embed=True)))
+        else:
+            d.append(draw.Text("Not Enough Responses",20,150,200,center=True,fill="#000000",font_weight="bold",font_family="DM Sans"))
+            d.append(draw.Text("Keep Sharing!",20,150,170,center=True,fill="#000000",font_weight="bold",font_family="DM Sans")) 
+          
+        d.append(draw.Image(317, 123, 259, 130,path=os.path.join(image_card_path, "bot_right.png"), embed=True,opacity=0.38))
+        d.append( draw.Text("INDIVIDUALS SELF ISOLATING", 15, 450, 240, center=True, fill="#4285F4", font_weight="bold",font_family="DM Sans"))
+        
+        if self_iso is not None and self_iso_total>=DISPLAY_INSIGHTS_THRESH:         
+            d.append(
+                draw.Text(str(int(self_iso * 100 / self_iso_total)) + "%", 40, 421, 190, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
+            d.append(draw.Image(460, 150, 70, 70,
+                                path=("House Icon.png"),
                                 embed=True))
-        elif need == "emotionalSupport":
-            d.append(draw.Text("Emotional", 20, 100, 200, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
-            d.append(draw.Text("Support", 20, 100, 170, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
-            d.append(draw.Image(180, 150, 70, 70,
-                                path=os.path.join(image_card_path, "Heart Icon.png"),
-                                embed=True))
-        elif need == "medication":
-            d.append(draw.Text("Medication", 20, 100, 185, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
-            d.append(draw.Image(190, 150, 70, 70,
-                                path=os.path.join(image_card_path, "Health Icon.png")))
-        elif need == "food":
-            d.append(draw.Text("Food/", 20, 100, 215, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
-            d.append(draw.Text("Necessary", 20, 100, 185, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
-            d.append(draw.Text("Resources", 20, 100, 155, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
-            d.append(draw.Image(190, 150, 70, 70,
-                                path=os.path.join(image_card_path, "Food Icon.png"),
-                                embed=True))
+        else:
+            d.append(draw.Text("Not Enough Responses",20,450,200,center=True,fill="#000000",font_weight="bold",font_family="DM Sans"))
+            d.append(draw.Text("Keep Sharing!",20,450,170,center=True,fill="#000000",font_weight="bold",font_family="DM Sans"))                      
+    else:
+        d.append(draw.Text("We need more submissions for more insights. Keep sharing!", 17, 300, 140, center=True, fill="#000000",font_family="DM Sans"))
 
-    
-    if self_iso is not None and self_iso_total>=DISPLAY_INSIGHTS_THRESH:
-        d.append(
-            draw.Text("INDIVIDUALS IN SELF ISOLATION", 10, 450, 245, center=True, fill="#000000", font_weight="bold",
-                      font_family="DM Sans"))
-        d.append(
-            draw.Text(str(int(self_iso * 100 / self_iso_total)) + "%", 40, 410, 190, center=True, fill="#000000", font_weight="bold", font_family="DM Sans"))
-        d.append(draw.Image(470, 150, 70, 70,
-                            path=os.path.join(image_card_path, "House Icon.png"),
-                            embed=True))
-
-    d.append(draw.Line(25, 125, 575, 125, stroke="#F5F3F2", stroke_width=2, fill='none'))
-    d.append(draw.Image(100, 0, 400, 70,
-                        path=os.path.join(image_card_path, "flatten.png"),
-                        embed=True))
-    d.append(draw.Text("Produced by", 20, 300, 100, center=True, fill="#000000"))
+    d.append(draw.Text("FLATTEN.CA", 40, 300, 60, center=True, fill="#000000", font_family="DM Sans",text_decoration="underline", font_weight = "bold"))
+    d.append(draw.Text("Produced by", 20, 300, 100, center=True, fill="#000000", font_family="DM Sans"))
 
     d.setPixelScale(2)  # Set number of pixels per geometry unit
 
