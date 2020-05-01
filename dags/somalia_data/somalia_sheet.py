@@ -68,6 +68,7 @@ def upload_to_sheets(data):
     creds_dict = json.loads(access_secret_version(project_id, SECRET_ID, "latest"))
     creds_obj = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, SCOPES)
 
+    # Upload to Google Sheets through the Google Sheets API
     service = build('sheets', 'v4', credentials=creds_obj)
 
     for sheet, value in zip(SHEETS, data):
