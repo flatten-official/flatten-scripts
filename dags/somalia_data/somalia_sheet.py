@@ -5,18 +5,20 @@ from oauth2client.service_account import ServiceAccountCredentials
 from googleapiclient.discovery import build
 from google.auth import compute_engine
 
+from utils.config import load_name_config
 from utils.secrets import access_secret_version
 from gcs.bucket_functions import download_blob
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-SPREADSHEET_ID = '16cVSGjBRQns1eOrrVmZ-DDRR3LEYGQn-B2J8PXXlBJw'
 SHEETS = ['Total Reports', 'Potential', 'Deaths']
-BUCKET = 'flatten-staging-dataset'
 FILE = 'somalia_data.json'
 SECRET_ID = "upload-sheets-somalia"
 
 
 def main():
+    vars = load_name_config("somalia_sheet")
+    SPREADSHEET_ID = vars['sheet_id']
+    BUCKET = vars['bucket']
     storage_client = storage.Client()
     bucket = storage_client.bucket(BUCKET)
 
@@ -50,10 +52,10 @@ def main():
         deaths.append(row_death)
         num_reports.append(row_reports)
 
-    upload_to_sheets([num_reports, potential, deaths])
+    upload_to_sheets([num_reports, potential, deaths], SPREADSHEET_ID)
 
 
-def upload_to_sheets(data):
+def upload_to_sheets(data,sheet_id):
     # Create credentials for Google Sheets API
     project_id = os.environ["GCP_PROJECT"]
     creds_str = access_secret_version(project_id, SECRET_ID, "latest")
@@ -63,7 +65,7 @@ def upload_to_sheets(data):
     service = build('sheets', 'v4', credentials=creds_obj)
 
     for sheet, value in zip(SHEETS, data):
-        service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=sheet, body={'values': value},
+        service.spreadsheets().values().update(spreadsheetId=sheet_id, range=sheet, body={'values': value},
                                                valueInputOption='RAW').execute()
 
 
