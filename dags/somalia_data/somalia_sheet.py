@@ -64,7 +64,7 @@ def parse_data(json_data):
     return [num_reports, potential, deaths]
 
 
-def upload_to_sheets(data,sheet_id):
+def upload_to_sheets(data):
     # Create credentials for Google Sheets API
     project_id = os.environ["GCP_PROJECT"]
     creds_dict = json.loads(access_secret_version(project_id, SECRET_ID, "latest"))
@@ -73,7 +73,7 @@ def upload_to_sheets(data,sheet_id):
     service = build('sheets', 'v4', credentials=creds_obj)
 
     for sheet, value in zip(SHEETS, data):
-        service.spreadsheets().values().update(spreadsheetId=sheet_id, range=sheet, body={'values': value},
+        service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=sheet, body={'values': value},
                                                valueInputOption='RAW').execute()
     print("Uploaded data to Google Sheets.")
 
