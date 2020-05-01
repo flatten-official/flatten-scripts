@@ -64,6 +64,7 @@ def upload_to_sheets(data):
     for sheet, value in zip(SHEETS, data):
         service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=sheet, body={'values': value},
                                                valueInputOption='RAW').execute()
+    print("Uploaded data to Google Sheets.")
 
 
 if __name__ == '__main__':
