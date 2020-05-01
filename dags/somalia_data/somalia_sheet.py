@@ -3,6 +3,7 @@ import os
 from google.cloud import storage
 from oauth2client.service_account import ServiceAccountCredentials
 from googleapiclient.discovery import build
+from google.auth import compute_engine
 
 from utils.secrets import access_secret_version
 from gcs.bucket_functions import download_blob
