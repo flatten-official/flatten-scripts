@@ -4,7 +4,7 @@ import gcs.bucket_functions as bf
 import json
 from googleapiclient.discovery import build
 
-SCOPE = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+SCOPE = ['https://spreadsheets.google.com/feeds']
 
 SPREADSHEET_ID = '16cVSGjBRQns1eOrrVmZ-DDRR3LEYGQn-B2J8PXXlBJw'
 SHEETS = ['Total Reports', 'Potential', 'Deaths']
@@ -12,8 +12,7 @@ BUCKET = 'flatten-staging-dataset'
 FILE = 'somalia_data.json'
 
 def main():
-    #creds = ServiceAccountCredentials.from_json_keyfile_name('creds.json', SCOPE)
-    creds = ServiceAccountCredentials.create_scoped(scopes=SCOPE)
+    creds = ServiceAccountCredentials.from_json_keyfile_name('creds.json', SCOPE)
     service = build('sheets', 'v4', credentials=creds)
 
     storage_client = storage.Client()
@@ -51,6 +50,6 @@ def main():
     
     for sheet, value in zip(SHEETS, [num_reports,potential,deaths]):
         service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=sheet, body={'values': value}, valueInputOption='RAW').execute()
-
+    
 if __name__ == '__main__':
     main()
