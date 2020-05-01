@@ -1,31 +1,32 @@
+import json
+import os
 from google.cloud import storage
 from oauth2client.service_account import ServiceAccountCredentials
-import gcs.bucket_functions as bf
-import json
 from googleapiclient.discovery import build
 
-SCOPE = ['https://spreadsheets.google.com/feeds']
+from utils.secrets import access_secret_version
+from gcs.bucket_functions import download_blob
 
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 SPREADSHEET_ID = '16cVSGjBRQns1eOrrVmZ-DDRR3LEYGQn-B2J8PXXlBJw'
 SHEETS = ['Total Reports', 'Potential', 'Deaths']
 BUCKET = 'flatten-staging-dataset'
 FILE = 'somalia_data.json'
+SECRET_ID = "upload-sheets-somalia-staging"
+
 
 def main():
-    creds = ServiceAccountCredentials.from_json_keyfile_name('creds.json', SCOPE)
-    service = build('sheets', 'v4', credentials=creds)
-
     storage_client = storage.Client()
     bucket = storage_client.bucket(BUCKET)
 
-    json_data = json.loads(bf.download_blob(bucket, FILE))["region_time_series"]
-    temp = json_data.pop("all_reports",None)
+    json_data = json.loads(download_blob(bucket, FILE))["region_time_series"]
+    temp = json_data.pop("all_reports", None)
     if temp:
         data = [[""] + list(temp.keys())]
     else:
         data = []
-    
-    #copies the data list into new vars
+
+    # copies the data list into new vars
     potential = data[:]
     deaths = data[:]
     num_reports = data[:]
@@ -47,9 +48,23 @@ def main():
         potential.append(row_pot)
         deaths.append(row_death)
         num_reports.append(row_reports)
-    
-    for sheet, value in zip(SHEETS, [num_reports,potential,deaths]):
-        service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=sheet, body={'values': value}, valueInputOption='RAW').execute()
-    
+
+    upload_to_sheets([num_reports, potential, deaths])
+
+
+def upload_to_sheets(data):
+    # Create credentials for Google Sheets API
+    project_id = os.environ["GCP_PROJECT"]
+    creds_str = access_secret_version(project_id, SECRET_ID, "latest")
+    creds_dict = json.loads(creds_str)
+    creds_obj = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, SCOPES)
+
+    service = build('sheets', 'v4', credentials=creds_obj)
+
+    for sheet, value in zip(SHEETS, data):
+        service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=sheet, body={'values': value},
+                                               valueInputOption='RAW').execute()
+
+
 if __name__ == '__main__':
     main()
