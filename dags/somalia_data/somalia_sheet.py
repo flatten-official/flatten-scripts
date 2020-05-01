@@ -3,6 +3,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import gcs.bucket_functions as bf
 import json
 from googleapiclient.discovery import build
+from google.auth import compute_engine
 
 SCOPE = ['https://spreadsheets.google.com/feeds']
 
@@ -12,7 +13,7 @@ BUCKET = 'flatten-staging-dataset'
 FILE = 'somalia_data.json'
 
 def main():
-    creds = ServiceAccountCredentials.from_json_keyfile_name('creds.json', SCOPE)
+    creds = compute_engine.Credentials()
     service = build('sheets', 'v4', credentials=creds)
 
     storage_client = storage.Client()
