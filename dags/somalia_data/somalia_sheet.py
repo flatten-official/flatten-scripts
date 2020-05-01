@@ -1,14 +1,23 @@
+"""
+This scripts
+1. Downloads the data from the somalia database in Google datastore
+2. Parse the data into 3 arrays of cells
+3. Downloads the service account credentials from the secret manager
+4. Uploads with that service account the data to the spreadsheet on the google drive
+"""
+
 import json
 import os
-from google.cloud import storage
 from oauth2client.service_account import ServiceAccountCredentials
 from googleapiclient.discovery import build
-from google.auth import compute_engine
 
 from utils.config import load_name_config
 from utils.secrets import access_secret_version
-from gcs.bucket_functions import download_blob
+from utils.bucket_functions import download_blob
 
+vars = load_name_config('somalia_sheet')
+SPREADSHEET_ID = vars['sheet_id']
+BUCKET = vars['bucket']
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 SHEETS = ['Total Reports', 'Potential', 'Deaths']
 FILE = 'somalia_data.json'
@@ -16,24 +25,25 @@ SECRET_ID = "upload-sheets-somalia"
 
 
 def main():
-    vars = load_name_config("somalia_sheet")
-    SPREADSHEET_ID = vars['sheet_id']
-    BUCKET = vars['bucket']
-    storage_client = storage.Client()
-    bucket = storage_client.bucket(BUCKET)
+    input_data = download_data()
+    output_data = parse_data(input_data)
+    upload_to_sheets(output_data)
 
-    json_data = json.loads(download_blob(bucket, FILE))["region_time_series"]
+
+def download_data():
+    return json.loads(download_blob(BUCKET, FILE))["region_time_series"]
+
+
+def parse_data(json_data):
     temp = json_data.pop("all_reports", None)
     if temp:
         data = [[""] + list(temp.keys())]
     else:
         data = []
-
     # copies the data list into new vars
     potential = data[:]
     deaths = data[:]
     num_reports = data[:]
-
     for district in json_data.keys():
         row_pot = [district]
         row_death = [district]
@@ -51,15 +61,13 @@ def main():
         potential.append(row_pot)
         deaths.append(row_death)
         num_reports.append(row_reports)
-
-    upload_to_sheets([num_reports, potential, deaths], SPREADSHEET_ID)
+    return [num_reports, potential, deaths]
 
 
 def upload_to_sheets(data,sheet_id):
     # Create credentials for Google Sheets API
     project_id = os.environ["GCP_PROJECT"]
-    creds_str = access_secret_version(project_id, SECRET_ID, "latest")
-    creds_dict = json.loads(creds_str)
+    creds_dict = json.loads(access_secret_version(project_id, SECRET_ID, "latest"))
     creds_obj = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, SCOPES)
 
     service = build('sheets', 'v4', credentials=creds_obj)
@@ -67,6 +75,7 @@ def upload_to_sheets(data,sheet_id):
     for sheet, value in zip(SHEETS, data):
         service.spreadsheets().values().update(spreadsheetId=sheet_id, range=sheet, body={'values': value},
                                                valueInputOption='RAW').execute()
+    print("Uploaded data to Google Sheets.")
 
 
 if __name__ == '__main__':
