@@ -12,7 +12,7 @@ SPREADSHEET_ID = '16cVSGjBRQns1eOrrVmZ-DDRR3LEYGQn-B2J8PXXlBJw'
 SHEETS = ['Total Reports', 'Potential', 'Deaths']
 BUCKET = 'flatten-staging-dataset'
 FILE = 'somalia_data.json'
-SECRET_ID = "upload-sheets-somalia-staging"
+SECRET_ID = "upload-sheets-somalia"
 
 
 def main():
