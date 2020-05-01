@@ -1,6 +1,5 @@
-import gcs.bucket_functions as bf
-import pandas as pd
-from google.cloud import datastore, storage
+import utils.bucket_functions as bf
+from google.cloud import storage
 import json
 import os
 from form_data.geo_utils import convert_zip_to_county

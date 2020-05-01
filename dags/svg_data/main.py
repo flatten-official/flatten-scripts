@@ -1,9 +1,6 @@
-import pandas as pd
-import gcs.bucket_functions as bf
-import pandas as pd
-from google.cloud import datastore, storage
+import utils.bucket_functions as bf
+from google.cloud import storage
 import json
-import os
 import datetime as dt
 
 UPLOAD_FILE = 'svg_data.json'

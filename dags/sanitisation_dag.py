@@ -1,16 +1,14 @@
-import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
-from airflow.contrib.operators.file_to_gcs import FileToGoogleCloudStorageOperator
 
 from sanitisation.service import main
 from form_data.service import main as main_form
 from svg_data.main import main as main_svg
 
-from gcs.debugger import enable_cloud_debugger
+from utils.debugger import enable_cloud_debugger
 
 enable_cloud_debugger()
 

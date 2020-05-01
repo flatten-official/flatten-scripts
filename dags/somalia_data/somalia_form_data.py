@@ -2,9 +2,8 @@ from google.cloud import datastore, storage
 from sanitisation.sanitisation import Sanitisor
 from utils.file_utils import load_keys
 from utils.time import get_string_date
-from gcs.bucket_functions import upload_blob
+from utils.bucket_functions import upload_blob
 from utils import config
-import os
 import json
 
 N_CHILDREN = 6

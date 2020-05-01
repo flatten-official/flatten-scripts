@@ -46,7 +46,7 @@ def load_name_config(name):
     config = load_config()
     name_config = config[name]
     project = detect_project(config)
-    project = "master" if project is "master" else "staging"
+    project = "master" if project == "master" else "staging"
     for k, v in name_config[project].items():
         name_config[k] = v
     return name_config
