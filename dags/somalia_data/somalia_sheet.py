@@ -11,13 +11,15 @@ import os
 from oauth2client.service_account import ServiceAccountCredentials
 from googleapiclient.discovery import build
 
+from utils.config import load_name_config
 from utils.secrets import access_secret_version
 from utils.bucket_functions import download_blob
 
+vars = load_name_config('somalia_sheet')
+SPREADSHEET_ID = vars['sheet_id']
+BUCKET = vars['bucket']
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-SPREADSHEET_ID = '16cVSGjBRQns1eOrrVmZ-DDRR3LEYGQn-B2J8PXXlBJw'
 SHEETS = ['Total Reports', 'Potential', 'Deaths']
-BUCKET = 'flatten-staging-dataset'
 FILE = 'somalia_data.json'
 SECRET_ID = "upload-sheets-somalia"
 
@@ -59,7 +61,7 @@ def parse_data(json_data):
         potential.append(row_pot)
         deaths.append(row_death)
         num_reports.append(row_reports)
-    return [deaths, num_reports, potential]
+    return [num_reports, potential, deaths]
 
 
 def upload_to_sheets(data):
