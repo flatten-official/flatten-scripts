@@ -24,7 +24,7 @@ FILE = 'somalia_data.json'
 SECRET_ID = "upload-sheets-somalia"
 
 
-def main():
+def upload_somalia_data_to_sheets():
     input_data = download_data()
     output_data = parse_data(input_data)
     upload_to_sheets(output_data)
@@ -80,4 +80,4 @@ def upload_to_sheets(data):
 
 
 if __name__ == '__main__':
-    main()
+    upload_somalia_data_to_sheets()

@@ -1,12 +1,12 @@
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
-from airflow.contrib.operators.file_to_gcs import FileToGoogleCloudStorageOperator
 
 from confirmed_cases.service import main
+from utils.dags import default_args
 
 
 def enable_cloud_debugger():
@@ -24,13 +24,6 @@ upload_location = '/home/airflow/gcs/data'
 confirmed_file = 'confirmed_data_composer.json'
 travel_file = 'travel_data_composer.json'
 provincial_file = 'provincial_data_composer.json'
-
-default_args = {
-    'owner': 'Flatten.ca',
-    'depends_on_past': False,
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5),
-}
 
 confirmed_cases_dag = DAG(
     dag_id='confirmed_cases',
