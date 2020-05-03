@@ -14,9 +14,9 @@ from the root of the repository.
 
 ## Updating PyPI packages.
 
-If you require a new PyPi package to be installed on Cloud Composer, you should put a `requirements.txt` file in the associated folder.
+If you require a new PyPi package to be installed on Cloud Composer, you should add the package to `requirements.txt`.
 
-You can sync this to the staging instance with `gcloud composer environments update run-scripts --update-pypi-packages-from-file requirements.txt --location us-central1`.
+You can sync this to the staging through the GC Composer UI or with `gcloud composer environments update run-scripts --update-pypi-packages-from-file requirements.txt --location us-central1`.
 
 When merging to master, note to Arthur or Ivan that the requirements need to be updated, and tell them which packages to install.
 

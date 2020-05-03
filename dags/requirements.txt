@@ -1,6 +1,7 @@
 # This file outlines which packages are required to run the DAGs
 # Please update this as we change dependencies in GCloud Composer
-# Note that this doesn't automatically sync and is just a useful way to document packages in use
+# Note that this doesn't automatically sync and is just a useful way to document packages in use.
+# To update composer with your changes add the packages in the GCloud Composer UI
 # In PyCharm the requirements.txt plugin allows you to easily install all required packages
 google-api-python-client
 google-cloud-storage
