@@ -1,13 +1,13 @@
 from google.cloud import datastore, storage
+import json
 import pandas as pd
 
-
-def upload_blob(bucket, data_string, destination_blob_name):
+def upload_blob(bucket, data_string, destination_blob_name, content_type='text/plain'):
     """Uploads a file to the bucket."""
 
     blob = bucket.blob(destination_blob_name)
 
-    blob.upload_from_string(data_string)
+    blob.upload_from_string(data_string, content_type=content_type)
 
     print(
         "File {} uploaded to {}.".format(
@@ -15,6 +15,10 @@ def upload_blob(bucket, data_string, destination_blob_name):
         )
     )
 
+
+def download_blob(bucket_name, source_blob_name):
+    """Downloads a file from the bucket from a string."""
+    return storage.Client().bucket(bucket_name).get_blob(source_blob_name).download_as_string()
 
 def list_blobs(bucket_name):
     """Lists all the blobs in the bucket."""
@@ -41,8 +45,6 @@ def get_csv(bucket_name, prefix):
     df = pd.read_csv('gs://' + bucket_name + '/' + csv_path)
     return df
 
-
-def download_blob(bucket_name, source_blob_name):
-    """Downloads a file from the bucket from a string."""
-
-    return storage.Client().bucket(bucket_name).get_blob(source_blob_name).download_as_string()
+def get_json(bucket_name, prefix):
+    data = download_blob(bucket_name, prefix).decode("utf-8")
+    return json.loads(data)
