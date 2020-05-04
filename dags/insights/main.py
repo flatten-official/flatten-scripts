@@ -11,7 +11,7 @@ from google.cloud import storage
 import drawSvg as draw
 import json
 import hashlib
-import base64
+import binascii
 
 DISPLAY_INSIGHTS_THRESH = 25
 
@@ -160,12 +160,13 @@ def run_service():
         )
 
         # file name is the base 64 e
-        fsa_hashed = base64.standard_b64encode(
+        fsa_hashed = binascii.hexlify(
             hashlib.pbkdf2_hmac(
                 config['image_hash_algorithm'],
                 fsa.encode(),
                 image_hash_secret,
-                int(config['image_hash_iterations'])
+                int(config['image_hash_iterations']),
+                dklen=int(config['image_hash_digest'])
             )
         ).decode()
         print(fsa_hashed)

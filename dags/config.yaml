@@ -24,8 +24,13 @@ insights_card:
   upload_file_ext: .svg
   upload_path: svg/
   download_file: fsa_img.json
-  image_hash_iterations: 10000
-  image_hash_algorithm: sha256
+  # same as in the node code for the backend - see src/utils/hash.js on that side
+  image_hash_iterations: 100000
+  image_hash_algorithm: sha512
+  image_hash_digest: 64
+  master:
+    image_hash_secret: projects/81735388662/secrets/image-secret/versions/latest
+    image_bucket: flatten-img-staging
   staging:
     image_hash_secret: projects/233853318753/secrets/image-secret/versions/latest
     image_bucket: flatten-img-staging
