@@ -2,13 +2,14 @@ from google.cloud import datastore, storage
 from sanitisation.sanitisation import Sanitisor
 from utils.file_utils import load_keys
 from utils.time import get_string_date
-from utils.bucket_functions import upload_blob
+from utils.gcp_helpers import upload_blob
 from utils import config
 import json
 
 N_CHILDREN = 6
 N_EXTRA = 6
-INDIVIDUAL_KEYS = ["mother_report", "father_report"] + [f"child_{n}_report" for n in range(1, N_CHILDREN+1)] + [f"extra_{n}_report" for n in range(1, N_EXTRA+1)]
+INDIVIDUAL_KEYS = ["mother_report", "father_report"] + [f"child_{n}_report" for n in range(1, N_CHILDREN + 1)] + [
+    f"extra_{n}_report" for n in range(1, N_EXTRA + 1)]
 
 
 def case_checker(individual):
@@ -16,6 +17,7 @@ def case_checker(individual):
     potential = any(item in individual for item in ["fever", "cough", "shortnessOfBreath"])
     vulnerable = any(item in individual for item in ["diabetes", "heartDisease", "breathingProblems"])
     return potential, vulnerable
+
 
 def process_response(response, response_keys):
     individuals = {}
@@ -52,8 +54,8 @@ def add_to_dict(existing, new):
     for key in new:
         existing[key] += new[key]
 
-def run_form_data_scraping():
 
+def run_form_data_scraping():
     vars = config.load_name_config("somalia")
 
     datastore_client = datastore.Client(namespace=vars["ds_namespace"])
@@ -84,7 +86,6 @@ def run_form_data_scraping():
             data["region"][district] = {}
         if not district in data["region_time_series"]:
             data["region_time_series"][district] = {}
-
 
         try:
             add_to_dict(data["region"][district], aggregated_data)

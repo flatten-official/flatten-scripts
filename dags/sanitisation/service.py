@@ -4,7 +4,7 @@ import os
 import time
 import csv
 
-from utils.bucket_functions import upload_blob
+from utils.gcp_helpers import upload_blob
 from utils.file_utils import load_excluded_postal_codes, load_keys
 
 GCS_BUCKETS = os.environ['GCS_BUCKETS'].split(',')

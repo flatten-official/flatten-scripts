@@ -4,9 +4,9 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 
-from somalia_data.main import main
-from somalia_data.somalia_form_data import run_form_data_scraping
-from somalia_data.somalia_sheet import upload_somalia_data_to_sheets
+from somalia.form.main import main
+from somalia.form.somalia_form_data import run_form_data_scraping
+from somalia.gsheets.somalia_sheet import upload_somalia_data_to_sheets
 from utils.dags import default_args
 
 from utils.debugger import enable_cloud_debugger
