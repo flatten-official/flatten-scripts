@@ -18,7 +18,7 @@ This file specifies the columns in the Google sheet.
 
 ## `excluded_columns.txt`
 
-A list of columns (paperform pre-fill custom keys) that should not be added to the GSheet. Order is unimportant. `ctqlb` should be removed once the database is cleaned. Do not include values that use to be in `columns.txt`.
+A list of columns (paperform pre-fill custom keys) that should not be added to the GSheet. Order is unimportant. Do not include values that use to be in `columns.txt`.
 
 ## Code logic
 
@@ -40,6 +40,8 @@ Notes:
 
 ## First time setup
 
-- A GSheet with the tabs already created (must match `TAB_NAMES`).
+1. Create a GSheet with the correct tabs (tab names match `TAB_NAMES`).
 
-- A service account must be created and credentials must be uploaded to the GCP Secret Manager. The service account must be added as an editor to the GSheets.
+2. Create a service account and share the sheet with the service account.
+
+3. Upload the service account's credentials to the GCP Secret Manager.

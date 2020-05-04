@@ -6,7 +6,7 @@ from airflow.operators.python_operator import PythonOperator
 
 from somalia.form.main import main
 from somalia.form.somalia_form_data import run_form_data_scraping
-from somalia.gsheets.somalia_sheet import upload_somalia_data_to_sheets
+from somalia.gsheets.somalia_sheet import main
 from utils.dags import default_args
 
 from utils.debugger import enable_cloud_debugger
@@ -76,7 +76,7 @@ echo_sheet = BashOperator(
 
 upload_sheet = PythonOperator(
     task_id='upload-to-sheets',
-    python_callable=upload_somalia_data_to_sheets,
+    python_callable=main,
     dag=somalia_sheets_upload
 )
 

@@ -1,11 +1,12 @@
 from pytz import utc
-import datetime
+from datetime import datetime, timezone
+
 
 def get_string_date(timestamp):
     # timestamp is in ms since UNIX origin, so divide by 1000 to get seconds
-    ts_sec = timestamp / 1000
     # make a UTC datetime object from the timestamp, convert to a day stamp
-    day = utc.localize(
-        datetime.datetime.utcfromtimestamp(ts_sec)
-    ).strftime('%Y-%m-%d')
-    return day
+    return utc.localize(datetime.utcfromtimestamp(timestamp / 1000)).strftime('%Y-%m-%d')
+
+
+def get_printable_cur_time():
+    return datetime.now().astimezone(timezone.utc).strftime("%Y-%m-%d, %H:%M:%S    (UTC)")
