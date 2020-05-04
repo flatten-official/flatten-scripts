@@ -1,4 +1,4 @@
-from google.cloud import datastore, storage
+from google.cloud import storage
 import pandas as pd
 
 
@@ -46,7 +46,3 @@ def download_blob(bucket_name, source_blob_name):
     """Downloads a file from the bucket from a string."""
 
     return storage.Client().bucket(bucket_name).get_blob(source_blob_name).download_as_string()
-
-
-def get_datastore_content(project, namespace, kind):
-    client = datastore.Client(namespace=namespace)
