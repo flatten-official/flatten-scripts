@@ -1,7 +1,7 @@
 project_id_master: flatten-271620
 project_id_staging: flatten-staging-271921
 somalia:
-  upload_file: somalia.json
+  upload_file: somalia_data.json
   ds_kind: PaperformSubmission-so
   sheets_service_account_secret_id: upload-sheets-somalia
   master:
