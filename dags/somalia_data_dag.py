@@ -1,15 +1,14 @@
-import os
 from datetime import datetime, timedelta
 
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
-from airflow.contrib.operators.file_to_gcs import FileToGoogleCloudStorageOperator
 
 from somalia_data.main import main
 from somalia_data.somalia_form_data import run_form_data_scraping
+from somalia_data.somalia_sheet import main as sheets_main
 
-from gcs.debugger import enable_cloud_debugger
+from utils.debugger import enable_cloud_debugger
 
 enable_cloud_debugger()
 
@@ -58,5 +57,11 @@ run_form_service = PythonOperator(
     dag=somalia_form_data_dag
 )
 
+update_sheet = PythonOperator(
+    task_id='update',
+    python_callable = sheets_main,
+    dag=somalia_form_data_dag
+)
+
 echo_confirmed >> run_confirmed_service
-echo_form >> run_form_service
+echo_form >> run_form_service >> update_sheet

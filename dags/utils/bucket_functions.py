@@ -15,14 +15,10 @@ def upload_blob(bucket, data_string, destination_blob_name, content_type='text/p
         )
     )
 
-def download_blob(bucket_name, source_blob_name):
-    """Downloads a blob from the bucket as a string"""
-    storage_client = storage.Client()
 
-    bucket = storage_client.bucket(bucket_name)
-    blob = bucket.blob(source_blob_name)
-    s = blob.download_as_string()
-    return s
+def download_blob(bucket_name, source_blob_name):
+    """Downloads a file from the bucket from a string."""
+    return storage.Client().bucket(bucket_name).get_blob(source_blob_name).download_as_string()
 
 def list_blobs(bucket_name):
     """Lists all the blobs in the bucket."""
@@ -35,19 +31,20 @@ def list_blobs(bucket_name):
 
     return [blob.name for blob in blobs]
 
+
 def list_blobs_prefix(bucket_name, prefix, delimiter=None):
     storage_client = storage.Client()
 
     # Note: Client.list_blobs requires at least package version 1.17.0.
     blobs = storage_client.list_blobs(bucket_name, prefix=prefix, delimiter=delimiter)
-    return[blob.name for blob in blobs if not blob.name.endswith('README.md')]
+    return [blob.name for blob in blobs if not blob.name.endswith('README.md')]
 
-def get_csv(bucket_name,prefix):
-    csv_path = max(list_blobs_prefix(bucket_name,prefix))
-    df = pd.read_csv('gs://'+bucket_name+'/'+csv_path)
+
+def get_csv(bucket_name, prefix):
+    csv_path = max(list_blobs_prefix(bucket_name, prefix))
+    df = pd.read_csv('gs://' + bucket_name + '/' + csv_path)
     return df
 
 def get_json(bucket_name, prefix):
     data = download_blob(bucket_name, prefix).decode("utf-8")
     return json.loads(data)
-
