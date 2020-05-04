@@ -108,6 +108,8 @@ def upload_data(data):
         write_request = service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range=tab_name,
                                                                body={'values': tab_data}, valueInputOption='RAW')
 
+        # Both request are first created so that if
+        # the update request creation fails, the clear request hasn't already been executed
         clear_request.execute()
         write_request.execute()
 
