@@ -7,7 +7,6 @@ This scripts
 """
 
 import json
-import os
 
 from google.cloud import datastore
 from oauth2client.service_account import ServiceAccountCredentials
@@ -15,7 +14,6 @@ from googleapiclient.discovery import build
 
 from utils.config import load_name_config, get_project_id
 from utils.secrets import access_secret_version
-from utils.gcp_helpers import download_blob
 
 config = load_name_config('somalia')
 
@@ -155,7 +153,8 @@ def get_excluded_columns_from_file():
     with open(EXCLUDED_COLUMN_FILE, "r") as f:
         exc_columns = f.read().rstrip().split("\n")
 
-    tab = [["The following columns from our data our not shown as they are not useful."]]  # Nested since it's 2D array
+    tab = [["The following columns from our form are not shown as they are not useful (e.g. lang (language) is always "
+            "the same)."]]  # Nested since it's 2D array
 
     for col in exc_columns:
         tab.append([col])
