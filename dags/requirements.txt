@@ -1,0 +1,18 @@
+# This file outlines which Python packages are required to run the DAGs.
+# Please update this file if you change the Python dependencies.
+# Note that this doesn't automatically sync with GCloud Composer and is just a useful way to document packages in use.
+# This is useful partly since IDEs such as PyCharm integrate with requirements.txt files.
+#
+# Since this doesn't sync with Composer, you'll need to add your packages in the GCloud Composer UI
+google-api-python-client
+google-cloud-storage
+google-cloud-datastore
+pytz
+pandas
+geopy
+beautifulsoup4
+grpcio
+pyyaml
+gcsfs
+drawsvg
+google-cloud-secret-manager

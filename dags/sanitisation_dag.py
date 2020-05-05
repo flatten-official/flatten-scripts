@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
@@ -7,17 +7,11 @@ from airflow.operators.python_operator import PythonOperator
 from sanitisation.service import main
 from form_data.service import main as main_form
 from svg_data.main import main as main_svg
+from utils.dags import default_args
 
 from utils.debugger import enable_cloud_debugger
 
 enable_cloud_debugger()
-
-default_args = {
-    'owner': 'Flatten.ca',
-    'depends_on_past': False,
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5),
-}
 
 sanitisation_dag = DAG(
     dag_id='sanitise',

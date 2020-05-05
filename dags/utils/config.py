@@ -2,7 +2,7 @@ import yaml
 import os
 
 COMPOSER_DAGS_FOLDER = "/home/airflow/gcs/dags"
-CONFIG_FILE="config.yaml"
+CONFIG_FILE = "config.yaml"
 
 
 def load_config():
@@ -25,11 +25,15 @@ def load_config():
     return config_data
 
 
+def get_project_id():
+    return os.environ["GCP_PROJECT"]
+
+
 def detect_project(config_data):
     """Detects the project (master, staging, or unknown) given the YAML config using
     the environement variables."""
     try:
-        project = os.environ["GCP_PROJECT"]
+        project = get_project_id()
     except KeyError:
         project = ""
     if project == config_data["project_id_master"]:

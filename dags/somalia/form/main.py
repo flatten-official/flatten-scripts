@@ -3,7 +3,7 @@ import datetime as dt
 import json
 from google.cloud import storage
 import os
-from utils.bucket_functions import upload_blob
+from utils.gcp_helpers import upload_blob
 
 COUNTRIES = ['Somalia']
 UPLOAD_FILE = 'somalia_confirmed.json'

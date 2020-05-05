@@ -1,4 +1,4 @@
-import utils.bucket_functions as bf
+import utils.gcp_helpers as bf
 from google.cloud import storage
 import json
 import datetime as dt
