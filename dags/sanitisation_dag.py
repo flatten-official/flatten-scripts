@@ -27,7 +27,7 @@ echo = BashOperator(
     bash_command='echo "Running Sanitisation Script"'
 )
 echo_form = BashOperator(
-    task_id='Echo',
+    task_id='Echo_form',
     bash_command='echo "Running Form Data Script"'
 )
 
@@ -50,7 +50,7 @@ svg = PythonOperator(
 )
 
 echo_hr_data = BashOperator(
-    task_id='Echo',
+    task_id='Echo_HR_data',
     bash_command='echo "Running Health Region Script"'
 )
 
