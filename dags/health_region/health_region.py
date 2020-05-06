@@ -37,5 +37,6 @@ def health_region_data():
             hr_data[hr][date] = {"total": reports, "potential": pot, "vulnerable": vul, "financial_support": fin_sup, "diabetes": diabetes, "hypertension": hyp}
     json_str = json.dumps(hr_data)
 
-    bf.upload_blob(vars['UPLOAD_BUCKET'], json_str, UPLOADFILE_NAME)
-    
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(vars["UPLOAD_BUCKET"])
+    bf.upload_blob(bucket, json_str, UPLOADFILE_NAME)
