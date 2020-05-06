@@ -4,6 +4,7 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 
+from health_region.health_region import health_region_data
 from sanitisation.service import main
 from form_data.service import main as main_form
 from svg_data.main import main as main_svg
@@ -48,4 +49,15 @@ svg = PythonOperator(
     dag=sanitisation_dag
 )
 
-echo >> sanitise >> form >> svg
+echo_hr_data = BashOperator(
+    task_id='Echo',
+    bash_command='echo "Running Health Region Script"'
+)
+
+get_region_data = PythonOperator(
+    task_id='health_region_data',
+    python_callable=health_region_data,
+    dag=sanitisation_dag
+)
+
+echo >> sanitise >> form >> svg >> echo_hr_data >> get_region_data
