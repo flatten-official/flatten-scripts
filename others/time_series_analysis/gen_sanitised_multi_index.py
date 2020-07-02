@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from google.cloud import storage
 
 def list_blobs_prefix(bucket_name, prefix, delimiter=None):
@@ -22,8 +23,15 @@ def gen_sanitised_by_date_fsa():
     df = df.groupby(['date', 'fsa']).agg({'probable': ['sum', 'count']})
     df = df.reset_index()
 
-    return df
+    idx = pd.date_range(min(df['date']), max(df['date']))
+    by_fsa = {}
+    for fsa in df['fsa'].unique():
+        by_fsa[fsa] = df[df['fsa']==fsa].groupby('date').mean().reset_index().set_index('date')
+        by_fsa[fsa].index = pd.DatetimeIndex(by_fsa[fsa].index)
+        by_fsa[fsa] = by_fsa[fsa].reindex(idx, fill_value=0)
+        by_fsa[fsa]['fsa'] = fsa
+    return pd.concat(fsa_data for fsa_data in by_fsa.values())
 
 if __name__ == "__main__":
     df = gen_sanitised_by_date_fsa()
-    df.to_csv('flatten_probable_by_date_fsa.csv', index=False)
+    df.to_csv('flatten_probable_by_date_fsa.csv', index=True)
