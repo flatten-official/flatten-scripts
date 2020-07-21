@@ -128,7 +128,8 @@ class Sanitisor:
                 "is_most_recent": self.bool_to_str(latest),
                 "fsa": fsa,
                 "zipcode": zipcode,
-                "country": country
+                "country": country,
+                "schema": schema,
             }
             latest = False
             probable, vulnerable = self.case_checker(response, schema)
@@ -171,6 +172,9 @@ class Sanitisor:
         lang = data["lang"]
         if not lang in ["en", "fr"]:
             return []
+        
+        
+        schema = "paperform"
 
         response_sanitised = {
             "id": unique_id,
@@ -178,10 +182,9 @@ class Sanitisor:
             "fsa": data["fsa"].upper(),
             "zipcode": "",
             "country": "ca",
+            "schema": schema,
             "is_most_recent": "y"
         }
-
-        schema = "paperform"
 
         for question_key in QUESTIONS:
             try:
