@@ -85,7 +85,7 @@ class Sanitisor:
 
     SANITISATION_MAPPINGS = {"yes": "y", "no": "n", "positive": "y", "negative": "n", "awaiting_results": "n",
                              "male": "m", "female": "f", "preferNotToRespond": "na"}
-    EXTRA_FIELDS = ["id", "country", "date", "fsa", "zipcode", "probable", "vulnerable", "is_most_recent"]
+    EXTRA_FIELDS = ["id", "country", "schema", "date", "fsa", "zipcode", "probable", "vulnerable", "is_most_recent"]
 
     def __init__(self, excluded_fsa, paperform_keys):
         self.excluded_fsa = excluded_fsa
