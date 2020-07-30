@@ -226,7 +226,7 @@ class Sanitisor:
         ))
         response_dict['cough'] = self.bool_to_str('cough' in response_dict['symptoms'])
         response_dict['shortness_of_breath'] = self.bool_to_str('shortnessOfBreath' in response_dict['symptoms'])
-        response_dict['any_medical_conditions'] = self.bool_to_str(response_dict['conditions'] == [] or response_dict['conditions'] is not ['other'])
+        response_dict['any_medical_conditions'] = self.bool_to_str(response_dict['conditions'] != [] or response_dict['conditions'] != ['other'])
 
     def case_checker(self, response, schema):
         if schema == "1":
@@ -255,9 +255,8 @@ class Sanitisor:
                         and 'shortnessOfBreath' in response['symptoms']
                         and response['travelOutsideCanada'] == 'y')
             )
-
             vulnerable = (
-                    (response['conditions'] != 'other' and response['conditions'] != "")
+                    (response['conditions'] != ['other'] and response['conditions'] != [])
                     or '65-74' in response['age'] or '>75' in response['age']
             )
         else:
